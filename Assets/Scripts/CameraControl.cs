@@ -7,34 +7,100 @@ public class CameraControl : MonoBehaviour
     [SerializeField] private Camera levelCamera;
     [SerializeField] private float rotationSpeed = 5.0f;
 
-    // camera movement action
-    InputAction cameraRotateAction;
-    InputAction cameraRotateButton;
-    InputAction cameraZoomAction;
-    InputAction perspectiveToggleAction;
+    [Header("Camera angle limits")]
+    [SerializeField] private float maxX;
+    [SerializeField] private float maxY;
+    [SerializeField] private float maxZ;
+
+    // camera controls etc
+    private InputAction cameraLookAction;
+
+    // angle tracking
+    private Axes lastAxisRotatedOn = Axes.NONE;
+    private Vector3 targetAngles = Vector3.zero;
+    private bool isRotating = false;
+    private float percentInc = 0;
+    private float currentPercent = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // assign actions
-        cameraRotateAction = InputSystem.actions.FindAction("Look");
-        cameraRotateButton = InputSystem.actions.FindAction("Look Press");
-        cameraZoomAction = InputSystem.actions.FindAction("Zoom");
-        perspectiveToggleAction = InputSystem.actions.FindAction("TogglePerspective");
+        cameraLookAction = InputSystem.actions.FindAction("Look");
     }
 
     // Update is called once per frame
     void Update()
     {
-        // write controls around mouse input for now
-        
-        // camera rotation
-        Vector2 camRotation = cameraRotateAction.ReadValue<Vector2>();
+        Vector2 movement = cameraLookAction.ReadValue<Vector2>();
+        Vector3 rotation = Vector3.zero;
 
-        if (cameraRotateButton.IsPressed())
+        SetRotationVector(ref rotation, movement);
+
+
+        HandleCameraRotation(rotation);
+    }
+
+    private void SetRotationVector(ref Vector3 rotation, Vector2 movement)
+    {
+        // read in the following order - left, right, up, down
+        if (movement.x > 0)
         {
-            transform.Rotate(new Vector3(camRotation.y * -1, camRotation.x, 0)
-                * Time.deltaTime * rotationSpeed, Space.World);
+            rotation.Set(0, -45, 0);
+        }
+        else if (movement.x < 0)
+        {
+            rotation.Set(0, 45, 0);
         }
     }
+
+    //private Vector3 FindNextAngle(Vector3 rotation)
+    //{
+    //    // treat each axis as a cardinal direction
+    //    // x = left / right
+    //    // y = up / down
+    //    switch (lastAxisRotatedOn)
+    //    {
+    //        case Axes.NONE:
+    //            // default, so left / right is x axis & z is up / down
+    //            return rotation;
+    //        case Axes.X:
+    //            //
+    //    }
+    //}
+
+    private void HandleCameraRotation(Vector3 rotationVal)
+    {
+        if (!isRotating) 
+        {
+            // set target angle
+            targetAngles = transform.rotation.eulerAngles;
+            targetAngles += rotationVal;
+            percentInc = rotationSpeed / (transform.eulerAngles - targetAngles).magnitude;
+            currentPercent = 0;
+            isRotating = true;
+        }
+
+        currentPercent += percentInc * Time.deltaTime;
+
+        // lerp towards target position
+        // t = % between a and b
+        Vector3 newEuler = Vector3.Lerp(transform.eulerAngles, targetAngles, currentPercent);
+
+        // set rotation & check if we're very close
+        transform.eulerAngles = newEuler;
+
+        if (Vector3.Distance(newEuler, targetAngles) <= rotationSpeed)
+        {
+            transform.eulerAngles = targetAngles;
+            isRotating = false;
+        }
+    }
+}
+
+public enum Axes
+{
+    X,
+    Y, 
+    Z,
+    NONE
 }
