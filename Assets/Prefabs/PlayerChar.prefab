@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 535468083849909228}
   - component: {fileID: 6763618884460633804}
   - component: {fileID: 4149679409274542594}
-  - component: {fileID: 7312406371382870151}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -88,29 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &7312406371382870151
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 966518172881208369}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3311720189761192454
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,6 +99,7 @@ GameObject:
   - component: {fileID: 4509712553642074466}
   - component: {fileID: 4333578219143204841}
   - component: {fileID: 7744027571720696057}
+  - component: {fileID: 3933791462712212039}
   m_Layer: 0
   m_Name: PlayerChar
   m_TagString: Untagged
@@ -166,7 +143,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1
+  m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4333578219143204841
@@ -211,6 +188,21 @@ MonoBehaviour:
   movementSpeed: 15
   characterRigidbody: {fileID: 4333578219143204841}
   cameraRigDownAnchor: {fileID: 0}
+--- !u!114 &3933791462712212039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3311720189761192454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e973222376c3cf4095be3bd8a6b4368, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelCamera: {fileID: 0}
+  fieldOfView: 60
+  size: 5
 --- !u!1 &8558276340464673302
 GameObject:
   m_ObjectHideFlags: 0

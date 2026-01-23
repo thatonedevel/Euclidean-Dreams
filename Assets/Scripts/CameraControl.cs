@@ -13,6 +13,7 @@ public class CameraControl : MonoBehaviour
     [SerializeField] private float maxX;
     [SerializeField] private float maxY;
     [SerializeField] private float maxZ;
+    [SerializeField] private float rotationAmount = 45;
 
     // camera controls etc
     private InputAction cameraLookAction;
@@ -45,8 +46,9 @@ public class CameraControl : MonoBehaviour
 
         SetRotationVector(ref rotation, movement);
 
-
-        HandleCameraRotation(rotation);
+        // only allow camera rotation in 3D
+        if (!levelCamera.orthographic)
+            HandleCameraRotation(rotation);
     }
 
     private void SetRotationVector(ref Vector3 rotation, Vector2 movement)
@@ -54,19 +56,19 @@ public class CameraControl : MonoBehaviour
         // read in the following order - left, right, up, down
         if (movement.x > 0)
         {
-            rotation.Set(0, -45, 0);
+            rotation.Set(0, -rotationAmount, 0);
         }
         else if (movement.x < 0)
         {
-            rotation.Set(0, 45, 0);
+            rotation.Set(0, rotationAmount, 0);
         }
         else if (movement.y > 0)
         {
-            rotation.Set(45, 0, 0);
+            rotation.Set(rotationAmount, 0, 0);
         }
         else if (movement.y < 0)
         {
-            rotation.Set(-45, 0, 0);
+            rotation.Set(-rotationAmount, 0, 0);
         }
     }
 

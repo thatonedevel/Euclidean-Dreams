@@ -301,12 +301,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10fa0aea78edb1d46a6280b12be4473e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCamera: {fileID: 0}
+  levelCamera: {fileID: 4614518569008099937}
   rotationSpeed: 80
   rigHelper: {fileID: 1290131505015339279}
   maxX: 0
   maxY: 0
   maxZ: 0
+  rotationAmount: 45
   lastAxisRotatedOn: 3
   targetAngles: {x: 0, y: 0, z: 0}
   isRotating: 0
