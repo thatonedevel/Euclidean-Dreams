@@ -8,7 +8,7 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Object References")]
     [SerializeField] private Rigidbody characterRigidbody;
-    [SerializeField] private GameObject levelCameraRoot;
+    [SerializeField] private GameObject cameraRigDownAnchor;
 
     // input actions
     InputAction movementAction;
@@ -27,12 +27,12 @@ public class CharacterMovement : MonoBehaviour
         // get move vector
         Vector2 moveInput = movementAction.ReadValue<Vector2>();
 
-        Vector3 moveVector = new Vector3(moveInput.x, 0, moveInput.y) * movementSpeed;
+        Vector3 moveVector = new Vector3(moveInput.x, 0, moveInput.y) * movementSpeed * Time.deltaTime;
 
-        Vector3 destination = levelCameraRoot.transform.TransformDirection(moveVector) + transform.position;
+        Vector3 destination = cameraRigDownAnchor.transform.TransformDirection(moveVector) + transform.position;
 
         // move rigidbody
-        characterRigidbody.MovePosition(Vector3.Lerp(transform.position, destination, Time.deltaTime));
+        characterRigidbody.MovePosition(destination);
 
         transform.LookAt(new Vector3(destination.x, transform.position.y, destination.z));
     }

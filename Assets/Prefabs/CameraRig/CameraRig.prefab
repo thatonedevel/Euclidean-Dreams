@@ -11,10 +11,8 @@ GameObject:
   - component: {fileID: 179288724391106439}
   - component: {fileID: 4768322556312887357}
   - component: {fileID: 768758973395020875}
-  - component: {fileID: 3960852123155143214}
-  - component: {fileID: 5071150013080199929}
   m_Layer: 0
-  m_Name: LevelCamRoot
+  m_Name: CameraRig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +31,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6485037799697401982}
+  - {fileID: 1163450297161826941}
+  - {fileID: 1072501289557937967}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4768322556312887357
@@ -89,52 +88,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3960852123155143214
-SphereCollider:
+--- !u!1 &1290131505015339279
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 817992272014732855}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5071150013080199929
-MonoBehaviour:
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1072501289557937967}
+  m_Layer: 0
+  m_Name: RigHelper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1072501289557937967
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 817992272014732855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10fa0aea78edb1d46a6280b12be4473e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelCamera: {fileID: 4614518569008099937}
-  rotationSpeed: 80
-  maxX: 0
-  maxY: 0
-  maxZ: 0
-  lastAxisRotatedOn: 3
-  targetAngles: {x: 0, y: 0, z: 0}
-  isRotating: 0
-  percentInc: 0
-  currentPercent: 0
-  lerpStartAngles: {x: 0, y: 0, z: 0}
-  elapsedLerpTime: 0
-  neededLerpTime: 0
+  m_GameObject: {fileID: 1290131505015339279}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 179288724391106439}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1372144977583298632
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,11 +147,11 @@ Transform:
   m_GameObject: {fileID: 1372144977583298632}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -12.27}
+  m_LocalPosition: {x: 0, y: 0, z: -12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 179288724391106439}
+  m_Father: {fileID: 1163450297161826941}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &4614518569008099937
 Camera:
@@ -272,3 +256,62 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &3118211520181515544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1163450297161826941}
+  - component: {fileID: 5410921982583789490}
+  m_Layer: 0
+  m_Name: CameraParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1163450297161826941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3118211520181515544}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6485037799697401982}
+  m_Father: {fileID: 179288724391106439}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5410921982583789490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3118211520181515544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10fa0aea78edb1d46a6280b12be4473e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelCamera: {fileID: 0}
+  rotationSpeed: 80
+  rigHelper: {fileID: 1290131505015339279}
+  maxX: 0
+  maxY: 0
+  maxZ: 0
+  lastAxisRotatedOn: 3
+  targetAngles: {x: 0, y: 0, z: 0}
+  isRotating: 0
+  percentInc: 0
+  currentPercent: 0
+  lerpStartAngles: {x: 0, y: 0, z: 0}
+  elapsedLerpTime: 0
+  neededLerpTime: 0

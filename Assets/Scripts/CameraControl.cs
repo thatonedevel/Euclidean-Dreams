@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,7 @@ public class CameraControl : MonoBehaviour
     // reference to actual camera component
     [SerializeField] private Camera levelCamera;
     [SerializeField] private float rotationSpeed = 5.0f;
+    [SerializeField] GameObject rigHelper;
 
     [Header("Camera angle limits")]
     [SerializeField] private float maxX;
@@ -114,6 +116,9 @@ public class CameraControl : MonoBehaviour
 
             // set rotation
             transform.eulerAngles = newEuler;
+
+            // set rig helper rotation but don't change its x axis
+            rigHelper.transform.eulerAngles = new Vector3(rigHelper.transform.eulerAngles.x, newEuler.y, newEuler.z);
 
             // check if we need to snap the rotation
             if (currentPercent >= 1)

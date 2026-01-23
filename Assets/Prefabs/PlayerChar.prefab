@@ -208,9 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 366a665fafb4c2c45beea51eb1bd13db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
+  movementSpeed: 15
   characterRigidbody: {fileID: 4333578219143204841}
-  levelCameraRoot: {fileID: 0}
+  cameraRigDownAnchor: {fileID: 0}
 --- !u!1 &8558276340464673302
 GameObject:
   m_ObjectHideFlags: 0
