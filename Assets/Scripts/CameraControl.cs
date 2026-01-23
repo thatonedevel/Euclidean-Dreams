@@ -58,6 +58,14 @@ public class CameraControl : MonoBehaviour
         {
             rotation.Set(0, 45, 0);
         }
+        else if (movement.y > 0)
+        {
+            rotation.Set(45, 0, 0);
+        }
+        else if (movement.y < 0)
+        {
+            rotation.Set(-45, 0, 0);
+        }
     }
 
     /*private Vector3 FindNextAngle(Vector3 rotation)
