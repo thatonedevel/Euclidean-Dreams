@@ -1,1 +1,3 @@
 *.unity merge=lfs filter=lfs diff=lfs
+*.mb merge=lfs filter=lfs diff=lfs
+*.ma merge=lfs filter=lfs diff=lfs
