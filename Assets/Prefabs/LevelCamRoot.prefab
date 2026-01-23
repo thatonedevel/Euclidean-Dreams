@@ -123,7 +123,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelCamera: {fileID: 4614518569008099937}
-  rotationSpeed: 5
+  rotationSpeed: 80
+  maxX: 0
+  maxY: 0
+  maxZ: 0
+  lastAxisRotatedOn: 3
+  targetAngles: {x: 0, y: 0, z: 0}
+  isRotating: 0
+  percentInc: 0
+  currentPercent: 0
+  lerpStartAngles: {x: 0, y: 0, z: 0}
+  elapsedLerpTime: 0
+  neededLerpTime: 0
 --- !u!1 &1372144977583298632
 GameObject:
   m_ObjectHideFlags: 0
