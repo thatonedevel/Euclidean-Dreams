@@ -16,16 +16,23 @@ public class CameraControl : MonoBehaviour
     private InputAction cameraLookAction;
 
     // angle tracking
-    private Axes lastAxisRotatedOn = Axes.NONE;
-    private Vector3 targetAngles = Vector3.zero;
-    private bool isRotating = false;
-    private float percentInc = 0;
-    private float currentPercent = 0;
+    [Header("Debug Info - Rotation information")]
+    [SerializeField] private Axes lastAxisRotatedOn = Axes.NONE;
+    [SerializeField] private Vector3 targetAngles = Vector3.zero;
+    [SerializeField] private bool isRotating = false;
+    [SerializeField] private float percentInc = 0;
+    [SerializeField] private float currentPercent = 0;
+    [SerializeField] private Vector3 lerpStartAngles = Vector3.zero;
+    [SerializeField] private float elapsedLerpTime = 0;
+    [SerializeField] private float neededLerpTime = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         cameraLookAction = InputSystem.actions.FindAction("Look");
+
+        // test lerp for negative angles
+        Debug.Log("Test lerp on a negative target (12%): " + Vector3.Lerp(Vector3.zero, new Vector3(0, -45, 0), 0.12f));
     }
 
     // Update is called once per frame
@@ -53,46 +60,63 @@ public class CameraControl : MonoBehaviour
         }
     }
 
-    //private Vector3 FindNextAngle(Vector3 rotation)
-    //{
-    //    // treat each axis as a cardinal direction
-    //    // x = left / right
-    //    // y = up / down
-    //    switch (lastAxisRotatedOn)
-    //    {
-    //        case Axes.NONE:
-    //            // default, so left / right is x axis & z is up / down
-    //            return rotation;
-    //        case Axes.X:
-    //            //
-    //    }
-    //}
+    /*private Vector3 FindNextAngle(Vector3 rotation)
+    {
+        // treat each axis as a cardinal direction
+        // x = left / right
+        // y = up / down
+        switch (lastAxisRotatedOn)
+        {
+            case Axes.NONE:
+                // default, so left / right is x axis & z is up / down
+                return rotation;
+            case Axes.X:
+                //
+        }
+    }*/
 
     private void HandleCameraRotation(Vector3 rotationVal)
     {
         if (!isRotating) 
         {
             // set target angle
-            targetAngles = transform.rotation.eulerAngles;
-            targetAngles += rotationVal;
-            percentInc = rotationSpeed / (transform.eulerAngles - targetAngles).magnitude;
+            targetAngles = transform.rotation.eulerAngles + rotationVal;
             currentPercent = 0;
+            lerpStartAngles = transform.eulerAngles;
+
+            // check if we need to lerp at all
+            if (targetAngles == transform.eulerAngles)
+            {
+                return;
+            }
+
+            // calculate the needed time - author French (2020, updated 2024) indicated lerp should not be used with speed
+            // speed = dist / time => time = dist / speed
+            neededLerpTime = Vector3.Distance(lerpStartAngles, targetAngles) / rotationSpeed;
+            // calculate the per frame %
             isRotating = true;
         }
-
-        currentPercent += percentInc * Time.deltaTime;
-
-        // lerp towards target position
-        // t = % between a and b
-        Vector3 newEuler = Vector3.Lerp(transform.eulerAngles, targetAngles, currentPercent);
-
-        // set rotation & check if we're very close
-        transform.eulerAngles = newEuler;
-
-        if (Vector3.Distance(newEuler, targetAngles) <= rotationSpeed)
+        if (isRotating)
         {
-            transform.eulerAngles = targetAngles;
-            isRotating = false;
+            // (French, 2020 [Updated 2024])
+            currentPercent = elapsedLerpTime / neededLerpTime;
+
+            Vector3 newEuler = Vector3.Lerp(lerpStartAngles, targetAngles, currentPercent);
+            elapsedLerpTime += Time.deltaTime;
+
+            // set rotation
+            transform.eulerAngles = newEuler;
+
+            // check if we need to snap the rotation
+            if (currentPercent >= 1)
+            {
+                // stop rotation, reset values
+                transform.eulerAngles = targetAngles;
+                elapsedLerpTime = 0;
+                neededLerpTime = 0;
+                currentPercent = 0;
+                isRotating = false;
+            }
         }
     }
 }
