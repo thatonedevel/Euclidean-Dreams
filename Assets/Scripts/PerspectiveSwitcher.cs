@@ -1,10 +1,16 @@
 using System.Collections.Generic;
+using System.Linq;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using Unity.VisualScripting;
+using Unity.Android.Gradle.Manifest;
 
 public class PerspectiveSwitcher : MonoBehaviour
 {
+    [Header("Object / Component References")]
+    [SerializeField] private Rigidbody playerRigidbody;
     [SerializeField] private Camera levelCamera;
 
     [Header("Perspective Settings")]
@@ -52,6 +58,8 @@ public class PerspectiveSwitcher : MonoBehaviour
             // switch to ortho projection
             levelCamera.orthographic = true;
             levelCamera.orthographicSize = size;
+            Debug.Log("Running the raycasts");
+            GeoSortingRaycasts();
         }
     }
 
@@ -70,6 +78,10 @@ public class PerspectiveSwitcher : MonoBehaviour
         float screenPointXIncr = 1.0f / fieldOfView;
         float screenPointYIncr = 1.0f / vertAngle;
 
+        print("X incrementer for loop: " + screenPointXIncr);
+        print("Y incrementer for loop: " + screenPointYIncr);
+
+
         RaycastHit hitData;
 
         for (float spY = 0; spY <= 1; spY += screenPointYIncr)
@@ -79,11 +91,14 @@ public class PerspectiveSwitcher : MonoBehaviour
                 Ray outRay = levelCamera.ScreenPointToRay(new Vector3(spX, spY));
                 Physics.Raycast(ray:outRay, hitInfo: out hitData);
 
+                Debug.DrawRay(outRay.origin, outRay.direction * 50, Color.white, 10);
+
                 if (hitData.collider != null)
                 {
                     // we hit something, check it is level geometry
                     if (hitData.collider.CompareTag("LevelGeometry"))
                     {
+                        Debug.Log("Adding geometry to hash set");
                         // add it to the hash set
                         detectedGeometry.Add(hitData.collider.gameObject);
                     }
@@ -94,12 +109,30 @@ public class PerspectiveSwitcher : MonoBehaviour
         // at this point we have all the level geometry
         // next we need to determine the needed collision data
         // if we're looking down, generate it aroud the geometry
-        if (levelCamera.transform.eulerAngles.y == 90)
-            GenerateCollisionAroundGeo();
+        if (levelCamera.transform.parent.eulerAngles.x == 90)
+        {
+            Debug.Log("Camera was at appropriate angle to read as facing straight down");
+            GenerateCollisionAroundGeo(detectedGeometry);
+        }
+            
     }
 
-    private void GenerateCollisionAroundGeo()
+    private void GenerateCollisionAroundGeo(HashSet<GameObject> levelGeo)
     {
+        // called when looking straight down
+        // get the highest y level & apply that to the player
+        GameObject[] geoArray = levelGeo.ToArray();
 
+        Debug.Log("Detected geo amount: " + geoArray.Length);
+
+        // remember neg -> a before b, positive -> b before a
+        Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.y - b.transform.position.y) * -1; });
+
+        // first item will now be at the highest y level
+        float neededYLevel = geoArray[0].transform.position.y;
+
+        // disable the gravity
+        playerRigidbody.useGravity = false;
+        transform.position.Set(transform.position.x, neededYLevel, transform.position.z);
     }
 }
