@@ -200,6 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e973222376c3cf4095be3bd8a6b4368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerRigidbody: {fileID: 4333578219143204841}
   levelCamera: {fileID: 0}
   fieldOfView: 60
   size: 5
