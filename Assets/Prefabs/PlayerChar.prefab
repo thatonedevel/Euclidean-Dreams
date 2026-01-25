@@ -206,6 +206,9 @@ MonoBehaviour:
   fieldOfView: 60
   size: 5
   collisionThickness: 0
+  raycastingMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &8558276340464673302
 GameObject:
   m_ObjectHideFlags: 0
