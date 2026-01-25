@@ -5,6 +5,7 @@ public class CharacterMovement : MonoBehaviour
 {
     [Header("Movement Data")]
     [SerializeField] private float movementSpeed = 5.0f;
+    [SerializeField] private MovementAxis movableAxes = MovementAxis.XZ;
 
     [Header("Object References")]
     [SerializeField] private Rigidbody characterRigidbody;
@@ -26,9 +27,18 @@ public class CharacterMovement : MonoBehaviour
     {
         // get move vector
         Vector2 moveInput = movementAction.ReadValue<Vector2>();
+        Vector3 moveVector = Vector3.zero;
 
-        Vector3 moveVector = new Vector3(moveInput.x, 0, moveInput.y) * movementSpeed * Time.deltaTime;
-
+        switch (movableAxes)
+        {
+            case MovementAxis.XZ:
+                moveVector = new Vector3(moveInput.x, 0, moveInput.y) * movementSpeed * Time.deltaTime;
+                break;
+            case MovementAxis.XY:
+                moveVector = new Vector3(moveInput.x, moveInput.y, 0) * movementSpeed * Time.deltaTime;
+                break;
+        }
+        
         Vector3 destination = cameraRigDownAnchor.transform.TransformDirection(moveVector) + transform.position;
 
         // move rigidbody
@@ -36,4 +46,15 @@ public class CharacterMovement : MonoBehaviour
 
         transform.LookAt(new Vector3(destination.x, transform.position.y, destination.z));
     }
+
+    private void DimensionSwitchHandler(Dimensions newDimension)
+    {
+        
+    }
+}
+
+public enum MovementAxis
+{
+    XZ,
+    XY
 }
