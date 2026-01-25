@@ -3,15 +3,13 @@ using System.Linq;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using Unity.VisualScripting;
-using Unity.Android.Gradle.Manifest;
 
 public class PerspectiveSwitcher : MonoBehaviour
 {
     [Header("Object / Component References")]
     [SerializeField] private Rigidbody playerRigidbody;
     [SerializeField] private Camera levelCamera;
+    [SerializeField] private Collider playerCollider;
 
     [Header("Perspective Settings")]
     [SerializeField] private float fieldOfView = 60;
@@ -21,6 +19,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     [Header("Collision Settings")]
     [SerializeField] private float collisionThickness;
+    [SerializeField] private LayerMask raycastingMask;
 
     // input
     private InputAction perspectiveSwitchAction;
@@ -52,6 +51,7 @@ public class PerspectiveSwitcher : MonoBehaviour
             // switch to perspective projection
             levelCamera.orthographic = false;
             levelCamera.fieldOfView = fieldOfView;
+            SetPlayer3DPos();
         }
         else
         {
@@ -72,52 +72,63 @@ public class PerspectiveSwitcher : MonoBehaviour
         Vector3 camRotationEuler = levelCamera.transform.parent.localEulerAngles;
 
         float horAngle = fieldOfView;
-        float vertAngle = 360 - (fieldOfView * 2);
+        float vertAngle = 360 - (fieldOfView * 4);
 
-        // use screenpoints to determine the raycast direction etc.
-        float screenPointXIncr = 1.0f / fieldOfView;
-        float screenPointYIncr = 1.0f / vertAngle;
+        float screenX = 0;
+        float screenY = 0;
 
-        print("X incrementer for loop: " + screenPointXIncr);
-        print("Y incrementer for loop: " + screenPointYIncr);
+        float xScale = Screen.width / horAngle;
+        float yScale = Screen.height / vertAngle;
 
+        print("x scale: " + xScale);
+        print("y scale: " + yScale);
 
+        print("hor angle: " + horAngle);
+        print("vert angle: " + vertAngle);
+
+        float rayLen = (levelCamera.farClipPlane - levelCamera.nearClipPlane) / 2.0f;
+        
         RaycastHit hitData;
+        // use screenpoints to determine the raycast direction etc.
 
-        for (float spY = 0; spY <= 1; spY += screenPointYIncr)
+        //print("X incrementer for loop: " + screenPointXIncr);
+        //print("Y incrementer for loop: " + screenPointYIncr);
+
+        // use the actual angles for looping, not the calculated floats
+        for (int i = 0; i <= vertAngle; i++) // inclusive loop as we want the whole screen
         {
-            for (float spX = 0; spX <= 1; spX += screenPointXIncr)
+            for (int j = 0; j <= horAngle; j++)
             {
-                Ray outRay = levelCamera.ScreenPointToRay(new Vector3(spX, spY));
-                Physics.Raycast(ray:outRay, hitInfo: out hitData);
+                Ray outRay = levelCamera.ScreenPointToRay(new Vector3(screenX, screenY, rayLen));
 
-                Debug.DrawRay(outRay.origin, outRay.direction * 50, Color.white, 10);
+                // draw the ray
+                Debug.DrawRay(outRay.origin, outRay.direction * rayLen, Color.white, 5);
+                Physics.Raycast(ray: outRay, hitInfo: out hitData, maxDistance: rayLen, layerMask: raycastingMask.value);
 
+                // if the ray hit level geometry, add it to the hash set
                 if (hitData.collider != null)
                 {
-                    // we hit something, check it is level geometry
-                    if (hitData.collider.CompareTag("LevelGeometry"))
-                    {
-                        Debug.Log("Adding geometry to hash set");
-                        // add it to the hash set
-                        detectedGeometry.Add(hitData.collider.gameObject);
-                    }
+                    detectedGeometry.Add(hitData.collider.gameObject);
                 }
+
+                screenX += xScale;
             }
+            screenX = 0;
+            screenY += yScale;
         }
 
-        // at this point we have all the level geometry
-        // next we need to determine the needed collision data
-        // if we're looking down, generate it aroud the geometry
+        //// at this point we have all the level geometry
+        //// next we need to determine the needed collision data
+        //// if we're looking down, generate it aroud the geometry
         if (levelCamera.transform.parent.eulerAngles.x == 90)
         {
             Debug.Log("Camera was at appropriate angle to read as facing straight down");
-            GenerateCollisionAroundGeo(detectedGeometry);
+            CalculatePlayerYLevelForStraightDown(detectedGeometry);
         }
-            
+
     }
 
-    private void GenerateCollisionAroundGeo(HashSet<GameObject> levelGeo)
+    private void CalculatePlayerYLevelForStraightDown(HashSet<GameObject> levelGeo)
     {
         // called when looking straight down
         // get the highest y level & apply that to the player
@@ -129,10 +140,36 @@ public class PerspectiveSwitcher : MonoBehaviour
         Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.y - b.transform.position.y) * -1; });
 
         // first item will now be at the highest y level
-        float neededYLevel = geoArray[0].transform.position.y;
+        float neededYLevel = geoArray[0].GetComponent<Collider>().bounds.max.y;
+
+        Debug.Log("Highest geometry: " + geoArray[0]);
+        Debug.Log("Calculated y level: " + neededYLevel);
 
         // disable the gravity
         playerRigidbody.useGravity = false;
-        transform.position.Set(transform.position.x, neededYLevel, transform.position.z);
+        transform.position = new Vector3(transform.position.x, neededYLevel, transform.position.z);
     }
+
+    private void SetPlayer3DPos()
+    {
+        // calculate the needed position of the player on each axis when returning to 3d
+        // perform a raycast from the player going straight down
+        Vector3 colliderCenterY = new(0, playerCollider.bounds.center.y, 0);
+
+
+        Ray playerRay = new Ray(transform.position + colliderCenterY, Vector3.down);
+        Debug.DrawRay(playerRay.origin, playerRay.direction * 100, Color.red, 5);
+        RaycastHit hit;
+
+        Physics.Raycast(ray: playerRay, hitInfo: out hit, 100, layerMask: raycastingMask.value);
+
+        if (hit.collider != null)
+        {
+            // get the max y of the collider & set that as the player's new y
+            transform.position = new Vector3(transform.position.x, 
+                hit.collider.bounds.max.y, transform.position.z);
+            // reenable the gravity too doofus
+            playerRigidbody.useGravity = true;
+        }
+    }    
 }
