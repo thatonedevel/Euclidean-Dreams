@@ -210,7 +210,7 @@ MonoBehaviour:
   levelCamera: {fileID: 0}
   playerCollider: {fileID: 4509712553642074466}
   fieldOfView: 60
-  size: 5
+  size: 10
   collisionThickness: 0
   raycastingMask:
     serializedVersion: 2
