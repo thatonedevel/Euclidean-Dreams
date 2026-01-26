@@ -186,8 +186,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 15
+  movableAxes: 0
+  groundingMask:
+    serializedVersion: 2
+    m_Bits: 8
   characterRigidbody: {fileID: 4333578219143204841}
+  characterCollider: {fileID: 4509712553642074466}
   cameraRigDownAnchor: {fileID: 0}
+  cameraParent: {fileID: 0}
 --- !u!114 &3933791462712212039
 MonoBehaviour:
   m_ObjectHideFlags: 0

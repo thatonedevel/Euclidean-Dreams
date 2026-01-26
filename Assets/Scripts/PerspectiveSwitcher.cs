@@ -21,7 +21,7 @@ public class PerspectiveSwitcher : MonoBehaviour
     [SerializeField] private float collisionThickness;
     [SerializeField] private LayerMask raycastingMask;
 
-    public Dimensions currentDimension { get; private set; } = Dimensions.THIRD;
+    public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
@@ -57,7 +57,7 @@ public class PerspectiveSwitcher : MonoBehaviour
             levelCamera.orthographic = false;
             levelCamera.fieldOfView = fieldOfView;
             SetPlayer3DPos();
-            currentDimension = Dimensions.THIRD;
+            CurrentDimension = Dimensions.THIRD;
         }
         else
         {
@@ -66,11 +66,11 @@ public class PerspectiveSwitcher : MonoBehaviour
             levelCamera.orthographicSize = size;
             Debug.Log("Running the raycasts");
             GeoSortingRaycasts();
-            currentDimension = Dimensions.SECOND;
+            CurrentDimension = Dimensions.SECOND;
         }
 
         // fire dimension switch event
-        OnDimensionsSwitched?.Invoke(currentDimension);
+        OnDimensionsSwitched?.Invoke(CurrentDimension);
     }
 
     private void GeoSortingRaycasts()
@@ -112,7 +112,7 @@ public class PerspectiveSwitcher : MonoBehaviour
                 Ray outRay = levelCamera.ScreenPointToRay(new Vector3(screenX, screenY, rayLen));
 
                 // draw the ray
-                Debug.DrawRay(outRay.origin, outRay.direction * rayLen, Color.white, 5);
+                //Debug.DrawRay(outRay.origin, outRay.direction * rayLen, Color.white, 5);
                 Physics.Raycast(ray: outRay, hitInfo: out hitData, maxDistance: rayLen, layerMask: raycastingMask.value);
 
                 // if the ray hit level geometry, add it to the hash set
@@ -168,7 +168,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
 
         Ray playerRay = new Ray(transform.position + colliderCenterY, Vector3.down);
-        Debug.DrawRay(playerRay.origin, playerRay.direction * 100, Color.red, 5);
+        //Debug.DrawRay(playerRay.origin, playerRay.direction * 100, Color.red, 5);
         RaycastHit hit;
 
         Physics.Raycast(ray: playerRay, hitInfo: out hit, 100, layerMask: raycastingMask.value);
