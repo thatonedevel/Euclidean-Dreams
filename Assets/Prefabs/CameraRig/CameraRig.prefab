@@ -302,8 +302,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelCamera: {fileID: 4614518569008099937}
-  rotationSpeed: 80
   rigHelper: {fileID: 1290131505015339279}
+  rotationSpeed: 80
+  cameraZoomScale: 40
   maxX: 0
   maxY: 0
   maxZ: 0
