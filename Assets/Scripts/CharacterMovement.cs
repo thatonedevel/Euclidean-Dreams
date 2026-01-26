@@ -69,7 +69,7 @@ public class CharacterMovement : MonoBehaviour
         Ray groundCheckRay = new Ray(transform.position + centeredOffset, Vector3.down); // using transform down for future proofing
         RaycastHit hit;
 
-        Debug.DrawRay(groundCheckRay.origin, groundCheckRay.direction * 100, Color.yellow, 5);
+        Debug.DrawRay(groundCheckRay.origin, groundCheckRay.direction * 100, Color.yellow, 1);
         Physics.Raycast(ray: groundCheckRay, hitInfo: out hit, 100, layerMask: groundingMask.value);
 
         if (hit.collider == null)

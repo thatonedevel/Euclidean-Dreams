@@ -112,7 +112,7 @@ public class PerspectiveSwitcher : MonoBehaviour
                 Ray outRay = levelCamera.ScreenPointToRay(new Vector3(screenX, screenY, rayLen));
 
                 // draw the ray
-                //Debug.DrawRay(outRay.origin, outRay.direction * rayLen, Color.white, 5);
+                Debug.DrawRay(outRay.origin, outRay.direction * rayLen, Color.white, 1);
                 Physics.Raycast(ray: outRay, hitInfo: out hitData, maxDistance: rayLen, layerMask: raycastingMask.value);
 
                 // if the ray hit level geometry, add it to the hash set
@@ -168,7 +168,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
 
         Ray playerRay = new Ray(transform.position + colliderCenterY, Vector3.down);
-        //Debug.DrawRay(playerRay.origin, playerRay.direction * 100, Color.red, 5);
+        Debug.DrawRay(playerRay.origin, playerRay.direction * 100, Color.red, 1);
         RaycastHit hit;
 
         Physics.Raycast(ray: playerRay, hitInfo: out hit, 100, layerMask: raycastingMask.value);
