@@ -3,6 +3,7 @@ using System.Linq;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using GameConstants;
 using GameConstants.Enumerations;
 
 public class PerspectiveSwitcher : MonoBehaviour
@@ -27,6 +28,7 @@ public class PerspectiveSwitcher : MonoBehaviour
     private bool IsLookingDownZAxis() => levelCamera.transform.parent.eulerAngles == new Vector3(0, 180, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, -180, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, 0, 0);
 
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
+    public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
@@ -139,19 +141,22 @@ public class PerspectiveSwitcher : MonoBehaviour
         {
             // looking down y axis
             Debug.Log("Camera was at appropriate angle to read as facing straight down");
-            CalculatePlayerAxisPosition(detectedGeometry, Axes.Y);
+            CurrentObservedAxis = Axes.Y;
         }
         else if (IsLookingDownXAxis())
         {
             // looking down the x axis
             Debug.Log("Looking down x axis");
+            CurrentObservedAxis = Axes.X;
         }
         else if (IsLookingDownZAxis())
         {
             // looking down the z axis
             Debug.Log("Looking down z axis");
+            CurrentObservedAxis = Axes.Z;
         }
 
+        CalculatePlayerAxisPosition(detectedGeometry, CurrentObservedAxis);
     }
 
     private void CalculatePlayerAxisPosition(HashSet<GameObject> levelGeo, Axes axis)
@@ -193,6 +198,23 @@ public class PerspectiveSwitcher : MonoBehaviour
         }
     }
 
+    private void SetPlayerAxisAsValue(Vector3 extractionVector, Axes axis)
+    {
+        // override that takes a vector3 and uses the value on the specified axis
+        switch (axis) 
+        {
+            case Axes.X:
+                transform.position = new Vector3(extractionVector.x, transform.position.y, transform.position.z);
+                break;
+            case Axes.Y:
+                transform.position = new Vector3(transform.position.x, extractionVector.y, transform.position.z);
+                break;
+            case Axes.Z:
+                transform.position = new Vector3(transform.position.x, transform.position.y, extractionVector.z);
+                break;
+        }
+    }
+
     private float GetClosestAxisPositionFromGeo(HashSet<GameObject> geometry, Axes axis)
     {
         // called when looking straight down
@@ -228,24 +250,69 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     private void SetPlayer3DPos()
     {
-        // calculate the needed position of the player on each axis when returning to 3d
-        // perform a raycast from the player going straight down
-        Vector3 colliderCenterY = new(0, playerCollider.bounds.center.y, 0);
-
-
-        Ray playerRay = new Ray(transform.position + colliderCenterY, Vector3.down);
-        Debug.DrawRay(playerRay.origin, playerRay.direction * 100, Color.red, 1);
-        RaycastHit hit;
-
-        Physics.Raycast(ray: playerRay, hitInfo: out hit, 100, layerMask: raycastingMask.value);
-
-        if (hit.collider != null)
+        if (CurrentObservedAxis == Axes.Y)
         {
-            // get the max y of the collider & set that as the player's new y
-            transform.position = new Vector3(transform.position.x, 
-                hit.collider.bounds.max.y, transform.position.z);
-            // reenable the gravity too doofus
-            playerRigidbody.useGravity = true;
+            // calculate the needed position of the player on each axis when returning to 3d
+            // perform a raycast from the player going straight down
+            Vector3 colliderCenterY = new(0, playerCollider.bounds.center.y, 0);
+
+            Ray playerRay = new Ray(transform.position + colliderCenterY, Vector3.down);
+            Debug.DrawRay(playerRay.origin, playerRay.direction * Constants.MAX_RAYCAST_DISTANCE, Color.red, 1);
+            RaycastHit hit;
+
+            Physics.Raycast(ray: playerRay, hitInfo: out hit, Constants.MAX_RAYCAST_DISTANCE, layerMask: raycastingMask.value);
+
+            if (hit.collider != null)
+            {
+                // get the max y of the collider & set that as the player's new y
+                transform.position = new Vector3(transform.position.x, 
+                    hit.collider.bounds.max.y, transform.position.z);
+                // reenable the gravity too doofus
+                playerRigidbody.useGravity = true;
+            }
+        }
+        else
+        {
+            // we're looking through one of the horizontal axes (x/z)
+            CalculatePlayerHorizontalPosition();
         }
     }    
+
+    private void CalculatePlayerHorizontalPosition()
+    {
+        // use this to calculate the horizontal axis value for the current axis when switching back to 3D
+
+        // run a series of raycasts going straight down, across the current axis. each offset by 1 unit
+        Ray currentRay;
+        RaycastHit currentHit;
+        Vector3 offsetVector = Vector3.zero;
+
+        switch (CurrentObservedAxis)
+        {
+            // use this to adjust the offset vector
+            case Axes.X:
+                offsetVector = new Vector3(1, 0, 0);
+                break;
+            case Axes.Z:
+                offsetVector = new Vector3(0, 0, 1);
+                break;
+        }
+
+        for (int i = Constants.MAX_RAYCAST_COUNT / -2; i < Constants.MAX_RAYCAST_COUNT / 2; i++)
+        {
+            currentRay = new Ray(transform.position + (offsetVector * i), Vector3.down);
+            Debug.DrawRay(currentRay.origin, currentRay.direction * Constants.MAX_RAYCAST_DISTANCE, Color.cyan, 1);
+            Physics.Raycast(ray: currentRay, hitInfo: out currentHit, maxDistance: Constants.MAX_RAYCAST_DISTANCE, layerMask: raycastingMask.value);
+
+            // check if we hit a bit of level geometry
+            if (currentHit.collider != null) 
+            {
+                // if we did, then set the player's position on this axis to the centre of this one
+                Vector3 localCentredPos = currentHit.collider.bounds.max;
+                SetPlayerAxisAsValue(localCentredPos, CurrentObservedAxis);
+                // re-enable gravity properly
+                playerRigidbody.useGravity = true;
+            }
+        }
+    }
 }
