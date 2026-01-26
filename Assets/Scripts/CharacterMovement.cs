@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using GameConstants.Enumerations;
 
 public class CharacterMovement : MonoBehaviour
 {
     [Header("Movement Data")]
     [SerializeField] private float movementSpeed = 5.0f;
-    [SerializeField] private MovementAxis movableAxes = MovementAxis.XZ;
+    [SerializeField] private MovementAxisCombos movableAxes = MovementAxisCombos.XZ;
     [SerializeField] private LayerMask groundingMask;
 
     [Header("Object References")]
@@ -34,10 +35,10 @@ public class CharacterMovement : MonoBehaviour
 
         switch (movableAxes)
         {
-            case MovementAxis.XZ:
+            case MovementAxisCombos.XZ:
                 moveVector = new Vector3(moveInput.x, 0, moveInput.y) * movementSpeed * Time.deltaTime;
                 break;
-            case MovementAxis.XY:
+            case MovementAxisCombos.XY:
                 moveVector = new Vector3(moveInput.x, moveInput.y, 0) * movementSpeed * Time.deltaTime;
                 break;
         }
@@ -83,10 +84,4 @@ public class CharacterMovement : MonoBehaviour
     {
         
     }
-}
-
-public enum MovementAxis
-{
-    XZ,
-    XY
 }

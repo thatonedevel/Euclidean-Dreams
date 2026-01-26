@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,7 +24,6 @@ public class CameraControl : MonoBehaviour
 
     // angle tracking
     [Header("Debug Info - Rotation information")]
-    [SerializeField] private Axes lastAxisRotatedOn = Axes.NONE;
     [SerializeField] private Vector3 targetAngles = Vector3.zero;
     [SerializeField] private bool isRotating = false;
     [SerializeField] private float percentInc = 0;
@@ -160,12 +159,4 @@ public class CameraControl : MonoBehaviour
             }
         }
     }
-}
-
-public enum Axes
-{
-    X,
-    Y, 
-    Z,
-    NONE
 }

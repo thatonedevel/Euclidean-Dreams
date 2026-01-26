@@ -3,6 +3,7 @@ using System.Linq;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using GameConstants.Enumerations;
 
 public class PerspectiveSwitcher : MonoBehaviour
 {
@@ -133,12 +134,17 @@ public class PerspectiveSwitcher : MonoBehaviour
         if (levelCamera.transform.parent.eulerAngles.x == 90)
         {
             Debug.Log("Camera was at appropriate angle to read as facing straight down");
-            CalculatePlayerYLevelForStraightDown(detectedGeometry);
+            CalculatePlayerAxisPosition(detectedGeometry, Axes.Y);
+        }
+        else if (levelCamera.transform.parent.eulerAngles.x != 90 && levelCamera.transform.parent.eulerAngles.x % 90 == 0)
+        {
+            // we're looking straight on
+            // calculate the character's depth
         }
 
     }
 
-    private void CalculatePlayerYLevelForStraightDown(HashSet<GameObject> levelGeo)
+    private void CalculatePlayerAxisPosition(HashSet<GameObject> levelGeo, Axes axis)
     {
         // called when looking straight down
         // get the highest y level & apply that to the player
@@ -157,8 +163,43 @@ public class PerspectiveSwitcher : MonoBehaviour
 
         // disable the gravity
         playerRigidbody.useGravity = false;
-        transform.position = new Vector3(transform.position.x, neededYLevel, transform.position.z);
+        SetPlayerAxisAsValue(neededYLevel, axis);
     }
+
+    private void SetPlayerAxisAsValue(float newValue, Axes axis)
+    {
+        // sets the specified axis of the player's transform to the supplied value
+        switch (axis)
+        {
+            case Axes.X:
+                transform.position = new Vector3(newValue, transform.position.y, transform.position.z);
+                break;
+            case Axes.Y:
+                transform.position = new Vector3(transform.position.x, newValue, transform.position.z);
+                break;
+            case Axes.Z:
+                transform.position = new Vector3(transform.position.x, transform.position.y, newValue);
+                break;
+        }
+    }
+
+    private float GetClosestAxisPositionFromGeo(HashSet<GameObject> geometry, Axes axis)
+    {
+        // called when looking straight down
+        // get the highest y level & apply that to the player
+        GameObject[] geoArray = geometry.ToArray();
+
+        Debug.Log("Detected geo amount: " + geoArray.Length);
+
+        // use a switch as we need to sort by a specified axis
+        Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.y - b.transform.position.y) * -1; });
+
+        // first item will now be at the highest y level
+        float neededYLevel = geoArray[0].GetComponent<Collider>().bounds.max.y;
+
+        return 1; // fail state
+    }
+
 
     private void SetPlayer3DPos()
     {
@@ -182,10 +223,4 @@ public class PerspectiveSwitcher : MonoBehaviour
             playerRigidbody.useGravity = true;
         }
     }    
-}
-
-public enum Dimensions
-{
-    THIRD,
-    SECOND
 }
