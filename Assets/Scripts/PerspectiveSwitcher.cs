@@ -22,6 +22,10 @@ public class PerspectiveSwitcher : MonoBehaviour
     [SerializeField] private float collisionThickness;
     [SerializeField] private LayerMask raycastingMask;
 
+    // lambdas
+    private bool IsLookingDownXAxis() => levelCamera.transform.parent.eulerAngles == new Vector3(0, 90, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, -90, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, 270, 0);
+    private bool IsLookingDownZAxis() => levelCamera.transform.parent.eulerAngles == new Vector3(0, 180, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, -180, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, 0, 0);
+
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
 
     // event fired when switching dimensions
@@ -133,13 +137,19 @@ public class PerspectiveSwitcher : MonoBehaviour
         //// if we're looking down, generate it aroud the geometry
         if (levelCamera.transform.parent.eulerAngles.x == 90)
         {
+            // looking down y axis
             Debug.Log("Camera was at appropriate angle to read as facing straight down");
             CalculatePlayerAxisPosition(detectedGeometry, Axes.Y);
         }
-        else if (levelCamera.transform.parent.eulerAngles.x != 90 && levelCamera.transform.parent.eulerAngles.x % 90 == 0)
+        else if (IsLookingDownXAxis())
         {
-            // we're looking straight on
-            // calculate the character's depth
+            // looking down the x axis
+            Debug.Log("Looking down x axis");
+        }
+        else if (IsLookingDownZAxis())
+        {
+            // looking down the z axis
+            Debug.Log("Looking down z axis");
         }
 
     }
@@ -156,14 +166,14 @@ public class PerspectiveSwitcher : MonoBehaviour
         Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.y - b.transform.position.y) * -1; });
 
         // first item will now be at the highest y level
-        float neededYLevel = geoArray[0].GetComponent<Collider>().bounds.max.y;
+        float neededAxisLevel = GetClosestAxisPositionFromGeo(levelGeo, axis);
 
         Debug.Log("Highest geometry: " + geoArray[0]);
-        Debug.Log("Calculated y level: " + neededYLevel);
+        Debug.Log("Calculated" + axis + " level: " + neededAxisLevel);
 
         // disable the gravity
         playerRigidbody.useGravity = false;
-        SetPlayerAxisAsValue(neededYLevel, axis);
+        SetPlayerAxisAsValue(neededAxisLevel, axis);
     }
 
     private void SetPlayerAxisAsValue(float newValue, Axes axis)
@@ -191,13 +201,28 @@ public class PerspectiveSwitcher : MonoBehaviour
 
         Debug.Log("Detected geo amount: " + geoArray.Length);
 
+        float neededAxisValue = 0;
+
         // use a switch as we need to sort by a specified axis
-        Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.y - b.transform.position.y) * -1; });
 
-        // first item will now be at the highest y level
-        float neededYLevel = geoArray[0].GetComponent<Collider>().bounds.max.y;
+        switch (axis)
+        {
+            case Axes.X:
+                Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.x - b.transform.position.x) * -1; });
+                neededAxisValue = geoArray[0].GetComponent<Collider>().bounds.max.x;
+                break;
+            case Axes.Y:
+                Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.y - b.transform.position.y) * -1; });
+                // first item will now be at the highest y level
+                neededAxisValue = geoArray[0].GetComponent<Collider>().bounds.max.y;
+                break;
+            case Axes.Z:
+                Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.z - b.transform.position.z) * -1; });
+                neededAxisValue = geoArray[0].GetComponent<Collider>().bounds.max.z;
+                break;
+        }
 
-        return 1; // fail state
+        return neededAxisValue; // fail state
     }
 
 
