@@ -25,6 +25,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     // lambdas
     private bool IsLookingDownXAxis() => levelCamera.transform.parent.eulerAngles == new Vector3(0, 90, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, -90, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, 270, 0);
+    private bool IsLookingDownYAxis() => levelCamera.transform.parent.eulerAngles.x == 90 && levelCamera.transform.parent.eulerAngles.y == 0;
     private bool IsLookingDownZAxis() => levelCamera.transform.parent.eulerAngles == new Vector3(0, 180, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, -180, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, 0, 0);
 
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
@@ -138,7 +139,7 @@ public class PerspectiveSwitcher : MonoBehaviour
         // at this point we have all the level geometry
         // next we need to determine the needed collision data
         // if we're looking down, generate it aroud the geometry
-        if (levelCamera.transform.parent.eulerAngles.x == 90)
+        if (IsLookingDownYAxis())
         {
             // looking down y axis
             Debug.Log("Camera was at appropriate angle to read as facing straight down");
@@ -282,40 +283,6 @@ public class PerspectiveSwitcher : MonoBehaviour
     private void CalculatePlayerHorizontalPosition()
     {
         // use this to calculate the horizontal axis value for the current axis when switching back to 3D
-
-        // run a series of raycasts going straight down, across the current axis. each offset by 1 unit
-        /*Ray currentRay;
-        RaycastHit currentHit;
-        Vector3 offsetVector = Vector3.zero;
-
-        switch (CurrentObservedAxis)
-        {
-            // use this to adjust the offset vector
-            case Axes.X:
-                offsetVector = new Vector3(1, 0, 0);
-                break;
-            case Axes.Z:
-                offsetVector = new Vector3(0, 0, 1);
-                break;
-        }
-
-        for (int i = Constants.MAX_RAYCAST_COUNT / -2; i < Constants.MAX_RAYCAST_COUNT / 2; i++)
-        {
-            currentRay = new Ray(transform.position + (offsetVector * i), Vector3.down);
-            Debug.DrawRay(currentRay.origin, currentRay.direction * Constants.MAX_RAYCAST_DISTANCE, Color.cyan, 1);
-            Physics.Raycast(ray: currentRay, hitInfo: out currentHit, maxDistance: Constants.MAX_RAYCAST_DISTANCE, layerMask: raycastingMask.value);
-
-            // check if we hit a bit of level geometry
-            if (currentHit.collider != null) 
-            {
-                // if we did, then set the player's position on this axis to the centre of this one
-                Debug.Log("Looking down the " + CurrentObservedAxis + " axis");
-                Vector3 localCentredPos = currentHit.collider.bounds.center + new Vector3(0, currentHit.collider.bounds.extents.y);
-                SetPlayerAxisAsValue(localCentredPos, CurrentObservedAxis);
-                // re-enable gravity properly
-                playerRigidbody.useGravity = true;
-            }
-        }*/
 
         // get the screen space position of the player, then go down by a couple of pixels
         Vector3 playerOffsetScreenSpacePos = levelCamera.WorldToScreenPoint(transform.position) - new Vector3(0, 5);
