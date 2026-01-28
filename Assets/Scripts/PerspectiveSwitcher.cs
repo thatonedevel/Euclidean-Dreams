@@ -267,8 +267,6 @@ public class PerspectiveSwitcher : MonoBehaviour
                 // get the max y of the collider & set that as the player's new y
                 transform.position = new Vector3(transform.position.x, 
                     hit.collider.bounds.max.y, transform.position.z);
-                // reenable the gravity too doofus
-                playerRigidbody.useGravity = true;
             }
         }
         else
@@ -276,6 +274,8 @@ public class PerspectiveSwitcher : MonoBehaviour
             // we're looking through one of the horizontal axes (x/z)
             CalculatePlayerHorizontalPosition();
         }
+        // reenable the gravity too doofus
+        playerRigidbody.useGravity = true;
     }    
 
     private void CalculatePlayerHorizontalPosition()
@@ -308,7 +308,8 @@ public class PerspectiveSwitcher : MonoBehaviour
             if (currentHit.collider != null) 
             {
                 // if we did, then set the player's position on this axis to the centre of this one
-                Vector3 localCentredPos = currentHit.collider.bounds.max;
+                Debug.Log("Looking down the " + CurrentObservedAxis + " axis");
+                Vector3 localCentredPos = currentHit.collider.bounds.center + new Vector3(0, currentHit.collider.bounds.extents.y);
                 SetPlayerAxisAsValue(localCentredPos, CurrentObservedAxis);
                 // re-enable gravity properly
                 playerRigidbody.useGravity = true;
