@@ -67,19 +67,24 @@ public class PerspectiveSwitcher : MonoBehaviour
             levelCamera.fieldOfView = fieldOfView;
             
             CurrentDimension = Dimensions.THIRD;
+            // fire dimension switch event
+            OnDimensionsSwitched?.Invoke(CurrentDimension);
         }
         else
         {
-            // switch to ortho projection
-            levelCamera.orthographic = true;
-            levelCamera.orthographicSize = size;
-            Debug.Log("Running the raycasts");
-            GeoSortingRaycasts();
-            CurrentDimension = Dimensions.SECOND;
+            // check we're aligned with one of the three axes
+            if (IsLookingDownXAxis() || IsLookingDownYAxis() || IsLookingDownZAxis())
+            {
+                // switch to ortho projection
+                levelCamera.orthographic = true;
+                levelCamera.orthographicSize = size;
+                Debug.Log("Running the raycasts");
+                GeoSortingRaycasts();
+                CurrentDimension = Dimensions.SECOND;
+            }
+            // fire dimension switch event
+            OnDimensionsSwitched?.Invoke(CurrentDimension);
         }
-
-        // fire dimension switch event
-        OnDimensionsSwitched?.Invoke(CurrentDimension);
     }
 
     private void GeoSortingRaycasts()
