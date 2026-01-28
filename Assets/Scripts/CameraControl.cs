@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,20 +6,24 @@ public class CameraControl : MonoBehaviour
 {
     // reference to actual camera component
     [SerializeField] private Camera levelCamera;
-    [SerializeField] private float rotationSpeed = 5.0f;
     [SerializeField] GameObject rigHelper;
+
+    [Header("Scales")]
+    [SerializeField] private float rotationSpeed = 5.0f;
+    [SerializeField] private float cameraZoomScale = 5.0f;
 
     [Header("Camera angle limits")]
     [SerializeField] private float maxX;
     [SerializeField] private float maxY;
     [SerializeField] private float maxZ;
+    [SerializeField] private float rotationAmount = 45;
 
     // camera controls etc
     private InputAction cameraLookAction;
+    private InputAction cameraProfZoomAction; // IT WAS ME BARRY, I'M THE ONE WHO MADE YOUR UNIT TESTS FAIL
 
     // angle tracking
     [Header("Debug Info - Rotation information")]
-    [SerializeField] private Axes lastAxisRotatedOn = Axes.NONE;
     [SerializeField] private Vector3 targetAngles = Vector3.zero;
     [SerializeField] private bool isRotating = false;
     [SerializeField] private float percentInc = 0;
@@ -32,9 +36,10 @@ public class CameraControl : MonoBehaviour
     void Start()
     {
         cameraLookAction = InputSystem.actions.FindAction("Look");
+        cameraProfZoomAction = InputSystem.actions.FindAction("Zoom");
 
         // test lerp for negative angles
-        Debug.Log("Test lerp on a negative target (12%): " + Vector3.Lerp(Vector3.zero, new Vector3(0, -45, 0), 0.12f));
+        //Debug.Log("Test lerp on a negative target (12%): " + Vector3.Lerp(Vector3.zero, new Vector3(0, -45, 0), 0.12f));
     }
 
     // Update is called once per frame
@@ -42,11 +47,16 @@ public class CameraControl : MonoBehaviour
     {
         Vector2 movement = cameraLookAction.ReadValue<Vector2>();
         Vector3 rotation = Vector3.zero;
+        Vector2 zoomAmount = cameraProfZoomAction.ReadValue<Vector2>();
+
 
         SetRotationVector(ref rotation, movement);
 
+        // only allow camera rotation in 3D
+        if (!levelCamera.orthographic)
+            HandleCameraRotation(rotation);
 
-        HandleCameraRotation(rotation);
+        ZoomCamera(zoomAmount);
     }
 
     private void SetRotationVector(ref Vector3 rotation, Vector2 movement)
@@ -54,19 +64,36 @@ public class CameraControl : MonoBehaviour
         // read in the following order - left, right, up, down
         if (movement.x > 0)
         {
-            rotation.Set(0, -45, 0);
+            rotation.Set(0, -rotationAmount, 0);
         }
         else if (movement.x < 0)
         {
-            rotation.Set(0, 45, 0);
+            rotation.Set(0, rotationAmount, 0);
         }
         else if (movement.y > 0)
         {
-            rotation.Set(45, 0, 0);
+            rotation.Set(rotationAmount, 0, 0);
         }
         else if (movement.y < 0)
         {
-            rotation.Set(-45, 0, 0);
+            rotation.Set(-rotationAmount, 0, 0);
+        }
+    }
+
+    private void ZoomCamera(Vector2 input)
+    {
+        // adjusts the camera's zoom level based on the y axis of the input vector
+        float delta = input.y * cameraZoomScale * Time.deltaTime;
+
+        if (!levelCamera.orthographic)
+        {
+            // 3d, adjust camera pos
+            levelCamera.transform.position += levelCamera.transform.forward * delta;
+        }
+        else
+        {
+            // adjust the camera size
+            levelCamera.orthographicSize += delta * -1;
         }
     }
 
@@ -132,12 +159,4 @@ public class CameraControl : MonoBehaviour
             }
         }
     }
-}
-
-public enum Axes
-{
-    X,
-    Y, 
-    Z,
-    NONE
 }
