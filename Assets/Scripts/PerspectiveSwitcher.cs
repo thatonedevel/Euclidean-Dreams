@@ -24,9 +24,15 @@ public class PerspectiveSwitcher : MonoBehaviour
     [SerializeField] private LayerMask raycastingMask;
 
     // lambdas
-    private bool IsLookingDownXAxis() => levelCamera.transform.parent.eulerAngles == new Vector3(0, 90, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, -90, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, 270, 0);
-    private bool IsLookingDownYAxis() => levelCamera.transform.parent.eulerAngles.x == 90 && levelCamera.transform.parent.eulerAngles.y == 0;
-    private bool IsLookingDownZAxis() => levelCamera.transform.parent.eulerAngles == new Vector3(0, 180, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, -180, 0) || levelCamera.transform.parent.eulerAngles == new Vector3(0, 0, 0);
+    private bool IsLookingDownXAxis() => EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3(0, 90, 0) 
+        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, -90, 0) 
+        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, 270, 0);
+
+    private bool IsLookingDownYAxis() => EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles).x == 90 && (EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles).z == 0 || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles).z == 360);
+    
+    private bool IsLookingDownZAxis() => EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, 180, 0) 
+        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, -180, 0) 
+        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, 0, 0);
 
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
     public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
@@ -59,6 +65,9 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     private void SwitchCamPerspective()
     {
+        Debug.Log("Camera rig euler rotation: " +  levelCamera.transform.parent.eulerAngles);
+        Debug.Log("Camera rig local euler rotation: " + levelCamera.transform.parent.localEulerAngles);
+
         if (levelCamera.orthographic)
         {
             // switch to perspective projection
@@ -246,7 +255,7 @@ public class PerspectiveSwitcher : MonoBehaviour
                 neededAxisValue = geoArray[0].GetComponent<Collider>().bounds.max.y;
                 break;
             case Axes.Z:
-                Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.z - b.transform.position.z) * -1; });
+                Array.Sort(geoArray, (GameObject a, GameObject b) => { return (int)(a.transform.position.z - b.transform.position.z); });
                 neededAxisValue = geoArray[0].GetComponent<Collider>().bounds.max.z;
                 break;
         }
