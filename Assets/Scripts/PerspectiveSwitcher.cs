@@ -61,9 +61,10 @@ public class PerspectiveSwitcher : MonoBehaviour
         if (levelCamera.orthographic)
         {
             // switch to perspective projection
+            SetPlayer3DPos();
             levelCamera.orthographic = false;
             levelCamera.fieldOfView = fieldOfView;
-            SetPlayer3DPos();
+            
             CurrentDimension = Dimensions.THIRD;
         }
         else
@@ -134,9 +135,9 @@ public class PerspectiveSwitcher : MonoBehaviour
             screenY += yScale;
         }
 
-        //// at this point we have all the level geometry
-        //// next we need to determine the needed collision data
-        //// if we're looking down, generate it aroud the geometry
+        // at this point we have all the level geometry
+        // next we need to determine the needed collision data
+        // if we're looking down, generate it aroud the geometry
         if (levelCamera.transform.parent.eulerAngles.x == 90)
         {
             // looking down y axis
@@ -283,7 +284,7 @@ public class PerspectiveSwitcher : MonoBehaviour
         // use this to calculate the horizontal axis value for the current axis when switching back to 3D
 
         // run a series of raycasts going straight down, across the current axis. each offset by 1 unit
-        Ray currentRay;
+        /*Ray currentRay;
         RaycastHit currentHit;
         Vector3 offsetVector = Vector3.zero;
 
@@ -314,6 +315,24 @@ public class PerspectiveSwitcher : MonoBehaviour
                 // re-enable gravity properly
                 playerRigidbody.useGravity = true;
             }
+        }*/
+
+        // get the screen space position of the player, then go down by a couple of pixels
+        Vector3 playerOffsetScreenSpacePos = levelCamera.WorldToScreenPoint(transform.position) - new Vector3(0, 5);
+
+        // we then do a screen pos to world pos & raycast that - therefore we can get geometry under the player
+        Ray groundRay = levelCamera.ScreenPointToRay(playerOffsetScreenSpacePos);
+        RaycastHit currentHit;
+
+        // regular raycast
+        Debug.DrawRay(groundRay.origin, groundRay.direction * Constants.MAX_RAYCAST_DISTANCE, Color.green, 1);
+        Physics.Raycast(ray: groundRay, hitInfo: out currentHit, maxDistance: Constants.MAX_RAYCAST_DISTANCE, layerMask: raycastingMask.value);
+
+        // check for a hit & set position
+        if (currentHit.collider != null) 
+        {
+            Vector3 centerHoriPos = currentHit.collider.bounds.center + new Vector3(0, currentHit.collider.bounds.extents.y);
+            SetPlayerAxisAsValue(centerHoriPos, CurrentObservedAxis);
         }
     }
 }
