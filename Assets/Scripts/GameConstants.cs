@@ -1,8 +1,8 @@
-using UnityEngine.Rendering;
-
 namespace GameConstants
 {
-    // namespace for important constants & enumerations
+    /// <summary>
+    /// Namespace for important game constants
+    /// </summary>
     public static class Constants
     {
         public const float MAX_RAYCAST_DISTANCE = 100;
@@ -10,22 +10,29 @@ namespace GameConstants
     }
 
     namespace Enumerations
-    {
-        
-
+    { 
         public enum Dimensions
         {
+            /// <summary>
+            /// Enum representing which "dimension" is being observed by the player
+            /// </summary>
             THIRD,
             SECOND
         }
         public enum MovementAxisCombos
         {
+            /// <summary>
+            /// The combinations of axes that the player may potentially move on through cardinal input
+            /// </summary>
             XZ,
             XY
         }
 
         public enum Axes
         {
+            /// <summary>
+            /// Enum representing the individual axes of movement in 3D
+            /// </summary>
             X,
             Y,
             Z
