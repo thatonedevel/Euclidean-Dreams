@@ -7,6 +7,11 @@ namespace GameConstants
     {
         public const float MAX_RAYCAST_DISTANCE = 100;
         public const int MAX_RAYCAST_COUNT = 100;
+
+        // tags
+        public const string TAG_PLAYER = "Player";
+        public const string TAG_LEVEL_GEOMETRY = "LevelGeometry";
+        public const string TAG_GEM_COLLECTIBLE = "Gem";
     }
 
     namespace Enumerations
@@ -36,6 +41,13 @@ namespace GameConstants
             X,
             Y,
             Z
+        }
+
+        public enum GemOrders
+        {
+            FIRST,
+            SECOND,
+            THIRD
         }
     }
 }
