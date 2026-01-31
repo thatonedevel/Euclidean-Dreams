@@ -7,6 +7,14 @@ namespace GameConstants
     {
         public const float MAX_RAYCAST_DISTANCE = 100;
         public const int MAX_RAYCAST_COUNT = 100;
+
+        // tags
+        public const string TAG_PLAYER = "Player";
+        public const string TAG_LEVEL_GEOMETRY = "LevelGeometry";
+        public const string TAG_GEM_COLLECTIBLE = "Gem";
+        public const string TAG_CAMERA = "CameraRig";
+
+        public const string LEVEL_PREFIX = "level_";
     }
 
     namespace Enumerations
@@ -25,7 +33,8 @@ namespace GameConstants
             /// The combinations of axes that the player may potentially move on through cardinal input
             /// </summary>
             XZ,
-            XY
+            XY,
+            YZ,
         }
 
         public enum Axes
@@ -36,6 +45,22 @@ namespace GameConstants
             X,
             Y,
             Z
+        }
+
+        public enum GemOrders
+        {
+            FIRST,
+            SECOND,
+            THIRD
+        }
+
+        public enum GameStates
+        {
+            PLAYING,
+            LEVEL_COMPLETE,
+            LEVEL_SELECT,
+            GAME_OVER,
+            TITLE_SCREEN
         }
     }
 }

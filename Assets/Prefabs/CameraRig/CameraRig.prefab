@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 5410921982583789490}
   m_Layer: 0
   m_Name: CameraParent
-  m_TagString: Untagged
+  m_TagString: CameraRig
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -309,7 +309,6 @@ MonoBehaviour:
   maxY: 0
   maxZ: 0
   rotationAmount: 45
-  lastAxisRotatedOn: 3
   targetAngles: {x: 0, y: 0, z: 0}
   isRotating: 0
   percentInc: 0
