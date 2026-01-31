@@ -49,5 +49,10 @@ namespace GameConstants
             SECOND,
             THIRD
         }
+
+        public enum GameStates
+        {
+
+        }
     }
 }
