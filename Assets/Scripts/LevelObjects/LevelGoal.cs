@@ -8,8 +8,10 @@ public class LevelGoal : MonoBehaviour
 
     public void OnTriggerEnter(Collider collision)
     {
+        Debug.Log("col detected");
         if (collision.CompareTag(Constants.TAG_PLAYER))
         {
+            Debug.Log("Player entered goal");
             OnGoalReached?.Invoke();
         }
     }
