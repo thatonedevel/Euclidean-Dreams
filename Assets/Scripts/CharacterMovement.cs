@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using GameConstants.Enumerations;
+using UnityEditor.SceneManagement;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class CharacterMovement : MonoBehaviour
     {
         movementAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
+
+        PerspectiveSwitcher.OnDimensionsSwitched += DimensionSwitchHandler;
     }
 
     // Update is called once per frame
@@ -39,7 +42,10 @@ public class CharacterMovement : MonoBehaviour
                 moveVector = new Vector3(moveInput.x, 0, moveInput.y) * movementSpeed * Time.deltaTime;
                 break;
             case MovementAxisCombos.XY:
-                moveVector = new Vector3(moveInput.x, moveInput.y, 0) * movementSpeed * Time.deltaTime;
+                moveVector = new Vector3(moveInput.x, 0, 0) * movementSpeed * Time.deltaTime;
+                break;
+            case MovementAxisCombos.YZ:
+                moveVector = new Vector3(moveInput.x, 0, 0) * movementSpeed * Time.deltaTime;
                 break;
         }
         
@@ -82,6 +88,27 @@ public class CharacterMovement : MonoBehaviour
 
     private void DimensionSwitchHandler(Dimensions newDimension)
     {
-
+        // update the movable axes
+        if (newDimension == Dimensions.THIRD)
+        {
+            // set to default
+            movableAxes = MovementAxisCombos.XZ;
+        }
+        else
+        {
+            // check the observed angle
+            switch (PerspectiveSwitcher.CurrentObservedAxis)
+            {
+                case Axes.Y:
+                    movableAxes = MovementAxisCombos.XZ;
+                    break;
+                case Axes.X:
+                    movableAxes = MovementAxisCombos.YZ;
+                    break;
+                case Axes.Z:
+                    movableAxes = MovementAxisCombos.XY;
+                    break;
+            }
+        }
     }
 }
