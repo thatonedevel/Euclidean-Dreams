@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - LevelGeometry
+  - CameraRig
+  - Gem
   layers:
   - Default
   - TransparentFX
