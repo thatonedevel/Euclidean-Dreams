@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     // game events
-    public static event Action<GameStates> OnGameStateChanged;
+    public static event Action<GameStates, GameStates> OnGameStateChanged;
     
     // Class singleton
     public static GameController Singleton { get; private set; }
@@ -48,6 +48,12 @@ public class GameController : MonoBehaviour
         {
 
         }
+
+        // invoke event sending the new state & state we transitioned from
+        OnGameStateChanged?.Invoke(newState, CurrentGameState);
+
+        // set new game state
+        CurrentGameState = newState;
     }
 
     private void SceneChangedHandler(Scene newScene, LoadSceneMode mode)
