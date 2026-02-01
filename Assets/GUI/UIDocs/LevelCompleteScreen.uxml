@@ -1,0 +1,24 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/GUI/USS/LevelCompleteScreen.uss?fileID=7433441132597879392&amp;guid=96db648fe12d6214e8065c13e7c57fc0&amp;type=3#LevelCompleteScreen" />
+    <ui:VisualElement name="UIRoot" style="flex-grow: 1; align-self: flex-start; align-items: center; width: 100%; background-color: rgba(0, 0, 0, 0.53);">
+        <ui:VisualElement name="DisplayPanel" style="flex-grow: 1; align-self: center; width: 624px; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgba(255, 255, 255, 0.68);">
+            <ui:Label text="Stage&#10;{stagename}&#10;Complete" name="StageCompleteLabel" style="height: 274px; -unity-text-align: middle-center; font-size: 70px; white-space: normal;" />
+            <ui:VisualElement name="GemCountContainer" style="flex-grow: 1; flex-direction: row; align-items: center; align-self: auto; justify-content: center; padding-left: 10px; padding-right: 10px;">
+                <ui:VisualElement name="Gauge0" class="gemGauge" style="flex-grow: 1;">
+                    <ui:VisualElement name="Display0" class="gaugeDisplay" style="flex-grow: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Gauge1" class="gemGauge" style="flex-grow: 1;">
+                    <ui:VisualElement name="Display1" class="gaugeDisplay" style="flex-grow: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Gauge2" class="gemGauge" style="flex-grow: 1;">
+                    <ui:VisualElement name="Display2" class="gaugeDisplay" style="flex-grow: 1;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ButtonContainer" style="flex-grow: 1; align-self: center; width: 466px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; margin-top: -120px; justify-content: flex-end; margin-bottom: 120px;">
+                <ui:Button text="Next Stage&#10;" name="NextStageButton" class="stageButton" />
+                <ui:Button text="Replay Stage" name="ReplayStageButton" class="stageButton" />
+                <ui:Button text="Stage Select" name="StageSelectButton" class="stageButton" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
