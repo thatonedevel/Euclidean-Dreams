@@ -12,6 +12,12 @@ public class LevelCompleteUIController : MonoBehaviour
     private Button replayStageButton;
     private Button stageSelectButton;
 
+    // gem gauges
+    private VisualElement[] gemGauges;
+
+    // reference to the stage's leveldata instance
+    LevelData stageLevelData;
+
     // hierarchy root element as shown in the builder
     private VisualElement screenRoot;
 
