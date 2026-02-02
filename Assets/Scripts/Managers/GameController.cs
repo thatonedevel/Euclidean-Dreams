@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
     private void GoalReachedHandler() => UpdateGameState(GameStates.LEVEL_COMPLETE);
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
         // this object is going to be persistent, so we're safe to use a singleton pattern
         if (Singleton == null)
@@ -44,12 +44,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void UpdateGameState(GameStates newState)
     {
         // use this to adjust things when the game's state changes & fire the OnGameStateChanged event
@@ -57,11 +51,13 @@ public class GameController : MonoBehaviour
         {
             case GameStates.PLAYING:
                 // enable char movement
-                playerCharacterObject.GetComponent<CharacterMovement>().enabled = false;
+                playerCharacterObject.GetComponent<CharacterMovement>().enabled = true;
+                levelCameraRig.GetComponent<CameraControl>().enabled = true;
                 break;
             case GameStates.LEVEL_COMPLETE:
                 // disable char movement
                 playerCharacterObject.GetComponent<CharacterMovement>().enabled = false;
+                levelCameraRig.GetComponent<CameraControl>().enabled = false;
                 break;
         }
 
@@ -77,6 +73,7 @@ public class GameController : MonoBehaviour
         // check the new scene's name to see if we're in a gameplay level
         if (newScene.name.StartsWith(Constants.LEVEL_PREFIX))
         {
+            Debug.Log("GameController: detected entry to level. updating references");
             // we went to a level
             // updare references to this level's cam & player object
             playerCharacterObject = GameObject.FindWithTag(Constants.TAG_PLAYER);
@@ -110,5 +107,12 @@ public class GameController : MonoBehaviour
     private void LevelCompletedHandler()
     {
         Debug.Log("Level completed");
+    }
+
+    public void StartGame()
+    {
+        // TODO: make this go to title screen
+        // load first level
+        LoadGameLevel(1);
     }
 }
