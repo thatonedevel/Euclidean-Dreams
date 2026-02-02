@@ -1,3 +1,5 @@
+using EDreams;
+using GameConstants;
 using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,15 +13,19 @@ public class LevelCompleteUIController : MonoBehaviour
     private Button nextStageButton;
     private Button replayStageButton;
     private Button stageSelectButton;
+    private Label stageCompletionLabel;
 
     // gem gauges
-    private VisualElement[] gemGauges;
+    private VisualElement[] gemGauges = new VisualElement[3];
 
     // reference to the stage's leveldata instance
     LevelData stageLevelData;
 
     // hierarchy root element as shown in the builder
     private VisualElement screenRoot;
+
+    // composite string for the level name
+    const string lvCompleteText = "Stage\n{0}\ncomplete";
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,6 +38,16 @@ public class LevelCompleteUIController : MonoBehaviour
         replayStageButton = levelCompleteUI.rootVisualElement.Query<Button>("ReplayStageButton");
         stageSelectButton = levelCompleteUI.rootVisualElement.Query<Button>("StageSelectButton");
         screenRoot = levelCompleteUI.rootVisualElement.Query<VisualElement>("UIRoot");
+        stageCompletionLabel = levelCompleteUI.rootVisualElement.Query<Label>("StageCompleteLabel");
+
+        // use this for the gauge references
+
+        UQueryState<VisualElement> gaugeQuery = new UQueryBuilder<VisualElement>(levelCompleteUI.rootVisualElement)
+            .Class("gaugeDisplay")
+            .Build();
+
+        // loop over this and store references in the gemGuages array
+        gaugeQuery.ForEach((VisualElement gauge) => Util.TryAddItemToArray(gemGauges, gauge));
 
         // set up event subscriptions for buttons
         nextStageButton.clicked += NextStageHandler;
@@ -64,6 +80,18 @@ public class LevelCompleteUIController : MonoBehaviour
 
     private void ShowUI()
     {
+        // update level data reference
+        stageLevelData = GameObject.FindGameObjectWithTag(Constants.TAG_LEVEL_DATA).GetComponent<LevelData>();
+
+        // set gem guage visibility
+        for (int i = 0; i < gemGauges.Length; i++) 
+        {
+            gemGauges[i].visible = stageLevelData.gemCollectionStatus[i];
+        }
+
+        // set stage name text
+        stageCompletionLabel.text = string.Format(lvCompleteText, stageLevelData.GetStageName());
+
         screenRoot.visible = true;
     }
 
