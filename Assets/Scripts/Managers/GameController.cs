@@ -21,6 +21,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject playerCharacterObject;
     [SerializeField] private GameObject levelCameraRig;
 
+    // lambda functions for events
+    private void GoalReachedHandler() => UpdateGameState(GameStates.LEVEL_COMPLETE);
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,6 +31,12 @@ public class GameController : MonoBehaviour
         if (Singleton == null)
         {
             Singleton = this;
+
+            Debug.Log("GameController: singleton initialised");
+
+            // subscribe to important events
+            LevelGoal.OnGoalReached += GoalReachedHandler;
+            SceneManager.sceneLoaded += SceneChangedHandler;
         }
         else
         {
@@ -46,7 +55,14 @@ public class GameController : MonoBehaviour
         // use this to adjust things when the game's state changes & fire the OnGameStateChanged event
         switch (newState)
         {
-
+            case GameStates.PLAYING:
+                // enable char movement
+                playerCharacterObject.GetComponent<CharacterMovement>().enabled = false;
+                break;
+            case GameStates.LEVEL_COMPLETE:
+                // disable char movement
+                playerCharacterObject.GetComponent<CharacterMovement>().enabled = false;
+                break;
         }
 
         // invoke event sending the new state & state we transitioned from
@@ -62,18 +78,23 @@ public class GameController : MonoBehaviour
         if (newScene.name.StartsWith(Constants.LEVEL_PREFIX))
         {
             // we went to a level
-            // update game state to playing
-            UpdateGameState(GameStates.PLAYING);
-            // update the reference to the player character to use this levels' instance
-
+            // updare references to this level's cam & player object
             playerCharacterObject = GameObject.FindWithTag(Constants.TAG_PLAYER);
             levelCameraRig = GameObject.FindWithTag(Constants.TAG_CAMERA);
+            // update game state to playing
+            UpdateGameState(GameStates.PLAYING);
         }
     }
 
     private void RestartLevel()
     {
-
+        // reload current level scene
+        // check first it is an actual level
+        if (SceneManager.GetSceneByBuildIndex(currentLevelNum).name.StartsWith(Constants.LEVEL_PREFIX))
+        {
+            // it is a level
+            SceneManager.LoadSceneAsync(currentLevelNum);
+        }
     }
 
     private void LoadGameLevel(int levelNumber)
@@ -83,6 +104,7 @@ public class GameController : MonoBehaviour
         Scene levelScene = SceneManager.GetSceneByBuildIndex(levelNumber);
         Debug.Log("Level scene name: " + levelScene.name);
         SceneManager.LoadSceneAsync(levelNumber);
+        currentLevelNum = levelNumber;
     }
 
     private void LevelCompletedHandler()
