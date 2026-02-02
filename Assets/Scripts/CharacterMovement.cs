@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using GameConstants.Enumerations;
-using UnityEditor.SceneManagement;
+using GameConstants;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -73,11 +73,11 @@ public class CharacterMovement : MonoBehaviour
         // method to run grounding checks when we're in 2D and looking straight down
         Vector3 centeredOffset = new Vector3(0, characterCollider.bounds.center.y, 0);
 
-        Ray groundCheckRay = new Ray(transform.position + centeredOffset, Vector3.down); // using transform down for future proofing
+        Ray groundCheckRay = new Ray(transform.position + centeredOffset, Vector3.down);
         RaycastHit hit;
 
-        Debug.DrawRay(groundCheckRay.origin, groundCheckRay.direction * 100, Color.yellow, 1);
-        Physics.Raycast(ray: groundCheckRay, hitInfo: out hit, 100, layerMask: groundingMask.value);
+        Debug.DrawRay(groundCheckRay.origin, groundCheckRay.direction * Constants.MAX_RAYCAST_DISTANCE, Color.yellow, 1);
+        Physics.Raycast(ray: groundCheckRay, hitInfo: out hit, Constants.MAX_RAYCAST_DISTANCE, layerMask: groundingMask.value);
 
         if (hit.collider == null)
         {
