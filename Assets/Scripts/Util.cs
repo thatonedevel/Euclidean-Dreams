@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace EDreams
@@ -20,6 +21,19 @@ namespace EDreams
             z = (int)target.z;
 
             return new Vector3Int(x, y, z);
+        }
+
+        public static bool TryAddItemToArray<T>(T[] target, T newItem)
+        {
+            ///<summary>Tries to add the specified newItem to target. Returns a boolean based on success</summary>
+            
+            int spaceIndex = Array.IndexOf(target, null);
+            if (spaceIndex != -1)
+            {
+                target[spaceIndex] = newItem;
+                return true;
+            }
+            return false;
         }
     }
 }
