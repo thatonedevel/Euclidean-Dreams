@@ -12,6 +12,9 @@ public class LevelCompleteUIController : MonoBehaviour
     private Button replayStageButton;
     private Button stageSelectButton;
 
+    // hierarchy root element as shown in the builder
+    private VisualElement screenRoot;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -19,14 +22,17 @@ public class LevelCompleteUIController : MonoBehaviour
         GameController.OnGameStateChanged += GameStateChangedHandler;
 
         // grab ui references
-        nextStageButton = levelCompleteUI.rootVisualElement.Query<Button>("StageCompleteButton");
+        nextStageButton = levelCompleteUI.rootVisualElement.Query<Button>("NextStageButton");
         replayStageButton = levelCompleteUI.rootVisualElement.Query<Button>("ReplayStageButton");
         stageSelectButton = levelCompleteUI.rootVisualElement.Query<Button>("StageSelectButton");
+        screenRoot = levelCompleteUI.rootVisualElement.Query<VisualElement>("UIRoot");
 
         // set up event subscriptions for buttons
         nextStageButton.clicked += NextStageHandler;
         replayStageButton.clicked += ReplayStageHandler;
         stageSelectButton.clicked += StageSelectHandler;
+
+        
     }
 
     private void OnDestroy()
@@ -37,12 +43,14 @@ public class LevelCompleteUIController : MonoBehaviour
 
     private void GameStateChangedHandler(GameStates newState, GameStates oldState)
     {
+        Debug.Log("detected state change");
         switch (newState)
         {
             case GameStates.PLAYING:
                 // we entered a level
                 break;
             case GameStates.LEVEL_COMPLETE:
+                Debug.Log("UI Controller: showing UI");
                 ShowUI();
                 break;
         }
@@ -50,7 +58,7 @@ public class LevelCompleteUIController : MonoBehaviour
 
     private void ShowUI()
     {
-        levelCompleteUI.enabled = true;
+        screenRoot.visible = true;
     }
 
     // handlers for the buttons
