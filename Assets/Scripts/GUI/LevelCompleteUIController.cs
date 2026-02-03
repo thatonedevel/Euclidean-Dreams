@@ -52,11 +52,9 @@ public class LevelCompleteUIController : MonoBehaviour
         gaugeQuery.ForEach((VisualElement gauge) => Util.TryAddItemToArray(gemGauges, gauge));
 
         // set up event subscriptions for buttons
-        nextStageButton.clicked += NextStageHandler;
-        replayStageButton.clicked += ReplayStageHandler;
-        stageSelectButton.clicked += StageSelectHandler;
-
-        
+        nextStageButton.clicked += () => GameController.Singleton.LoadGameLevel(GameController.Singleton.currentLevelNum + 1);
+        replayStageButton.clicked += () => GameController.Singleton.RestartLevel();
+        stageSelectButton.clicked += () => GameController.Singleton.GoToStageSelect();
     }
 
     private void OnDestroy()
@@ -101,6 +99,10 @@ public class LevelCompleteUIController : MonoBehaviour
         // show clear time
         stageClearTimeLabel.text = string.Format("Clear Time: {0}", FormatClearTime(stageLevelData.levelClearTime));
 
+        // set interactivity of the next level button based on if we're at the last level
+        Debug.Log("Is at last level? " + GameController.Singleton.isAtLastLevel);
+        nextStageButton.enabledSelf = !GameController.Singleton.isAtLastLevel;
+
         screenRoot.visible = true;
     }
 
@@ -124,22 +126,5 @@ public class LevelCompleteUIController : MonoBehaviour
             secString = remSeconds.ToString();
 
         return minString + ":" + secString;
-    }
-
-    // handlers for the buttons
-
-    private void NextStageHandler()
-    {
-
-    }
-
-    private void StageSelectHandler()
-    {
-
-    }
-
-    private void ReplayStageHandler()
-    {
-        GameController.Singleton.RestartLevel();
     }
 }
