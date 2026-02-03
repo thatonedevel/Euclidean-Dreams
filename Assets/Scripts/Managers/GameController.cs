@@ -15,6 +15,8 @@ public class GameController : MonoBehaviour
 
     public GameStates CurrentGameState { get; private set; } = GameStates.PLAYING;
 
+    public bool isAtLastLevel { get; private set; } = false; // used to check if the current level is the last one
+
     public int currentLevelNum { get; private set; } = 0; // default to 0 as level numbers begin at 01
 
     [Header("Level object references")]
@@ -102,6 +104,9 @@ public class GameController : MonoBehaviour
         Debug.Log("Level scene name: " + levelScene.name);
         SceneManager.LoadSceneAsync(levelNumber);
         currentLevelNum = levelNumber;
+
+        // update the last level flag
+        isAtLastLevel = !CheckLevelExistsAtIndex(levelNumber + 1);
     }
 
     private void LevelCompletedHandler()
@@ -121,5 +126,19 @@ public class GameController : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(Constants.SCENE_LEVEL_SELECT);
         UpdateGameState(GameStates.LEVEL_SELECT);
+    }
+
+    private bool CheckLevelExistsAtIndex(int sceneIndex)
+    {
+        // method to check if the supplied index value points to a game level
+        Scene target = SceneManager.GetSceneByBuildIndex(sceneIndex);
+
+        if (target.IsValid())
+        {
+            // scene exists. is it a level?
+            return target.name.StartsWith(Constants.LEVEL_PREFIX);
+        }
+
+        return false;
     }
 }
