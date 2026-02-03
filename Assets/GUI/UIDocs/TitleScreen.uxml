@@ -15,7 +15,7 @@
                     </Bindings>
                 </ui:Label>
                 <ui:VisualElement name="Spacer" style="flex-grow: 1; min-width: 0; min-height: 0; width: 1247px; height: -72px;" />
-                <ui:Label text="© University of Brighton 2026" name="CopyrightLabel" class="footer-text" style="width: 242px; -unity-text-align: upper-right;" />
+                <ui:Label text="© University of Brighton 2026" name="CopyrightLabel" class="footer-text" style="width: 242px; -unity-text-align: upper-right; visibility: hidden;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
