@@ -61,6 +61,11 @@ public class GameController : MonoBehaviour
                 playerCharacterObject.GetComponent<CharacterMovement>().enabled = false;
                 levelCameraRig.GetComponent<CameraControl>().enabled = false;
                 break;
+            default:
+                // title screen, level select
+                currentLevelNum = 0;
+                isAtLastLevel = CheckLevelExistsAtIndex(currentLevelNum + 1);
+                break;
         }
 
         // invoke event sending the new state & state we transitioned from
