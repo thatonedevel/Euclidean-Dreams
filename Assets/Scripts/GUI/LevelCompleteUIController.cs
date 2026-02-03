@@ -14,6 +14,7 @@ public class LevelCompleteUIController : MonoBehaviour
     private Button replayStageButton;
     private Button stageSelectButton;
     private Label stageCompletionLabel;
+    private Label stageClearTimeLabel;
 
     // gem gauges
     private VisualElement[] gemGauges = new VisualElement[3];
@@ -39,6 +40,7 @@ public class LevelCompleteUIController : MonoBehaviour
         stageSelectButton = levelCompleteUI.rootVisualElement.Query<Button>("StageSelectButton");
         screenRoot = levelCompleteUI.rootVisualElement.Query<VisualElement>("UIRoot");
         stageCompletionLabel = levelCompleteUI.rootVisualElement.Query<Label>("StageCompleteLabel");
+        stageClearTimeLabel = levelCompleteUI.rootVisualElement.Query<Label>("ClearTimeLabel");
 
         // use this for the gauge references
 
@@ -92,7 +94,32 @@ public class LevelCompleteUIController : MonoBehaviour
         // set stage name text
         stageCompletionLabel.text = string.Format(lvCompleteText, stageLevelData.GetStageName());
 
+        // show clear time
+        stageClearTimeLabel.text = string.Format("Clear Time: {0}", FormatClearTime(stageLevelData.levelClearTime));
+
         screenRoot.visible = true;
+    }
+
+    private string FormatClearTime(float time)
+    {
+        // format the given time in the format of mm:ss
+        int minutes = (int)Mathf.Floor(time / 60);
+        int remSeconds = (int)(time % 60);
+
+        string minString = "00";
+        string secString = "00";
+
+        if (minutes.ToString().Length == 1)
+            minString = "0" + minutes.ToString();
+        else
+            minString = minutes.ToString();
+        
+        if (remSeconds.ToString().Length == 1)
+            secString = "0" + remSeconds.ToString();
+        else
+            secString = remSeconds.ToString();
+
+        return minString + ":" + secString;
     }
 
     // handlers for the buttons
