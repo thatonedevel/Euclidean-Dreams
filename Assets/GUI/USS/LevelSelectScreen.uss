@@ -1,0 +1,16 @@
+.level-select-button {
+    width: 180px;
+    height: 180px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+    padding-left: 0;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    font-size: 30px;
+    -unity-font-style: bold;
+}

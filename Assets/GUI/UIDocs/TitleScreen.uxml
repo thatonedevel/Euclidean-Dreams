@@ -1,0 +1,22 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/GUI/USS/TitleScreen.uss?fileID=7433441132597879392&amp;guid=c1f3048937027d74f8863b6939afde46&amp;type=3#TitleScreen" />
+    <ui:VisualElement name="Root" style="flex-grow: 1;">
+        <ui:VisualElement name="TitlePanel" style="flex-grow: 1; background-color: rgb(255, 255, 255);">
+            <ui:Label text="Euclidean Dreams" name="TitleLabel" style="-unity-text-align: middle-center; width: 821px; align-self: center; height: 188px; font-size: 70px;" />
+            <ui:VisualElement name="ButtonsContainer" style="flex-grow: 1; -unity-text-align: lower-left; align-content: flex-start; align-items: stretch; width: 507px; align-self: center; margin-top: 130px; position: absolute; top: 190px; left: auto; height: 278px; justify-content: flex-start; right: auto; bottom: 0;">
+                <ui:Button text="Play" name="PlayButton" class="title-button" />
+                <ui:Button text="Settings" name="SettingsButton" class="title-button" />
+                <ui:Button text="Quit" name="QuitButton" class="title-button" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Footer" style="flex-grow: 1; flex-direction: row; justify-content: center; height: 62px; position: absolute; top: 1017px; left: 2px; width: 1916px;">
+                <ui:Label text="v" name="VersionLabel" data-source="project://database/Assets/SOInstances/VersionNumSO.asset?fileID=11400000&amp;guid=4737418711f0f324a92467e5b8c432b1&amp;type=2#VersionNumSO" data-source-path="versionFormatted" class="footer-text" style="width: 134px;">
+                    <Bindings>
+                        <ui:DataBinding property="text" data-source-path="versionFormatted" data-source="project://database/Assets/SOInstances/VersionNumSO.asset?fileID=11400000&amp;guid=4737418711f0f324a92467e5b8c432b1&amp;type=2#VersionNumSO" binding-mode="ToTarget" />
+                    </Bindings>
+                </ui:Label>
+                <ui:VisualElement name="Spacer" style="flex-grow: 1; min-width: 0; min-height: 0; width: 1247px; height: -72px;" />
+                <ui:Label text="© University of Brighton 2026" name="CopyrightLabel" class="footer-text" style="width: 242px; -unity-text-align: upper-right;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
