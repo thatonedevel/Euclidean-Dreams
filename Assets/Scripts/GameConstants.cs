@@ -16,6 +16,10 @@ namespace GameConstants
         public const string TAG_LEVEL_DATA = "LevelData";
 
         public const string LEVEL_PREFIX = "level_";
+
+        // scene names
+        public const string SCENE_TITLE = "TitleScreen";
+        public const string SCENE_LEVEL_SELECT = "LevelSelectScreen";
     }
 
     namespace Enumerations

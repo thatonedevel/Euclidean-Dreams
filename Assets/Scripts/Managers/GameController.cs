@@ -94,7 +94,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void LoadGameLevel(int levelNumber)
+    public void LoadGameLevel(int levelNumber)
     {
         // will use the levelNumber for the scene's buildIndex
         Debug.Log("Loading level: " + levelNumber);
@@ -113,12 +113,13 @@ public class GameController : MonoBehaviour
     {
         // TODO: make this go to title screen
         // load first level
-        LoadGameLevel(1);
+        SceneManager.LoadSceneAsync(Constants.SCENE_TITLE);
+        UpdateGameState(GameStates.TITLE_SCREEN);
     }
 
     public void GoToStageSelect()
     {
-        SceneManager.LoadSceneAsync("LevelSelect");
+        SceneManager.LoadSceneAsync(Constants.SCENE_LEVEL_SELECT);
         UpdateGameState(GameStates.LEVEL_SELECT);
     }
 }
