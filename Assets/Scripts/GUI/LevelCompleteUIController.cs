@@ -53,7 +53,7 @@ public class LevelCompleteUIController : MonoBehaviour
 
         // set up event subscriptions for buttons
         nextStageButton.clicked += () => GameController.Singleton.LoadGameLevel(GameController.Singleton.currentLevelNum + 1);
-        replayStageButton.clicked += () => GameController.Singleton.RestartLevel();
+        replayStageButton.clicked += RestartLevelHandler;
         stageSelectButton.clicked += () => GameController.Singleton.GoToStageSelect();
     }
 
@@ -126,5 +126,19 @@ public class LevelCompleteUIController : MonoBehaviour
             secString = remSeconds.ToString();
 
         return minString + ":" + secString;
+    }
+
+    private void RestartLevelHandler()
+    {
+        screenRoot.visible = false;
+
+        // also disable the gauges since this doesnt propagate properly?
+
+        for (int i = 0; i < gemGauges.Length; i++)
+        {
+            gemGauges[i].visible = false;
+        }
+
+        GameController.Singleton.RestartLevel();
     }
 }
