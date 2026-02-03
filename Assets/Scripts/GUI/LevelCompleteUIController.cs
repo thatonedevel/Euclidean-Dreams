@@ -77,6 +77,10 @@ public class LevelCompleteUIController : MonoBehaviour
                 Debug.Log("UI Controller: showing UI");
                 ShowUI();
                 break;
+            default:
+                // disable the ui
+                screenRoot.visible = false;
+                break;
         }
     }
 
@@ -136,6 +140,6 @@ public class LevelCompleteUIController : MonoBehaviour
 
     private void ReplayStageHandler()
     {
-
+        GameController.Singleton.RestartLevel();
     }
 }

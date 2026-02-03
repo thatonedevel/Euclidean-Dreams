@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
 
     public GameStates CurrentGameState { get; private set; } = GameStates.PLAYING;
 
-    private int currentLevelNum = 0; // default to 0 as level numbers begin at 01
+    public int currentLevelNum { get; private set; } = 0; // default to 0 as level numbers begin at 01
 
     [Header("Level object references")]
     [SerializeField] private GameObject playerCharacterObject;
@@ -83,7 +83,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void RestartLevel()
+    public void RestartLevel()
     {
         // reload current level scene
         // check first it is an actual level
@@ -114,5 +114,11 @@ public class GameController : MonoBehaviour
         // TODO: make this go to title screen
         // load first level
         LoadGameLevel(1);
+    }
+
+    public void GoToStageSelect()
+    {
+        SceneManager.LoadSceneAsync("LevelSelect");
+        UpdateGameState(GameStates.LEVEL_SELECT);
     }
 }

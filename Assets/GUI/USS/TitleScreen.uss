@@ -1,0 +1,14 @@
+.footer-text {
+    font-size: 20px;
+    -unity-text-align: middle-left;
+    color: rgb(87, 87, 87);
+}
+
+.title-button {
+    font-size: 40px;
+    border-top-left-radius: 0%;
+    border-top-right-radius: 0%;
+    border-bottom-right-radius: 0%;
+    border-bottom-left-radius: 0%;
+    margin-bottom: 25px;
+}
