@@ -17,8 +17,10 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private GameObject cameraParent;
 
     // input actions
-    InputAction movementAction;
-    InputAction jumpAction;
+    private InputAction movementAction;
+    private InputAction jumpAction;
+
+    private Vector3 destination = Vector3.zero;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -49,14 +51,31 @@ public class CharacterMovement : MonoBehaviour
                 break;
         }
         
-        Vector3 destination = cameraRigDownAnchor.transform.TransformDirection(moveVector) + transform.position;
+        destination = cameraRigDownAnchor.transform.TransformDirection(moveVector) + transform.position;
 
         // move rigidbody
-        characterRigidbody.MovePosition(destination);
+        /*characterRigidbody.MovePosition(destination);
 
         transform.LookAt(new Vector3(destination.x, transform.position.y, destination.z));
 
         // if we're in 2D, perform the grounding check
+        if (PerspectiveSwitcher.CurrentDimension == Dimensions.SECOND)
+        {
+            // check the angle of the camera
+            if (cameraParent.transform.localEulerAngles.x == 90)
+            {
+                HandleFallingWhenTopDown();
+            }
+        }*/
+    }
+
+    private void FixedUpdate()
+    {
+        // handle all rigidbody movement here - as pointed out by ep1s0de (2021)
+        // all programatic use of a rigidbody should be handled in FixedUpdate
+        characterRigidbody.MovePosition(destination);
+        transform.LookAt(new Vector3(destination.x, transform.position.y, destination.z));
+
         if (PerspectiveSwitcher.CurrentDimension == Dimensions.SECOND)
         {
             // check the angle of the camera
