@@ -28,11 +28,15 @@ public class PerspectiveSwitcher : MonoBehaviour
     private const int ANGLE_THRESHOLD = 5;
 
     // lambdas
-    private bool IsLookingDownXAxis() => Util.IsVectorInRange(levelCamera.transform.parent.eulerAngles, CHECK_ANGLE, ANGLE_THRESHOLD, Axes.Y);
+    private bool IsLookingDownXAxis() => EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3(0, 90, 0)
+        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, -90, 0)
+        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, 270, 0);
 
-    private bool IsLookingDownYAxis() => Util.IsVectorInRange(levelCamera.transform.parent.eulerAngles, CHECK_ANGLE, ANGLE_THRESHOLD, Axes.X);
+    private bool IsLookingDownYAxis() => EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles).x == 90 && (EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles).z % 90 == 0 || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles).z == 360);
 
-    private bool IsLookingDownZAxis() => Util.IsVectorInRange(levelCamera.transform.parent.eulerAngles, 180, ANGLE_THRESHOLD, Axes.Y);
+    private bool IsLookingDownZAxis() => EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, 180, 0)
+        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, -180, 0)
+        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, 0, 0);
 
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
     public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
