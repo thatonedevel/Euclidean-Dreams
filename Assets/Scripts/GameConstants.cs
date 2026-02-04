@@ -65,7 +65,8 @@ namespace GameConstants
             LEVEL_COMPLETE,
             LEVEL_SELECT,
             GAME_OVER,
-            TITLE_SCREEN
+            TITLE_SCREEN,
+            PAUSED
         }
     }
 }
