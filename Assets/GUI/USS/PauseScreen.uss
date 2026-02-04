@@ -1,0 +1,10 @@
+.pause-menu-button {
+    font-size: 50px;
+    margin-bottom: 10px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
