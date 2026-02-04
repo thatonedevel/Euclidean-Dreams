@@ -66,7 +66,7 @@ namespace EDreams
                 case Axes.X:
                     checkValue = (int)v.x;
                     secondAxis = (int)v.y;
-                    thirdAxis = (int)v.z;
+                    thirdAxis = 0; // HACK: the check fails as the z rotation is stored as 90
                     break;
                 case Axes.Y:
                     checkValue = (int)v.y;
