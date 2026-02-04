@@ -146,4 +146,16 @@ public class GameController : MonoBehaviour
 
         return false;
     }
+
+    public void PauseGame()
+    {
+        if (CurrentGameState == GameStates.PLAYING)
+            UpdateGameState(GameStates.PAUSED);
+    }
+
+    public void ResumeGame()
+    {
+        if (CurrentGameState == GameStates.PAUSED)
+            UpdateGameState(GameStates.PLAYING);
+    }
 }
