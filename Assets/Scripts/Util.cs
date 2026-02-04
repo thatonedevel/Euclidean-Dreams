@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using GameConstants.Enumerations;
 
 namespace EDreams
 {
@@ -34,6 +35,52 @@ namespace EDreams
                 return true;
             }
             return false;
+        }
+
+        public static int RoundToNearest45(float val)
+        {
+            // takes in a value representing an angle & rounds it to the nearest factor of 45
+
+            int lower = 0;
+            int upper = 0;
+
+            return 0;
+        }
+
+        private static bool IsValueInRange(int value, int target, int range)
+        {
+            // checks if the supplied value is in range to the target by the specified amount
+            return Math.Abs(target - value) <= range;
+        }
+
+        public static bool IsVectorInRange(Vector3 v, int target, int range, Axes axisToCheck)
+        {
+            // override to do the same with a vector3 on the specified axis. will check that the other two axes are also zero
+
+            int checkValue = 0;
+            int secondAxis = 0;
+            int thirdAxis = 0;
+
+            switch (axisToCheck)
+            {
+                case Axes.X:
+                    checkValue = (int)v.x;
+                    secondAxis = (int)v.y;
+                    thirdAxis = (int)v.z;
+                    break;
+                case Axes.Y:
+                    checkValue = (int)v.y;
+                    secondAxis = (int)v.z;
+                    thirdAxis = (int)v.x;
+                    break;
+                case Axes.Z:
+                    checkValue = (int)v.z;
+                    secondAxis = (int)v.x;
+                    thirdAxis = (int)v.y;
+                    break;
+            }
+
+            return IsValueInRange(checkValue, target, range) && IsValueInRange(secondAxis, 0, 5) && IsValueInRange(thirdAxis, 0, 5);
         }
     }
 }

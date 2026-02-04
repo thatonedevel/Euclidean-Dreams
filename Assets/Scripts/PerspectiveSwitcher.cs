@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using GameConstants;
 using GameConstants.Enumerations;
+using EDreams;
 
 public class PerspectiveSwitcher : MonoBehaviour
 {
@@ -23,16 +24,15 @@ public class PerspectiveSwitcher : MonoBehaviour
     [SerializeField] private float collisionThickness;
     [SerializeField] private LayerMask raycastingMask;
 
-    // lambdas
-    private bool IsLookingDownXAxis() => EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3(0, 90, 0) 
-        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, -90, 0) 
-        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, 270, 0);
+    private const int CHECK_ANGLE = 90;
+    private const int ANGLE_THRESHOLD = 5;
 
-    private bool IsLookingDownYAxis() => EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles).x == 90 && (EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles).z == 0 || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles).z == 360);
-    
-    private bool IsLookingDownZAxis() => EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, 180, 0) 
-        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, -180, 0) 
-        || EDreams.Util.ConvertVec3ToInt(levelCamera.transform.parent.eulerAngles) == new Vector3Int(0, 0, 0);
+    // lambdas
+    private bool IsLookingDownXAxis() => Util.IsVectorInRange(levelCamera.transform.parent.eulerAngles, CHECK_ANGLE, ANGLE_THRESHOLD, Axes.Y);
+
+    private bool IsLookingDownYAxis() => Util.IsVectorInRange(levelCamera.transform.parent.eulerAngles, CHECK_ANGLE, ANGLE_THRESHOLD, Axes.X);
+
+    private bool IsLookingDownZAxis() => Util.IsVectorInRange(levelCamera.transform.parent.eulerAngles, 180, ANGLE_THRESHOLD, Axes.Y);
 
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
     public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
