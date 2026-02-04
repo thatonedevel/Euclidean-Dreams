@@ -3,6 +3,7 @@ using GameConstants;
 using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 
 public class GameController : MonoBehaviour
@@ -26,6 +27,9 @@ public class GameController : MonoBehaviour
     // lambda functions for events
     private void GoalReachedHandler() => UpdateGameState(GameStates.LEVEL_COMPLETE);
 
+    // input specific to the game controller
+    private InputAction pauseAction;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
@@ -43,6 +47,24 @@ public class GameController : MonoBehaviour
         else
         {
             DestroyImmediate(gameObject); // dispose of the gameobject & attached info to prevent duplicates
+        }
+    }
+
+    private void Start()
+    {
+        // initialise input
+        pauseAction = InputSystem.actions.FindAction("Pause");
+    }
+
+    private void Update()
+    {
+        if (pauseAction.WasPressedThisFrame())
+        {
+            // toggle the pause menu
+            if (CurrentGameState == GameStates.PLAYING)
+                PauseGame();
+            else if (CurrentGameState == GameStates.PAUSED)
+                ResumeGame();
         }
     }
 
@@ -65,6 +87,12 @@ public class GameController : MonoBehaviour
                 // title screen, level select
                 currentLevelNum = 0;
                 isAtLastLevel = CheckLevelExistsAtIndex(currentLevelNum + 1);
+
+                // disable character movement if the character is not null
+                if (playerCharacterObject != null)
+                {
+                    playerCharacterObject.GetComponent<CharacterMovement>().enabled = false;
+                }
                 break;
         }
 
