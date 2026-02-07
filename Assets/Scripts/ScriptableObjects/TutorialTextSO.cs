@@ -7,7 +7,7 @@ public class TutorialTextSO : ScriptableObject
 {
     public List<string> TutorialLines = new();
     public string currentLine = "";
-    private int lineIndex = 0;
+    public int lineIndex { get; private set; } = 0;
 
     public static event Action OnTutorialFinished;
 
