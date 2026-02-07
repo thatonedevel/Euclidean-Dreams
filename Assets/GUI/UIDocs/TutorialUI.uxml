@@ -1,0 +1,5 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="Root" style="flex-grow: 1; flex-direction: column-reverse; margin-bottom: 20px;">
+        <ui:Label text="the tutorial text goes here" name="TutorialText" style="-unity-text-align: middle-center; font-size: 50px; -unity-font-style: bold; color: rgb(0, 0, 0);" />
+    </ui:VisualElement>
+</ui:UXML>
