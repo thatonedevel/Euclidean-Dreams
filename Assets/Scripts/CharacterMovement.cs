@@ -25,8 +25,8 @@ public class CharacterMovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        movementAction = InputSystem.actions.FindAction("Move");
-        jumpAction = InputSystem.actions.FindAction("Jump");
+        movementAction = InputSystem.actions.FindAction(Constants.ACTION_MOVE);
+        jumpAction = InputSystem.actions.FindAction(Constants.ACTION_JUMP);
 
         PerspectiveSwitcher.OnDimensionsSwitched += DimensionSwitchHandler;
     }

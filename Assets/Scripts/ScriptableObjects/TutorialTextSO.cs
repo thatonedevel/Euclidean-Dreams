@@ -12,6 +12,14 @@ public class TutorialTextSO : ScriptableObject
     public static event Action OnTutorialFinished;
 
 
+    private void Awake()
+    {
+        if (TutorialLines.Count > 0) 
+        {
+            currentLine = TutorialLines[lineIndex];
+        }
+    }
+
     private void OnEnable()
     {
         // initialise the current line

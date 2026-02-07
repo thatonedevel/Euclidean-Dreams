@@ -1,3 +1,4 @@
+using GameConstants;
 using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,8 +36,8 @@ public class CameraControl : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        cameraLookAction = InputSystem.actions.FindAction("Look");
-        cameraProfZoomAction = InputSystem.actions.FindAction("Zoom");
+        cameraLookAction = InputSystem.actions.FindAction(Constants.ACTION_ROTATE_CAMERA);
+        cameraProfZoomAction = InputSystem.actions.FindAction(Constants.ACTION_ZOOM_CAMERA);
 
         // test lerp for negative angles
         //Debug.Log("Test lerp on a negative target (12%): " + Vector3.Lerp(Vector3.zero, new Vector3(0, -45, 0), 0.12f));

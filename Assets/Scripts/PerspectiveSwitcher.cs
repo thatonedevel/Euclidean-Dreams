@@ -50,7 +50,7 @@ public class PerspectiveSwitcher : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        perspectiveSwitchAction = InputSystem.actions.FindAction("Toggle Perspective");
+        perspectiveSwitchAction = InputSystem.actions.FindAction(Constants.ACTION_SWITCH_PERSPECTIVE);
     }
 
     // Update is called once per frame
