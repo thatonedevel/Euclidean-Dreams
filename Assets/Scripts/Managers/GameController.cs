@@ -53,7 +53,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         // initialise input
-        pauseAction = InputSystem.actions.FindAction("Pause");
+        pauseAction = InputSystem.actions.FindAction(Constants.ACTION_PAUSE);
     }
 
     private void Update()

@@ -76,9 +76,7 @@ public class PauseMenuController : MonoBehaviour
         {
             OpenPauseMenu();
         }
-        
-        // closing pause menu
-        if (newState == GameStates.PLAYING && oldState == GameStates.PAUSED)
+        else
         {
             ClosePauseMenu();
         }

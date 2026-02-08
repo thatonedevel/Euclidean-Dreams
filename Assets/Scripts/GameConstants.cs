@@ -9,6 +9,7 @@ namespace GameConstants
         public const int MAX_RAYCAST_COUNT = 100;
 
         // tags
+
         public const string TAG_PLAYER = "Player";
         public const string TAG_LEVEL_GEOMETRY = "LevelGeometry";
         public const string TAG_GEM_COLLECTIBLE = "Gem";
@@ -20,6 +21,15 @@ namespace GameConstants
         // scene names
         public const string SCENE_TITLE = "TitleScreen";
         public const string SCENE_LEVEL_SELECT = "LevelSelectScreen";
+
+        // input actions
+        public const string ACTION_MOVE = "Move";
+        public const string ACTION_JUMP = "Jump";
+        public const string ACTION_ROTATE_CAMERA = "Look";
+        public const string ACTION_ZOOM_CAMERA = "Zoom";
+        public const string ACTION_SWITCH_PERSPECTIVE = "Toggle Perspective";
+        public const string ACTION_PAUSE = "Pause";
+
     }
 
     namespace Enumerations
