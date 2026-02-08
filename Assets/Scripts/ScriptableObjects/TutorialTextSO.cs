@@ -16,7 +16,7 @@ public class TutorialTextSO : ScriptableObject
     {
         if (TutorialLines.Count > 0) 
         {
-            currentLine = TutorialLines[lineIndex];
+            currentLine = TutorialLines[0];
         }
     }
 
@@ -24,7 +24,7 @@ public class TutorialTextSO : ScriptableObject
     {
         // initialise the current line
         if (TutorialLines.Count > 0)
-            currentLine = TutorialLines[lineIndex];
+            currentLine = TutorialLines[0];
     }
 
     public void AdvanceText()
