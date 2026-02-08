@@ -17,6 +17,7 @@ public class TutorialTextSO : ScriptableObject
         if (TutorialLines.Count > 0) 
         {
             currentLine = TutorialLines[0];
+            lineIndex = 0;
         }
     }
 
@@ -24,18 +25,22 @@ public class TutorialTextSO : ScriptableObject
     {
         // initialise the current line
         if (TutorialLines.Count > 0)
+        {
             currentLine = TutorialLines[0];
+            lineIndex = 0;
+        } 
     }
 
     public void AdvanceText()
     {
-        if (lineIndex < TutorialLines.Count)
+        if (lineIndex < TutorialLines.Count - 1)
         {
             lineIndex++;
             currentLine = TutorialLines[lineIndex];
         }
         else
         {
+            Debug.Log("finished the tutorial");
             // reached end of tutorial text
             OnTutorialFinished?.Invoke();
         }

@@ -11,6 +11,9 @@ public class TutorialUIController : MonoBehaviour
     [SerializeField] private UIDocument tutorialDoc;
     [SerializeField] private TutorialTextSO tutorialText;
 
+    [Header("Tutorial Settings")]
+    [SerializeField] private float introDuration;
+
     // inputs we need to listen for
     private InputAction moveAction;
     private InputAction zoomAction;
@@ -35,6 +38,7 @@ public class TutorialUIController : MonoBehaviour
         cameraLookAction.performed += TutorialActionsListener;
 
         PerspectiveSwitcher.OnDimensionsSwitched += FirstDimSwitchHandler;
+        TutorialTextSO.OnTutorialFinished += TutorialFinishedHandler;
 
         StartCoroutine(routine: FirstSectionCoroutine());
     }
@@ -45,6 +49,7 @@ public class TutorialUIController : MonoBehaviour
         moveAction.performed -= TutorialActionsListener;
         zoomAction.performed -= TutorialActionsListener;
         cameraLookAction.performed -= TutorialActionsListener;
+        TutorialTextSO.OnTutorialFinished -= TutorialFinishedHandler;
     }
 
     private void TutorialActionsListener(InputAction.CallbackContext context)
@@ -72,21 +77,21 @@ public class TutorialUIController : MonoBehaviour
     private void FirstDimSwitchHandler(Dimensions newDim)
     {
         // check the current index
-        if (tutorialText.lineIndex == 4)
+        if (tutorialText.lineIndex == 4 || tutorialText.lineIndex == 5)
         {
             tutorialText.AdvanceText();
         }
-        else if (tutorialText.lineIndex == 5)
-        {
-            // close tutorial
-            tutorialDoc.rootVisualElement.visible = false;
-        }
+    }
+
+    private void TutorialFinishedHandler()
+    {
+        tutorialDoc.rootVisualElement.visible = false;
     }
 
     private IEnumerator FirstSectionCoroutine()
     {
         Debug.Log("Starting wait");
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(introDuration);
         Debug.Log("Finished wait");
         tutorialText.AdvanceText();
     }
