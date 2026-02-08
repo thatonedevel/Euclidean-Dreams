@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using GameConstants;
+using GameConstants.Enumerations;
+using System.Collections;
 
 public class TutorialUIController : MonoBehaviour
 {
@@ -15,12 +17,6 @@ public class TutorialUIController : MonoBehaviour
     private InputAction cameraLookAction;
     private InputAction perspectiveSwitchAction;
 
-    // events for the actions
-    private PlayerInput.ActionEvent movedEvent;
-    private PlayerInput.ActionEvent zoomEvent;
-    private PlayerInput.ActionEvent lookEvent;
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -32,19 +28,29 @@ public class TutorialUIController : MonoBehaviour
 
         perspectiveSwitchAction = InputSystem.actions.FindAction(Constants.ACTION_SWITCH_PERSPECTIVE);
 
-        // set up the events
-        movedEvent = new PlayerInput.ActionEvent(moveAction);
-        zoomEvent = new PlayerInput.ActionEvent(zoomAction);
-        lookEvent = new PlayerInput.ActionEvent(cameraLookAction);
 
-        // and add the callback
-        movedEvent.AddListener(TutorialActionsListener);
-        zoomEvent.AddListener(TutorialActionsListener);
-        lookEvent.AddListener(TutorialActionsListener);
+        // subscribe to the performed event
+        moveAction.performed += TutorialActionsListener;
+        zoomAction.performed += TutorialActionsListener;
+        cameraLookAction.performed += TutorialActionsListener;
+
+        PerspectiveSwitcher.OnDimensionsSwitched += FirstDimSwitchHandler;
+
+        StartCoroutine(routine: FirstSectionCoroutine());
+    }
+
+    private void OnDestroy()
+    {
+        PerspectiveSwitcher.OnDimensionsSwitched -= FirstDimSwitchHandler;
+        moveAction.performed -= TutorialActionsListener;
+        zoomAction.performed -= TutorialActionsListener;
+        cameraLookAction.performed -= TutorialActionsListener;
     }
 
     private void TutorialActionsListener(InputAction.CallbackContext context)
     {
+        Debug.Log("Action detected");
+
         // just read the action & check which one it is
         if (context.action == moveAction)
         {
@@ -61,5 +67,27 @@ public class TutorialUIController : MonoBehaviour
             if (tutorialText.lineIndex == 2)
                 tutorialText.AdvanceText();
         }
+    }
+
+    private void FirstDimSwitchHandler(Dimensions newDim)
+    {
+        // check the current index
+        if (tutorialText.lineIndex == 4)
+        {
+            tutorialText.AdvanceText();
+        }
+        else if (tutorialText.lineIndex == 5)
+        {
+            // close tutorial
+            tutorialDoc.rootVisualElement.visible = false;
+        }
+    }
+
+    private IEnumerator FirstSectionCoroutine()
+    {
+        Debug.Log("Starting wait");
+        yield return new WaitForSeconds(5);
+        Debug.Log("Finished wait");
+        tutorialText.AdvanceText();
     }
 }
