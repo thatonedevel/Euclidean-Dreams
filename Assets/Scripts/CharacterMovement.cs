@@ -20,6 +20,8 @@ public class CharacterMovement : MonoBehaviour
     private InputAction movementAction;
     private InputAction jumpAction;
 
+    private bool isFirstUpdate = true;
+
     private Vector3 destination = Vector3.zero;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -73,6 +75,14 @@ public class CharacterMovement : MonoBehaviour
     {
         // handle all rigidbody movement here - as pointed out by ep1s0de (2021)
         // all programatic use of a rigidbody should be handled in FixedUpdate
+
+        // fix to prevent character being moved on scene start
+        if (isFirstUpdate)
+        {
+            isFirstUpdate = false;
+            return;
+        }
+
         characterRigidbody.MovePosition(destination);
         transform.LookAt(new Vector3(destination.x, transform.position.y, destination.z));
 
