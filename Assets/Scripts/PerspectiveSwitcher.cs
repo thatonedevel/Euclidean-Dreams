@@ -41,7 +41,7 @@ public class PerspectiveSwitcher : MonoBehaviour
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
     public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
 
-    public static HashSet<GameObject> currentVisibleGeometryIn2D { get; private set; } = new();
+    public static GameObject[] CurrentVisibleGeometryIn2D { get; private set; } = { };
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
@@ -82,6 +82,8 @@ public class PerspectiveSwitcher : MonoBehaviour
             levelCamera.fieldOfView = fieldOfView;
             
             CurrentDimension = Dimensions.THIRD;
+            // clear detected geometry array
+            CurrentVisibleGeometryIn2D = Array.Empty<GameObject>();
             // fire dimension switch event
             OnDimensionsSwitched?.Invoke(CurrentDimension);
         }
@@ -182,9 +184,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
         CalculatePlayerAxisPosition(detectedGeometry, CurrentObservedAxis);
         // set the current detected geometry. will be empty when in 3D
-        GameObject[] tmp = detectedGeometry.ToArray();
-        currentVisibleGeometryIn2D.Clear();
-        currentVisibleGeometryIn2D.AddRange(tmp);
+        CurrentVisibleGeometryIn2D = detectedGeometry.ToArray();
     }
 
     private void CalculatePlayerAxisPosition(HashSet<GameObject> levelGeo, Axes axis)
