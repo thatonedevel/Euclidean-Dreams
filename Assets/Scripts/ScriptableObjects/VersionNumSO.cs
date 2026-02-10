@@ -1,13 +1,17 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "VersionNumSO", menuName = "Scriptable Objects/VersionNumSO")]
-public class VersionNumSO : ScriptableObject
+namespace ScriptableObjects
 {
-    public string versionFormatted;
-
-    private void Awake()
+    [CreateAssetMenu(fileName = "VersionNumSO", menuName = "Scriptable Objects/VersionNumSO")]
+    public class VersionNumSO : ScriptableObject
     {
-        // set the version variable
-        versionFormatted = "v" + Application.version;
+        public string versionFormatted;
+    
+        private void Awake()
+        {
+            // set the version variable
+            versionFormatted = "v" + Application.version;
+        }
     }
 }
+
