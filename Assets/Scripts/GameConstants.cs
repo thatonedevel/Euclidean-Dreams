@@ -15,6 +15,7 @@ namespace GameConstants
         public const string TAG_GEM_COLLECTIBLE = "Gem";
         public const string TAG_CAMERA = "CameraRig";
         public const string TAG_LEVEL_DATA = "LevelData";
+        public const string TAG_GENERATED_COLLIDER = "GeneratedCollider";
 
         public const string LEVEL_PREFIX = "level_";
 
