@@ -152,9 +152,11 @@ public class PerspectiveSwitcher : MonoBehaviour
                     // check that the geometry isn't genned collision
                     if (!hitData.collider.CompareTag(Constants.TAG_GENERATED_COLLIDER))
                     {
-                        detectedGeometry.Add(hitData.collider.gameObject);
-                        // add the collider to the detected colliders
-                        CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
+                        if (detectedGeometry.Add(hitData.collider.gameObject))
+                        {
+                            // add the collider to the detected colliders
+                            CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
+                        }
                     }
                 }
 
