@@ -71,32 +71,27 @@ namespace LevelObjects
                         // set base position using the player's x axis value
                         currentCol.transform.position = new Vector3(
                             playerCharacter.transform.position.x,
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].center.y,
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].center.z
+                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.position.y,
+                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.position.z
                             );
-
-                        currentCol.size = new Vector3(
-                            colliderDepth,
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].size.y,
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].size.z
-                        );
                     }
                     else if (PerspectiveSwitcher.CurrentObservedAxis == Axes.Z)
                     {
                         // set base position using the player's z axis value
                         currentCol.transform.position = new Vector3(
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].center.x,
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].center.y,
+                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.position.x,
+                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.position.y,
                             playerCharacter.transform.position.z
                             );
-                        
-                        // set bounds of the collider to use collision depth on z axis
-                        currentCol.size = new Vector3(
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].size.x,
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].size.y,
-                            colliderDepth
-                            );
                     }
+                    
+                    // collider size should match its target
+                    currentCol.size = PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].size;
+                    // set center of collider separately
+                    currentCol.center = PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].center;
+                    
+                    // make sure rotation matches
+                    currentCol.transform.rotation = PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.rotation;
                     
                     // we've set the bounds of the collider as needed yay
                     // just enable it now
