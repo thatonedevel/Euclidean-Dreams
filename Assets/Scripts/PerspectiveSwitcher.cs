@@ -41,7 +41,7 @@ public class PerspectiveSwitcher : MonoBehaviour
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
     public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
 
-    public static GameObject[] CurrentVisibleGeometryIn2D { get; private set; } = { };
+    public static List<BoxCollider> CurrentVisibleCollisionGeometryIn2D { get; private set; } = new();
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
@@ -83,7 +83,7 @@ public class PerspectiveSwitcher : MonoBehaviour
             
             CurrentDimension = Dimensions.THIRD;
             // clear detected geometry array
-            CurrentVisibleGeometryIn2D = Array.Empty<GameObject>();
+            CurrentVisibleCollisionGeometryIn2D.Clear();
             // fire dimension switch event
             OnDimensionsSwitched?.Invoke(CurrentDimension);
         }
@@ -151,7 +151,11 @@ public class PerspectiveSwitcher : MonoBehaviour
                 {
                     // check that the geometry isn't genned collision
                     if (!hitData.collider.CompareTag(Constants.TAG_GENERATED_COLLIDER))
+                    {
                         detectedGeometry.Add(hitData.collider.gameObject);
+                        // add the collider to the detected colliders
+                        CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
+                    }
                 }
 
                 screenX += xScale;
@@ -183,8 +187,6 @@ public class PerspectiveSwitcher : MonoBehaviour
         }
 
         CalculatePlayerAxisPosition(detectedGeometry, CurrentObservedAxis);
-        // set the current detected geometry. will be empty when in 3D
-        CurrentVisibleGeometryIn2D = detectedGeometry.ToArray();
     }
 
     private void CalculatePlayerAxisPosition(HashSet<GameObject> levelGeo, Axes axis)
