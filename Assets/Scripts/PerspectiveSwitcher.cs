@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using GameConstants;
 using GameConstants.Enumerations;
+using Unity.VisualScripting;
 
 public class PerspectiveSwitcher : MonoBehaviour
 {
@@ -39,6 +40,8 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
     public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
+
+    public static HashSet<GameObject> currentVisibleGeometryIn2D { get; private set; } = new();
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
@@ -144,7 +147,9 @@ public class PerspectiveSwitcher : MonoBehaviour
                 // if the ray hit level geometry, add it to the hash set
                 if (hitData.collider != null)
                 {
-                    detectedGeometry.Add(hitData.collider.gameObject);
+                    // check that the geometry isn't genned collision
+                    if (!hitData.collider.CompareTag(Constants.TAG_GENERATED_COLLIDER))
+                        detectedGeometry.Add(hitData.collider.gameObject);
                 }
 
                 screenX += xScale;
@@ -176,6 +181,10 @@ public class PerspectiveSwitcher : MonoBehaviour
         }
 
         CalculatePlayerAxisPosition(detectedGeometry, CurrentObservedAxis);
+        // set the current detected geometry. will be empty when in 3D
+        GameObject[] tmp = detectedGeometry.ToArray();
+        currentVisibleGeometryIn2D.Clear();
+        currentVisibleGeometryIn2D.AddRange(tmp);
     }
 
     private void CalculatePlayerAxisPosition(HashSet<GameObject> levelGeo, Axes axis)
