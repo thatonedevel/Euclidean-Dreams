@@ -149,14 +149,10 @@ public class PerspectiveSwitcher : MonoBehaviour
                 // if the ray hit level geometry, add it to the hash set
                 if (hitData.collider != null)
                 {
-                    // check that the geometry isn't genned collision
-                    if (!hitData.collider.CompareTag(Constants.TAG_GENERATED_COLLIDER))
+                    if (detectedGeometry.Add(hitData.collider.gameObject))
                     {
-                        if (detectedGeometry.Add(hitData.collider.gameObject))
-                        {
-                            // add the collider to the detected colliders
-                            CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
-                        }
+                        // add the collider to the detected colliders
+                        CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
                     }
                 }
 
