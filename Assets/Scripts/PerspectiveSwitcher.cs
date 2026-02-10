@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using GameConstants;
 using GameConstants.Enumerations;
-using EDreams;
 
 public class PerspectiveSwitcher : MonoBehaviour
 {
