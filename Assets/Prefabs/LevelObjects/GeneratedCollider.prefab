@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4465733197537502079}
   - component: {fileID: 5490963445355435220}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: GeneratedCollider
   m_TagString: GeneratedCollider
   m_Icon: {fileID: 0}
