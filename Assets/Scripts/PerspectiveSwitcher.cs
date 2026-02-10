@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using GameConstants;
 using GameConstants.Enumerations;
-using EDreams;
+using Unity.VisualScripting;
 
 public class PerspectiveSwitcher : MonoBehaviour
 {
@@ -40,6 +40,8 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
     public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
+
+    public static List<BoxCollider> CurrentVisibleCollisionGeometryIn2D { get; private set; } = new();
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
@@ -80,6 +82,8 @@ public class PerspectiveSwitcher : MonoBehaviour
             levelCamera.fieldOfView = fieldOfView;
             
             CurrentDimension = Dimensions.THIRD;
+            // clear detected geometry array
+            CurrentVisibleCollisionGeometryIn2D.Clear();
             // fire dimension switch event
             OnDimensionsSwitched?.Invoke(CurrentDimension);
         }
@@ -145,7 +149,11 @@ public class PerspectiveSwitcher : MonoBehaviour
                 // if the ray hit level geometry, add it to the hash set
                 if (hitData.collider != null)
                 {
-                    detectedGeometry.Add(hitData.collider.gameObject);
+                    if (detectedGeometry.Add(hitData.collider.gameObject))
+                    {
+                        // add the collider to the detected colliders
+                        CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
+                    }
                 }
 
                 screenX += xScale;

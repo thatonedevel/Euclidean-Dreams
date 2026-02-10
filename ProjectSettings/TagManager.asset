@@ -8,6 +8,7 @@ TagManager:
   - CameraRig
   - Gem
   - LevelData
+  - GeneratedCollider
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - Level Geometry
   - Water
   - UI
-  - 
+  - Generated Collision
   - 
   - 
   - 

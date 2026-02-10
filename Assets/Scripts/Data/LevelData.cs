@@ -1,5 +1,6 @@
 using GameConstants.Enumerations;
 using UnityEngine;
+using LevelObjects;
 
 public class LevelData : MonoBehaviour
 {
