@@ -2,21 +2,24 @@ using System;
 using UnityEngine;
 using GameConstants;
 
-public class LevelGoal : MonoBehaviour
+namespace LevelObjects
 {
-    public static event Action OnGoalReached;
-
-    // reference to the current level's LevelData instance
-    [SerializeField] private LevelData currentLevelDataObject;
-
-    public void OnTriggerEnter(Collider collision)
+    public class LevelGoal : MonoBehaviour
     {
-        Debug.Log("col detected");
-        if (collision.CompareTag(Constants.TAG_PLAYER))
+        public static event Action OnGoalReached;
+
+        // reference to the current level's LevelData instance
+        [SerializeField] private LevelData currentLevelDataObject;
+
+        public void OnTriggerEnter(Collider collision)
         {
-            Debug.Log("Player entered goal");
-            currentLevelDataObject.StopLevelTimer();
-            OnGoalReached?.Invoke();
+            Debug.Log("col detected");
+            if (collision.CompareTag(Constants.TAG_PLAYER))
+            {
+                Debug.Log("Player entered goal");
+                currentLevelDataObject.StopLevelTimer();
+                OnGoalReached?.Invoke();
+            }
         }
     }
 }

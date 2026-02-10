@@ -3,19 +3,22 @@ using UnityEngine;
 using GameConstants;
 using GameConstants.Enumerations;
 
-public class Gem : MonoBehaviour
+namespace LevelObjects
 {
-    // behaviour for the gem collectible
-    public GemOrders gemNumber;
-
-    public static event Action<GemOrders> OnGemCollected;
-
-    private void OnTriggerEnter(Collider other)
+    public class Gem : MonoBehaviour
     {
-        if (other.CompareTag(Constants.TAG_PLAYER))
+        // behaviour for the gem collectible
+        public GemOrders gemNumber;
+    
+        public static event Action<GemOrders> OnGemCollected;
+    
+        private void OnTriggerEnter(Collider other)
         {
-            OnGemCollected?.Invoke(gemNumber);
-            Destroy(gameObject);
+            if (other.CompareTag(Constants.TAG_PLAYER))
+            {
+                OnGemCollected?.Invoke(gemNumber);
+                Destroy(gameObject);
+            }
         }
     }
 }
