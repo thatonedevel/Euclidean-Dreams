@@ -10,6 +10,7 @@ namespace EGUI
         [SerializeField] private UIDocument levelSelectDoc;
     
         private Button titleScreenButton;
+        private Button devGymButton;
         private List<Button> levelSelectionButtons = new();
     
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -17,6 +18,7 @@ namespace EGUI
         {
             // initialise ui
             titleScreenButton = levelSelectDoc.rootVisualElement.Query<Button>("TitleScreenButton");
+            devGymButton = levelSelectDoc.rootVisualElement.Query<Button>("GymButton");
     
             // use a query builder to get all the level selection buttons
             UQueryState<Button> buttonQuery = new UQueryBuilder<Button>(levelSelectDoc.rootVisualElement)
@@ -25,6 +27,7 @@ namespace EGUI
     
             // subscribe to the events / register the callbacks
             titleScreenButton.clicked += () => GameController.Singleton.StartGame();
+            devGymButton.clicked += () => GameController.Singleton.LoadDevGym();
     
             buttonQuery.ForEach((Button btn) => { 
                 levelSelectionButtons.Add(btn);

@@ -7,8 +7,9 @@
                 <ui:Button text="1" class="level-select-button" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="Footer" style="flex-grow: 1; height: 0; min-height: 0; align-content: flex-start; justify-content: flex-start; flex-direction: column-reverse; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
-            <ui:Button text="Title" name="TitleScreenButton" style="width: 206px; height: 73px; -unity-text-align: middle-center; font-size: 30px;" />
+        <ui:VisualElement name="Footer" style="flex-grow: 1; height: 0; min-height: 0; align-content: flex-start; justify-content: flex-end; flex-direction: column; padding-top: 0; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; align-items: stretch; align-self: stretch;">
+            <ui:Button text="Title" name="TitleScreenButton" style="width: 198px; height: 76px; -unity-text-align: middle-center; font-size: 30px;" />
+            <ui:Button text="Gym / Dev Room" name="GymButton" style="width: 284px; height: 73px; -unity-text-align: middle-center; font-size: 30px; align-self: flex-end;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
