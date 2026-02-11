@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using GameConstants;
+using Data;
 
 namespace LevelObjects
 {

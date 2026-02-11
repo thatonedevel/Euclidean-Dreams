@@ -4,6 +4,7 @@ using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Managers;
+using Data;
 
 namespace EGUI
 {

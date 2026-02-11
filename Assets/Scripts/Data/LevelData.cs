@@ -2,55 +2,58 @@ using GameConstants.Enumerations;
 using UnityEngine;
 using LevelObjects;
 
-public class LevelData : MonoBehaviour
+namespace Data
 {
-    // class used to store data about the current level
-    // stores collectible status & level clear time
-
-    // all the data we want to read
-    public float levelClearTime { get; private set; } = -1;
-    public bool[] gemCollectionStatus = new bool[3];
-    [SerializeField] private string stageName;
-
-    // internal data
-    private float levelStartTime;
-
-    public string GetStageName() => stageName;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class LevelData : MonoBehaviour
     {
-        // subscribe to gem collected event
-        Gem.OnGemCollected += GemCollectedHandler;
-        levelStartTime = Time.time;
-    }
+        // class used to store data about the current level
+        // stores collectible status & level clear time
 
-    private void OnDestroy()
-    {
-        // unsubscribe from events
-        Gem.OnGemCollected -= GemCollectedHandler;
-    }
+        // all the data we want to read
+        public float levelClearTime { get; private set; } = -1;
+        public bool[] gemCollectionStatus = new bool[3];
+        [SerializeField] private string stageName;
 
-    public void ResetLevelTime()
-    {
-        // resets the level start time to current time
+        // internal data
+        private float levelStartTime;
 
-    }
+        public string GetStageName() => stageName;
 
-    public void ResetLevelData()
-    {
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            // subscribe to gem collected event
+            Gem.OnGemCollected += GemCollectedHandler;
+            levelStartTime = Time.time;
+        }
 
-    }
+        private void OnDestroy()
+        {
+            // unsubscribe from events
+            Gem.OnGemCollected -= GemCollectedHandler;
+        }
 
-    public void GemCollectedHandler(GemOrders num)
-    {
-        // gemorders is an enum so we can cast directly to an int to get the index
-        gemCollectionStatus[(int)num] = true;
-    }
+        public void ResetLevelTime()
+        {
+            // resets the level start time to current time
 
-    public void StopLevelTimer()
-    {
-        // call this when we want to get the stage's clear time
-        levelClearTime = Mathf.Round(Time.time - levelStartTime);
+        }
+
+        public void ResetLevelData()
+        {
+
+        }
+
+        public void GemCollectedHandler(GemOrders num)
+        {
+            // gemorders is an enum so we can cast directly to an int to get the index
+            gemCollectionStatus[(int)num] = true;
+        }
+
+        public void StopLevelTimer()
+        {
+            // call this when we want to get the stage's clear time
+            levelClearTime = Mathf.Round(Time.time - levelStartTime);
+        }
     }
 }
