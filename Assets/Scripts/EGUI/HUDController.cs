@@ -3,7 +3,6 @@ using UnityEngine.UIElements;
 using Managers;
 using System.Collections.Generic;
 using GameConstants.Enumerations;
-using LevelObjects;
 
 namespace EGUI
 {
@@ -48,10 +47,17 @@ namespace EGUI
            switch (newState)
            {
                case GameStates.PLAYING:
+                   displayRoot.visible = true;
                    if (oldState != GameStates.PAUSED)
                    {
                        ResetGemDisplays();
                    }
+                   break;
+               case GameStates.PAUSED:
+                   break;
+               default: 
+                   // hide the hud
+                   displayRoot.visible = false;
                    break;
            }
        }
