@@ -124,10 +124,15 @@ namespace Managers
         {
             // reload current level scene
             // check first it is an actual level
-            if (SceneManager.GetSceneByBuildIndex(currentLevelNum).name.StartsWith(Constants.LEVEL_PREFIX))
+            print("Current level number: " + currentLevelNum);
+            var scn = SceneManager.GetSceneByBuildIndex(currentLevelNum);
+            if (scn.IsValid())
             {
-                // it is a level
-                SceneManager.LoadSceneAsync(currentLevelNum);
+                if (scn.name.StartsWith(Constants.LEVEL_PREFIX) || scn.name.Equals("TestScene"))
+                {
+                    // it is a level
+                    SceneManager.LoadSceneAsync(currentLevelNum);
+                }
             }
         }
     

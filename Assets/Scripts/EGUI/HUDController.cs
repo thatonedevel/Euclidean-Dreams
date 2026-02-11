@@ -19,22 +19,39 @@ namespace EGUI
        private List<VisualElement> gemDisplays = new();
        
        // Start is called once before the first execution of Update after the MonoBehaviour is created
-       void Start()
+       void OnEnable()
        {
            // set up ui
            displayRoot = hudDoc.rootVisualElement.Query<VisualElement>("Root");
            pauseButton = hudDoc.rootVisualElement.Query<Button>("PauseButton");
            restartButton = hudDoc.rootVisualElement.Query<Button>("RestartButton");
 
-           UQueryState<VisualElement> gemQuery = new UQueryBuilder<VisualElement>()
+           UQueryState<VisualElement> gemQuery = new UQueryBuilder<VisualElement>(hudDoc.rootVisualElement)
                .Class("gem-display")
                .Build();
 
            gemQuery.ForEach((VisualElement element) => { gemDisplays.Add(element); });
            
+           
+       }
+
+       void Start()
+       {
            // subscribe to events
            GameController.OnGameStateChanged += GameStateChangedHandler;
            LevelObjects.Gem.OnGemCollected += GemCollectedHandler;
+           
+           pauseButton.clicked += () =>
+           {
+               print("pausing");
+               GameController.Singleton.PauseGame();
+           };
+           
+           restartButton.clicked += () =>
+           {
+               print("restarting");
+               GameController.Singleton.RestartLevel();
+           };
        }
 
        private void GemCollectedHandler(GemOrders order)
