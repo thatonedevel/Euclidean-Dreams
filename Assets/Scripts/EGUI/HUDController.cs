@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 using Managers;
 using System.Collections.Generic;
 using GameConstants.Enumerations;
+using ScriptableObjects;
 
 namespace EGUI
 {
@@ -10,6 +11,8 @@ namespace EGUI
    {
        [Header("References")] [SerializeField]
        private UIDocument hudDoc;
+
+       [SerializeField] private TimerSO timer;
 
        private VisualElement displayRoot;
        
@@ -19,7 +22,7 @@ namespace EGUI
        private List<VisualElement> gemDisplays = new();
        
        // Start is called once before the first execution of Update after the MonoBehaviour is created
-       void OnEnable()
+       private void OnEnable()
        {
            // set up ui
            displayRoot = hudDoc.rootVisualElement.Query<VisualElement>("Root");
@@ -35,7 +38,7 @@ namespace EGUI
            
        }
 
-       void Start()
+       private void Start()
        {
            // subscribe to events
            GameController.OnGameStateChanged += GameStateChangedHandler;
@@ -54,6 +57,15 @@ namespace EGUI
            };
        }
 
+       private void Update()
+       {
+           if (GameController.Singleton.CurrentGameState == GameStates.PLAYING)
+           {
+               print("time stuff");
+               timer.FormatTime();
+           }
+       }
+
        private void GemCollectedHandler(GemOrders order)
        {
            gemDisplays[(int)order].visible = true;
@@ -68,6 +80,7 @@ namespace EGUI
                    if (oldState != GameStates.PAUSED)
                    {
                        ResetGemDisplays();
+                       timer.StartTimer();
                    }
                    break;
                case GameStates.PAUSED:

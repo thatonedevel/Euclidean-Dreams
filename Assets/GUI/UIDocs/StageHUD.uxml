@@ -14,7 +14,11 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="TheRest" style="flex-grow: 1; flex-direction: row-reverse; justify-content: center; align-content: center; margin-right: 286px; align-items: center;">
-                <ui:Label text="Time:" name="TimerLabel" style="width: 432px; -unity-text-align: upper-right; padding-right: -6px; margin-right: 1px; margin-left: 90px; font-size: 30px;" />
+                <ui:Label text="Time:" name="TimerLabel" style="width: 432px; -unity-text-align: upper-right; padding-right: -6px; margin-right: 1px; margin-left: 90px; font-size: 30px;">
+                    <Bindings>
+                        <ui:DataBinding property="text" data-source-path="formattedTime" data-source="project://database/Assets/SOInstances/TimerSO.asset?fileID=11400000&amp;guid=772876accf7b9d7498013c8928a56d4b&amp;type=2#TimerSO" binding-mode="ToTarget" />
+                    </Bindings>
+                </ui:Label>
                 <ui:Button text="Pause" name="PauseButton" enabled="true" class="hud-button" style="width: 77px; height: 74px;" />
                 <ui:Button text="Restart" name="RestartButton" class="hud-button" style="width: 80px; margin-right: 2px; height: 74px;" />
             </ui:VisualElement>
