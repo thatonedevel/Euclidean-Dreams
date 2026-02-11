@@ -4,6 +4,7 @@
 # models
 *.mb merge=lfs filter=lfs diff=lfs
 *.ma merge=lfs filter=lfs diff=lfs
+*.fbx merge=lfs filter=lfs diff=lfs
 
 # textures
 *.png merge=lfs filter=lfs diff=lfs
