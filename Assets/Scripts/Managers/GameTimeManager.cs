@@ -51,7 +51,7 @@ namespace Managers
                 currentLevelTime = Time.time - levelStartTime;
                 // write the time data to the timer so & format it
                 timer.currentLevelTime = currentLevelTime;
-                print("formatting time");
+                //print("formatting time");
                 timer.FormatTime();
             }
         }

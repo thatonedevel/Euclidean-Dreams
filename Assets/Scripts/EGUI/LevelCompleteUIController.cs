@@ -69,7 +69,7 @@ namespace EGUI
     
         private void GameStateChangedHandler(GameStates newState, GameStates oldState)
         {
-            Debug.Log("detected state change");
+            Debug.Log("detected state change " + newState);
             switch (newState)
             {
                 case GameStates.PLAYING:
