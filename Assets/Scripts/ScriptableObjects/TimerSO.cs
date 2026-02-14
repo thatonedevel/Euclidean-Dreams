@@ -7,26 +7,31 @@ namespace ScriptableObjects
     [CreateAssetMenu(fileName = "TimerSO", menuName = "Scriptable Objects/TimerSO")]
     public class TimerSO : ScriptableObject
     {
-        public string formattedTime = "{0}:{1}";
+        private const string TIME_FORMAT = "{0}:{1}";
+        
+        public string formattedLevelTime = "00:00";
     
         private float levelStartTime = 0;
+        
+        public float currentLevelTime = 0;
+        public float currentGameTime = 0;
 
         public void StartTimer()
         {
             levelStartTime = Time.time;
         }
 
-        public void FormatTime()
+        public void FormatTime(bool forLevel = true)
         {
             string minString = "";
             string secString = "";
             
-            // get current time
-            float timeElapased = Time.time - levelStartTime;
-            
             // divide into min / sec component
-            int minutes = (int)timeElapased / 60;
-            int seconds = (int)timeElapased % 60;
+            int minutes = (int)currentLevelTime / 60;
+            int seconds = (int)currentLevelTime;
+
+            if (currentLevelTime >= 60)
+                seconds = (int)currentLevelTime % 60;
 
             if (minutes < 10)
                 minString += "0" + minutes.ToString();
@@ -38,7 +43,8 @@ namespace ScriptableObjects
             else
                 secString += seconds.ToString();
             
-            formattedTime = string.Format(formattedTime, minutes, seconds);
+            if (forLevel) 
+                formattedLevelTime = string.Format(TIME_FORMAT, minString, secString);
         }
     }
 }

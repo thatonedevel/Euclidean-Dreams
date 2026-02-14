@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5229d865f848448998c16e5db9008f, type: 3}
   m_Name: TimerSO
   m_EditorClassIdentifier: 
-  formattedTime: '{0}:{1}'
+  formattedLevelTime: '{0}:{1}'
+  currentLevelTime: 7.050032
+  currentGameTime: 0

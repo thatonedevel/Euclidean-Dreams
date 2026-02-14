@@ -1,5 +1,6 @@
 using GameConstants.Enumerations;
 using UnityEngine;
+using ScriptableObjects;
 
 namespace Managers
 {
@@ -7,14 +8,21 @@ namespace Managers
     {
         // class for managing play / level time
         // TODO: implement full play time with the save system
-        
-        public float TotalPlayTime { get; private set; }
-        public float CurrentLevelTime { get; private set; }
+
+        private float TotalPlayTime = 0;
+        [SerializeField] private float currentLevelTime = 0;
         
         public static GameTimeManager Singleton { get; private set; }
         
         private bool updateGameTime = false;
         private bool updateLevelTime = false;
+        
+        // start times so we can calculate the total time elapsed
+        private float gameStartTime = 0;
+        private float levelStartTime = 0;
+        
+        [Header("References")]
+        [SerializeField] private TimerSO timer;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -37,8 +45,15 @@ namespace Managers
         {
             // if the timers are enabled, then update them
             if (updateGameTime) TotalPlayTime += Time.deltaTime;
-            
-            if (updateLevelTime) CurrentLevelTime += Time.deltaTime;
+
+            if (updateLevelTime)
+            {
+                currentLevelTime = Time.time - levelStartTime;
+                // write the time data to the timer so & format it
+                timer.currentLevelTime = currentLevelTime;
+                print("formatting time");
+                timer.FormatTime();
+            }
         }
 
         public void ResetAllTimers()
@@ -48,24 +63,25 @@ namespace Managers
             updateLevelTime = false;
             
             TotalPlayTime = 0;
-            CurrentLevelTime = 0;
+            currentLevelTime = 0;
         }
 
 
         public void ResetLevelTimer()
         {
             updateLevelTime = false;
-            CurrentLevelTime = 0;
+            currentLevelTime = 0;
         }
         
         public void StartLevelTimer()
         {
+            levelStartTime = Time.time;
             updateLevelTime = true;
         }
 
         public void StopLevelTimer()
         {
-            
+            updateLevelTime = false;
         }
 
         public void StopGameTimer()
@@ -78,8 +94,12 @@ namespace Managers
             switch (newState)
             {
                 case GameStates.PLAYING:
-                    ResetLevelTimer();
-                    StartLevelTimer();
+                    if (oldState != GameStates.PLAYING && oldState != GameStates.PAUSED)
+                    {
+                        print("starting level timer");
+                        ResetLevelTimer();
+                        StartLevelTimer();
+                    }
                     break;
                 case GameStates.LEVEL_COMPLETE:
                     StopLevelTimer();

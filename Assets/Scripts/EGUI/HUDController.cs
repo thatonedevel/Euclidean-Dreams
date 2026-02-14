@@ -55,14 +55,6 @@ namespace EGUI
            };
        }
 
-       private void Update()
-       {
-           if (GameController.Singleton.CurrentGameState == GameStates.PLAYING)
-           {
-               print("time stuff");
-           }
-       }
-
        private void GemCollectedHandler(GemOrders order)
        {
            gemDisplays[(int)order].visible = true;
