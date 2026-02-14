@@ -12,8 +12,6 @@ namespace EGUI
        [Header("References")] [SerializeField]
        private UIDocument hudDoc;
 
-       [SerializeField] private TimerSO timer;
-
        private VisualElement displayRoot;
        
        private Button pauseButton;
@@ -62,7 +60,6 @@ namespace EGUI
            if (GameController.Singleton.CurrentGameState == GameStates.PLAYING)
            {
                print("time stuff");
-               timer.FormatTime();
            }
        }
 
@@ -80,7 +77,6 @@ namespace EGUI
                    if (oldState != GameStates.PAUSED)
                    {
                        ResetGemDisplays();
-                       timer.StartTimer();
                    }
                    break;
                case GameStates.PAUSED:
