@@ -108,7 +108,7 @@ namespace Managers
         private void SceneChangedHandler(Scene newScene, LoadSceneMode mode)
         {
             // check the new scene's name to see if we're in a gameplay level
-            if (newScene.name.StartsWith(Constants.LEVEL_PREFIX))
+            if (newScene.name.StartsWith(Constants.LEVEL_PREFIX) || newScene.name.Equals("TestScene"))
             {
                 Debug.Log("GameController: detected entry to level. updating references");
                 // we went to a level
@@ -124,10 +124,15 @@ namespace Managers
         {
             // reload current level scene
             // check first it is an actual level
-            if (SceneManager.GetSceneByBuildIndex(currentLevelNum).name.StartsWith(Constants.LEVEL_PREFIX))
+            print("Current level number: " + currentLevelNum);
+            var scn = SceneManager.GetSceneByBuildIndex(currentLevelNum);
+            if (scn.IsValid())
             {
-                // it is a level
-                SceneManager.LoadSceneAsync(currentLevelNum);
+                if (scn.name.StartsWith(Constants.LEVEL_PREFIX) || scn.name.Equals("TestScene"))
+                {
+                    // it is a level
+                    SceneManager.LoadSceneAsync(currentLevelNum);
+                }
             }
         }
     
@@ -142,6 +147,12 @@ namespace Managers
     
             // update the last level flag
             isAtLastLevel = !CheckLevelExistsAtIndex(levelNumber + 1);
+        }
+
+        public void LoadDevGym()
+        {
+            // method that loads the gym / dev room scene
+            SceneManager.LoadSceneAsync("TestScene");
         }
     
         private void LevelCompletedHandler()

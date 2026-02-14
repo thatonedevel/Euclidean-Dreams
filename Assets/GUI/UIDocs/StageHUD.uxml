@@ -1,0 +1,27 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/GUI/USS/StageHUD.uss?fileID=7433441132597879392&amp;guid=1e13210645071274b9ee8f3e0161cff2&amp;type=3#StageHUD" />
+    <ui:VisualElement name="Root" style="flex-grow: 1; flex-direction: column; visibility: hidden;">
+        <ui:VisualElement name="Header" style="flex-grow: 1; flex-direction: row; align-items: center; justify-content: center; padding-bottom: 983px;">
+            <ui:VisualElement name="GemGroup" style="flex-grow: 1; height: 51px; flex-direction: row; align-items: stretch; justify-content: flex-start; align-self: auto; align-content: auto; margin-left: 10px; margin-right: 667px;">
+                <ui:VisualElement name="GemContainer0" class="gem-container" style="flex-grow: 1;">
+                    <ui:VisualElement name="GemDisplay0" class="gem-display" style="flex-grow: 1; visibility: hidden;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="GemContainer1" class="gem-container" style="flex-grow: 1;">
+                    <ui:VisualElement name="GemDisplay1" class="gem-display" style="flex-grow: 1; visibility: hidden;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="GemContainer2" class="gem-container" style="flex-grow: 1;">
+                    <ui:VisualElement name="GemDisplay2" class="gem-display" style="flex-grow: 1; visibility: hidden;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="TheRest" style="flex-grow: 1; flex-direction: row-reverse; justify-content: center; align-content: center; margin-right: 286px; align-items: center;">
+                <ui:Label text="Time:" name="TimerLabel" style="width: 432px; -unity-text-align: upper-right; padding-right: -6px; margin-right: 1px; margin-left: 90px; font-size: 30px;">
+                    <Bindings>
+                        <ui:DataBinding property="text" data-source-path="formattedLevelTime" data-source="project://database/Assets/SOInstances/TimerSO.asset?fileID=11400000&amp;guid=772876accf7b9d7498013c8928a56d4b&amp;type=2#TimerSO" binding-mode="ToTarget" />
+                    </Bindings>
+                </ui:Label>
+                <ui:Button text="Pause" name="PauseButton" enabled="true" class="hud-button" style="width: 77px; height: 74px;" />
+                <ui:Button text="Restart" name="RestartButton" class="hud-button" style="width: 80px; margin-right: 2px; height: 74px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

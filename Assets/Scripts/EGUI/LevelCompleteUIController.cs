@@ -4,6 +4,7 @@ using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Managers;
+using Data;
 
 namespace EGUI
 {
@@ -68,7 +69,7 @@ namespace EGUI
     
         private void GameStateChangedHandler(GameStates newState, GameStates oldState)
         {
-            Debug.Log("detected state change");
+            Debug.Log("detected state change " + newState);
             switch (newState)
             {
                 case GameStates.PLAYING:
@@ -100,35 +101,12 @@ namespace EGUI
             stageCompletionLabel.text = string.Format(lvCompleteText, stageLevelData.GetStageName());
     
             // show clear time
-            stageClearTimeLabel.text = string.Format("Clear Time: {0}", FormatClearTime(stageLevelData.levelClearTime));
     
             // set interactivity of the next level button based on if we're at the last level
             Debug.Log("Is at last level? " + GameController.Singleton.isAtLastLevel);
             nextStageButton.enabledSelf = !GameController.Singleton.isAtLastLevel;
     
             screenRoot.visible = true;
-        }
-    
-        private string FormatClearTime(float time)
-        {
-            // format the given time in the format of mm:ss
-            int minutes = (int)Mathf.Floor(time / 60);
-            int remSeconds = (int)(time % 60);
-    
-            string minString = "00";
-            string secString = "00";
-    
-            if (minutes.ToString().Length == 1)
-                minString = "0" + minutes.ToString();
-            else
-                minString = minutes.ToString();
-            
-            if (remSeconds.ToString().Length == 1)
-                secString = "0" + remSeconds.ToString();
-            else
-                secString = remSeconds.ToString();
-    
-            return minString + ":" + secString;
         }
     
         private void RestartLevelHandler()
