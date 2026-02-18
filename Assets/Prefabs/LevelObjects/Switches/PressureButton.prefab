@@ -71,7 +71,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -96,6 +96,7 @@ MonoBehaviour:
   - Player
   pressCooldown: 0
   callbackInterval: 1
+  nextCallbackTime: 0
 --- !u!1001 &3447137856375498566
 PrefabInstance:
   m_ObjectHideFlags: 0
