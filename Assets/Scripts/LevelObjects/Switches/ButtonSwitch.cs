@@ -11,7 +11,7 @@ namespace LevelObjects.Switches
 
         protected float nextPressTime = 0;
         
-        protected void OnTriggerEnter(Collider other)
+        protected virtual void OnTriggerEnter(Collider other)
         {
             // grab the tag of the colliding obj
             if (Array.IndexOf(validTags, other.tag) != -1)
