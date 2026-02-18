@@ -50,8 +50,9 @@ MonoBehaviour:
   onSwitchEnabled:
     m_PersistentCalls:
       m_Calls: []
-  validTags: []
-  pressCooldown: 0
+  validTags:
+  - Player
+  pressCooldown: 1
 --- !u!65 &3582186079361891056
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -88,7 +89,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
