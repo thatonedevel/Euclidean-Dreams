@@ -45,6 +45,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
+    public static event Action<Dimensions> OnDimensionsSwitched_Early;
 
     // input
     private InputAction perspectiveSwitchAction;
@@ -76,6 +77,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
         if (levelCamera.orthographic)
         {
+            OnDimensionsSwitched_Early?.Invoke(Dimensions.THIRD);
             // switch to perspective projection
             SetPlayer3DPos();
             levelCamera.orthographic = false;
@@ -92,15 +94,16 @@ public class PerspectiveSwitcher : MonoBehaviour
             // check we're aligned with one of the three axes
             if (IsLookingDownXAxis() || IsLookingDownYAxis() || IsLookingDownZAxis())
             {
+                OnDimensionsSwitched_Early?.Invoke(Dimensions.SECOND);
                 // switch to ortho projection
                 levelCamera.orthographic = true;
                 levelCamera.orthographicSize = size;
                 Debug.Log("Running the raycasts");
                 GeoSortingRaycasts();
                 CurrentDimension = Dimensions.SECOND;
+                // fire dimension switch event
+                OnDimensionsSwitched?.Invoke(CurrentDimension);
             }
-            // fire dimension switch event
-            OnDimensionsSwitched?.Invoke(CurrentDimension);
         }
     }
 
