@@ -94,6 +94,7 @@ public class PerspectiveSwitcher : MonoBehaviour
             // check we're aligned with one of the three axes
             if (IsLookingDownXAxis() || IsLookingDownYAxis() || IsLookingDownZAxis())
             {
+                UpdateObservedAxis();
                 OnDimensionsSwitched_Early?.Invoke(Dimensions.SECOND);
                 // switch to ortho projection
                 levelCamera.orthographic = true;
@@ -168,25 +169,6 @@ public class PerspectiveSwitcher : MonoBehaviour
         // at this point we have all the level geometry
         // next we need to determine the needed collision data
         // if we're looking down, generate it aroud the geometry
-        if (IsLookingDownYAxis())
-        {
-            // looking down y axis
-            Debug.Log("Camera was at appropriate angle to read as facing straight down");
-            CurrentObservedAxis = Axes.Y;
-        }
-        else if (IsLookingDownXAxis())
-        {
-            // looking down the x axis
-            Debug.Log("Looking down x axis");
-            CurrentObservedAxis = Axes.X;
-        }
-        else if (IsLookingDownZAxis())
-        {
-            // looking down the z axis
-            Debug.Log("Looking down z axis");
-            CurrentObservedAxis = Axes.Z;
-        }
-
         CalculatePlayerAxisPosition(detectedGeometry, CurrentObservedAxis);
     }
 
@@ -330,5 +312,16 @@ public class PerspectiveSwitcher : MonoBehaviour
             Vector3 centerHoriPos = currentHit.collider.bounds.center + new Vector3(0, currentHit.collider.bounds.extents.y);
             SetPlayerAxisAsValue(centerHoriPos, CurrentObservedAxis);
         }
+    }
+
+    private void UpdateObservedAxis()
+    {
+        // called to update the CurrentObservedAxis field
+        if (IsLookingDownXAxis())
+            CurrentObservedAxis = Axes.X;
+        else if (IsLookingDownYAxis())
+            CurrentObservedAxis = Axes.Y;
+        else if (IsLookingDownZAxis())
+            CurrentObservedAxis = Axes.Z;
     }
 }
