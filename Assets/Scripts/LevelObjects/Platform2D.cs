@@ -32,7 +32,7 @@ namespace LevelObjects
             if (newDim == Dimensions.THIRD)
             {
                 platformCollider.enabled = false;
-                platformRenderer.enabled = false;
+                //platformRenderer.enabled = false;
             }
             else
             {
@@ -41,7 +41,7 @@ namespace LevelObjects
                 {
                     // enable the collider
                     platformCollider.enabled = true;
-                    platformRenderer.enabled = true;
+                    //platformRenderer.enabled = true;
                 }
                 else
                 {
