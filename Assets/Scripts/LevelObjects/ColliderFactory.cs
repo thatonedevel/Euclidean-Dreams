@@ -109,6 +109,9 @@ namespace LevelObjects
             
             standardColliders.AddRange(root.GetComponentsInChildren<BoxCollider>());
             
+            // filter out the plat2d's
+            RemovePlatform2D(standardColliders);
+            
             // instantiate the needed amount of colliders
             for (int i = 0; i < standardColliders.Count; i++)
             {
@@ -123,6 +126,18 @@ namespace LevelObjects
             foreach (var collider in generatedColliders)
             {
                 collider.enabled = false;
+            }
+        }
+
+        private void RemovePlatform2D(List<Collider> collList)
+        {
+            // used to removed the plat2d objects from the collider pool
+            for (int i = collList.Count - 1; i >= 0; i--)
+            {
+                if (collList[i].TryGetComponent<Platform2D>(out Platform2D platform2D))
+                {
+                    collList.RemoveAt(i);
+                }
             }
         }
     }
