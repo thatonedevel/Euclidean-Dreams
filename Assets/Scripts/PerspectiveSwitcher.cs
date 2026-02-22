@@ -189,8 +189,9 @@ public class PerspectiveSwitcher : MonoBehaviour
         Debug.Log("Highest geometry: " + geoArray[0]);
         Debug.Log("Calculated" + axis + " level: " + neededAxisLevel);
 
-        // disable the gravity
-        playerRigidbody.useGravity = false;
+        // disable the gravity if looking straight down
+        if (CurrentObservedAxis == Axes.Y)
+            playerRigidbody.useGravity = false;
         SetPlayerAxisAsValue(neededAxisLevel, axis);
     }
 
