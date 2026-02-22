@@ -45,6 +45,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
+    public static event Action<Dimensions> OnDimensionsSwitched_Early;
 
     // input
     private InputAction perspectiveSwitchAction;
@@ -76,6 +77,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
         if (levelCamera.orthographic)
         {
+            OnDimensionsSwitched_Early?.Invoke(Dimensions.THIRD);
             // switch to perspective projection
             SetPlayer3DPos();
             levelCamera.orthographic = false;
@@ -92,15 +94,17 @@ public class PerspectiveSwitcher : MonoBehaviour
             // check we're aligned with one of the three axes
             if (IsLookingDownXAxis() || IsLookingDownYAxis() || IsLookingDownZAxis())
             {
+                UpdateObservedAxis();
+                OnDimensionsSwitched_Early?.Invoke(Dimensions.SECOND);
                 // switch to ortho projection
                 levelCamera.orthographic = true;
                 levelCamera.orthographicSize = size;
                 Debug.Log("Running the raycasts");
                 GeoSortingRaycasts();
                 CurrentDimension = Dimensions.SECOND;
+                // fire dimension switch event
+                OnDimensionsSwitched?.Invoke(CurrentDimension);
             }
-            // fire dimension switch event
-            OnDimensionsSwitched?.Invoke(CurrentDimension);
         }
     }
 
@@ -165,25 +169,6 @@ public class PerspectiveSwitcher : MonoBehaviour
         // at this point we have all the level geometry
         // next we need to determine the needed collision data
         // if we're looking down, generate it aroud the geometry
-        if (IsLookingDownYAxis())
-        {
-            // looking down y axis
-            Debug.Log("Camera was at appropriate angle to read as facing straight down");
-            CurrentObservedAxis = Axes.Y;
-        }
-        else if (IsLookingDownXAxis())
-        {
-            // looking down the x axis
-            Debug.Log("Looking down x axis");
-            CurrentObservedAxis = Axes.X;
-        }
-        else if (IsLookingDownZAxis())
-        {
-            // looking down the z axis
-            Debug.Log("Looking down z axis");
-            CurrentObservedAxis = Axes.Z;
-        }
-
         CalculatePlayerAxisPosition(detectedGeometry, CurrentObservedAxis);
     }
 
@@ -204,8 +189,9 @@ public class PerspectiveSwitcher : MonoBehaviour
         Debug.Log("Highest geometry: " + geoArray[0]);
         Debug.Log("Calculated" + axis + " level: " + neededAxisLevel);
 
-        // disable the gravity
-        playerRigidbody.useGravity = false;
+        // disable the gravity if looking straight down
+        if (CurrentObservedAxis == Axes.Y)
+            playerRigidbody.useGravity = false;
         SetPlayerAxisAsValue(neededAxisLevel, axis);
     }
 
@@ -327,5 +313,16 @@ public class PerspectiveSwitcher : MonoBehaviour
             Vector3 centerHoriPos = currentHit.collider.bounds.center + new Vector3(0, currentHit.collider.bounds.extents.y);
             SetPlayerAxisAsValue(centerHoriPos, CurrentObservedAxis);
         }
+    }
+
+    private void UpdateObservedAxis()
+    {
+        // called to update the CurrentObservedAxis field
+        if (IsLookingDownXAxis())
+            CurrentObservedAxis = Axes.X;
+        else if (IsLookingDownYAxis())
+            CurrentObservedAxis = Axes.Y;
+        else if (IsLookingDownZAxis())
+            CurrentObservedAxis = Axes.Z;
     }
 }
