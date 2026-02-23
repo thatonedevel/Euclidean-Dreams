@@ -1,5 +1,6 @@
 # unity scenes
 *.unity merge=lfs filter=lfs diff=lfs
+*.scenetemplate merge=lfs filter=lfs diff=lfs
 
 # models
 *.mb merge=lfs filter=lfs diff=lfs

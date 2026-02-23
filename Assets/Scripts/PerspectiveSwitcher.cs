@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using GameConstants;
 using GameConstants.Enumerations;
+using LevelObjects;
 using Unity.VisualScripting;
 
 public class PerspectiveSwitcher : MonoBehaviour
@@ -155,8 +156,10 @@ public class PerspectiveSwitcher : MonoBehaviour
                 {
                     if (detectedGeometry.Add(hitData.collider.gameObject))
                     {
+                        // make sure to filter out the 2d platforms so we don't go out of range
                         // add the collider to the detected colliders
-                        CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
+                        if (!hitData.collider.TryGetComponent<Platform2D>(out Platform2D temp))
+                            CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
                     }
                 }
 

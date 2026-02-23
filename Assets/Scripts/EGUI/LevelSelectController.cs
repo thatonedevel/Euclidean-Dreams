@@ -39,14 +39,12 @@ namespace EGUI
         {
             // grab the button that was clicked
             int levelNum = -1;
-    
-            if (int.TryParse((eventData.target as Button).text, out levelNum))
-            {
-                // we clicked a button
-                // tell the game manager to load the level based on the stored number
-                Debug.Log("level selector: Level to load: " + levelNum);
-                GameController.Singleton.LoadGameLevel(levelNum);
-            }
+
+            Button clickedButton = eventData.target as Button;
+            
+            // search the button list to find it
+            levelNum =  levelSelectionButtons.IndexOf(clickedButton);
+            GameController.Singleton.LoadGameLevel(levelNum);
         }
     }
 }
