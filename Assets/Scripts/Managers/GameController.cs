@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using LevelObjects;
+using Unity.VisualScripting;
+using UnityEngine.AddressableAssets;
 
 namespace Managers
 {
@@ -25,6 +27,9 @@ namespace Managers
         [Header("Level object references")]
         [SerializeField] private GameObject playerCharacterObject;
         [SerializeField] private GameObject levelCameraRig;
+
+        [Header("Game Flow Management")] [SerializeField]
+        private string[] levelKeys;
     
         // lambda functions for events
         private void GoalReachedHandler() => UpdateGameState(GameStates.LEVEL_COMPLETE);
@@ -124,16 +129,7 @@ namespace Managers
         {
             // reload current level scene
             // check first it is an actual level
-            print("Current level number: " + currentLevelNum);
-            var scn = SceneManager.GetSceneByBuildIndex(currentLevelNum);
-            if (scn.IsValid())
-            {
-                if (scn.name.StartsWith(Constants.LEVEL_PREFIX) || scn.name.Equals("TestScene"))
-                {
-                    // it is a level
-                    SceneManager.LoadSceneAsync(currentLevelNum);
-                }
-            }
+            
         }
     
         public void LoadGameLevel(int levelNumber)
@@ -142,7 +138,7 @@ namespace Managers
             Debug.Log("Loading level: " + levelNumber);
             Scene levelScene = SceneManager.GetSceneByBuildIndex(levelNumber);
             Debug.Log("Level scene name: " + levelScene.name);
-            SceneManager.LoadSceneAsync(levelNumber);
+            Addressables.LoadSceneAsync(levelNumber);
             currentLevelNum = levelNumber;
     
             // update the last level flag
@@ -159,7 +155,7 @@ namespace Managers
         public void LoadDevGym()
         {
             // method that loads the gym / dev room scene
-            SceneManager.LoadSceneAsync("TestScene");
+            Addressables.LoadSceneAsync("TestScene");
         }
     
         private void LevelCompletedHandler()
@@ -171,13 +167,13 @@ namespace Managers
         {
             // TODO: make this go to title screen
             // load first level
-            SceneManager.LoadSceneAsync(Constants.SCENE_TITLE);
+            Addressables.LoadSceneAsync(Constants.SCENE_TITLE);
             UpdateGameState(GameStates.TITLE_SCREEN);
         }
     
         public void GoToStageSelect()
         {
-            SceneManager.LoadSceneAsync(Constants.SCENE_LEVEL_SELECT);
+            Addressables.LoadSceneAsync(Constants.SCENE_LEVEL_SELECT);
             UpdateGameState(GameStates.LEVEL_SELECT);
         }
     
