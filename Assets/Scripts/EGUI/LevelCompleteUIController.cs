@@ -56,7 +56,7 @@ namespace EGUI
             gaugeQuery.ForEach((VisualElement gauge) => Util.TryAddItemToArray(gemGauges, gauge));
     
             // set up event subscriptions for buttons
-            nextStageButton.clicked += () => GameController.Singleton.LoadGameLevel(GameController.Singleton.currentLevelNum + 1);
+            nextStageButton.clicked += NextStageHandler;
             replayStageButton.clicked += RestartLevelHandler;
             stageSelectButton.clicked += () => GameController.Singleton.GoToStageSelect();
         }
@@ -65,6 +65,12 @@ namespace EGUI
         {
             // unsubscribe from events here to prevent crashes
             GameController.OnGameStateChanged -= GameStateChangedHandler;
+        }
+
+        private void NextStageHandler()
+        {
+            screenRoot.visible = false;
+            GameController.Singleton.LoadGameLevel(GameController.Singleton.currentLevelIndex + 1);
         }
     
         private void GameStateChangedHandler(GameStates newState, GameStates oldState)

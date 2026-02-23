@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using LevelObjects;
+using Unity.VisualScripting;
+using UnityEngine.AddressableAssets;
 
 namespace Managers
 {
@@ -20,11 +22,14 @@ namespace Managers
     
         public bool isAtLastLevel { get; private set; } = false; // used to check if the current level is the last one
     
-        public int currentLevelNum { get; private set; } = 0; // default to 0 as level numbers begin at 01
+        public int currentLevelIndex { get; private set; } = -1; // default to 0 as level numbers begin at 01
     
         [Header("Level object references")]
         [SerializeField] private GameObject playerCharacterObject;
         [SerializeField] private GameObject levelCameraRig;
+
+        [Header("Game Flow Management")] [SerializeField]
+        private string[] levelKeys;
     
         // lambda functions for events
         private void GoalReachedHandler() => UpdateGameState(GameStates.LEVEL_COMPLETE);
@@ -87,8 +92,8 @@ namespace Managers
                     break;
                 default:
                     // title screen, level select
-                    currentLevelNum = 0;
-                    isAtLastLevel = CheckLevelExistsAtIndex(currentLevelNum + 1);
+                    currentLevelIndex = -1;
+                    isAtLastLevel = currentLevelIndex != -1 && currentLevelIndex < levelKeys.Length - 1; //CheckLevelExistsAtIndex(currentLevelNum + 1);
     
                     // disable character movement if the character is not null
                     if (playerCharacterObject != null)
@@ -122,37 +127,39 @@ namespace Managers
     
         public void RestartLevel()
         {
+            print("Attempting to restart current level");
             // reload current level scene
             // check first it is an actual level
-            print("Current level number: " + currentLevelNum);
-            var scn = SceneManager.GetSceneByBuildIndex(currentLevelNum);
-            if (scn.IsValid())
+            Scene currentScene = SceneManager.GetActiveScene();
+            if (currentScene.name.StartsWith(Constants.LEVEL_PREFIX))
             {
-                if (scn.name.StartsWith(Constants.LEVEL_PREFIX) || scn.name.Equals("TestScene"))
-                {
-                    // it is a level
-                    SceneManager.LoadSceneAsync(currentLevelNum);
-                }
+                print("Can restart current level");
+                
             }
         }
     
-        public void LoadGameLevel(int levelNumber)
+        public void LoadGameLevel(int levelIndex)
         {
-            // will use the levelNumber for the scene's buildIndex
-            Debug.Log("Loading level: " + levelNumber);
-            Scene levelScene = SceneManager.GetSceneByBuildIndex(levelNumber);
-            Debug.Log("Level scene name: " + levelScene.name);
-            SceneManager.LoadSceneAsync(levelNumber);
-            currentLevelNum = levelNumber;
-    
-            // update the last level flag
-            isAtLastLevel = !CheckLevelExistsAtIndex(levelNumber + 1);
+            Debug.Log("Loading level at index:  " + levelIndex);
+            // check it actually exists
+            if (levelIndex >= 0 && levelIndex < levelKeys.Length)
+            {
+                // level should have a key
+                string lvKey = levelKeys[levelIndex];
+                Addressables.LoadSceneAsync(lvKey);
+                currentLevelIndex = levelIndex;
+                isAtLastLevel = levelIndex ==  levelKeys.Length - 1;
+            }
+            else
+            {
+                
+            }
         }
 
         public void LoadDevGym()
         {
             // method that loads the gym / dev room scene
-            SceneManager.LoadSceneAsync("TestScene");
+            Addressables.LoadSceneAsync("TestScene");
         }
     
         private void LevelCompletedHandler()
@@ -164,18 +171,20 @@ namespace Managers
         {
             // TODO: make this go to title screen
             // load first level
-            SceneManager.LoadSceneAsync(Constants.SCENE_TITLE);
+            Addressables.LoadSceneAsync(Constants.SCENE_TITLE);
             UpdateGameState(GameStates.TITLE_SCREEN);
         }
     
         public void GoToStageSelect()
         {
-            SceneManager.LoadSceneAsync(Constants.SCENE_LEVEL_SELECT);
+            Addressables.LoadSceneAsync(Constants.SCENE_LEVEL_SELECT);
             UpdateGameState(GameStates.LEVEL_SELECT);
         }
     
         private bool CheckLevelExistsAtIndex(int sceneIndex)
         {
+            print("Checking level " + sceneIndex + " exists");
+            
             // method to check if the supplied index value points to a game level
             Scene target = SceneManager.GetSceneByBuildIndex(sceneIndex);
     
