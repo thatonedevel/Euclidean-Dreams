@@ -63,6 +63,9 @@ namespace LevelObjects
                 for (int i = 0; i < PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.Count; i++)
                 {
                     // get the generated collider of the same index & adjust bounds
+                    print("Total found colliders: " + PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.Count);
+                    print("Collider index: " + i);
+                    
                     BoxCollider currentCol = generatedColliders[i];
                     
                     // check the axis we're looking down
