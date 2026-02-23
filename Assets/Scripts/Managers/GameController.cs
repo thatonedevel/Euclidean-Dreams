@@ -146,6 +146,13 @@ namespace Managers
             currentLevelNum = levelNumber;
     
             // update the last level flag
+            if (currentLevelNum + 1 == 2)
+            {
+                // TODO: remove once we've checked te issue
+                // run a check here to see where the finding lv2 is failing
+                print("Does lv2 exist: " + CheckLevelExistsAtIndex(2));
+                print("lv 2 name: " + SceneManager.GetSceneByBuildIndex(2).name);
+            }
             isAtLastLevel = !CheckLevelExistsAtIndex(levelNumber + 1);
         }
 
@@ -176,6 +183,8 @@ namespace Managers
     
         private bool CheckLevelExistsAtIndex(int sceneIndex)
         {
+            print("Checking level " + sceneIndex + " exists");
+            
             // method to check if the supplied index value points to a game level
             Scene target = SceneManager.GetSceneByBuildIndex(sceneIndex);
     
