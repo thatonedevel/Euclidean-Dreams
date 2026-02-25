@@ -78,9 +78,6 @@ namespace EGUI
             Debug.Log("detected state change " + newState);
             switch (newState)
             {
-                case GameStates.PLAYING:
-                    // we entered a level
-                    break;
                 case GameStates.LEVEL_COMPLETE:
                     Debug.Log("UI Controller: showing UI");
                     ShowUI();
