@@ -22,7 +22,7 @@ namespace Managers
     
         public bool isAtLastLevel { get; private set; } = false; // used to check if the current level is the last one
     
-        public int currentLevelIndex { get; private set; } = -1; // default to 0 as level numbers begin at 01
+        public int CurrentLevelIndex { get; private set; } = -1; // default to 0 as level numbers begin at 01
     
         [Header("Level object references")]
         [SerializeField] private GameObject playerCharacterObject;
@@ -92,8 +92,8 @@ namespace Managers
                     break;
                 default:
                     // title screen, level select
-                    currentLevelIndex = -1;
-                    isAtLastLevel = currentLevelIndex != -1 && currentLevelIndex < levelKeys.Length - 1; //CheckLevelExistsAtIndex(currentLevelNum + 1);
+                    CurrentLevelIndex = -1;
+                    isAtLastLevel = CurrentLevelIndex != -1 && CurrentLevelIndex < levelKeys.Length - 1; //CheckLevelExistsAtIndex(currentLevelNum + 1);
     
                     // disable character movement if the character is not null
                     if (playerCharacterObject != null)
@@ -147,7 +147,7 @@ namespace Managers
                 // level should have a key
                 string lvKey = levelKeys[levelIndex];
                 Addressables.LoadSceneAsync(lvKey);
-                currentLevelIndex = levelIndex;
+                CurrentLevelIndex = levelIndex;
                 isAtLastLevel = levelIndex ==  levelKeys.Length - 1;
             }
             else
