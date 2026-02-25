@@ -10,6 +10,9 @@
                 <ui:Button text="2" name="L2Button" enabled="false" class="level-select-button">
                     <ui:VisualElement name="Lock" class="level-padlock" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Sprites/physica_expansion.png?fileID=-1343850948&amp;guid=9d93081a9c559fe4f8d2b6b793002c8d&amp;type=3#physica_expansion_padlock&quot;);" />
                 </ui:Button>
+                <ui:Button text="3" name="L3Button" enabled="false" class="level-select-button">
+                    <ui:VisualElement name="Lock" class="level-padlock" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Sprites/physica_expansion.png?fileID=-1343850948&amp;guid=9d93081a9c559fe4f8d2b6b793002c8d&amp;type=3#physica_expansion_padlock&quot;);" />
+                </ui:Button>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Footer" style="flex-grow: 1; height: 0; min-height: 0; align-content: flex-start; justify-content: flex-end; flex-direction: column; padding-top: 0; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; align-items: stretch; align-self: stretch;">
