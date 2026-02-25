@@ -14,3 +14,7 @@
     font-size: 30px;
     -unity-font-style: bold;
 }
+
+.level-padlock {
+    background-size: 75% 90%;
+}
