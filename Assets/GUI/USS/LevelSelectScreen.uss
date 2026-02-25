@@ -18,3 +18,9 @@
 .level-padlock {
     background-size: 75% 90%;
 }
+
+/* As pointed out by spiney199 (2024), use the .unity-disabled pseudoclass to make the padlocks appear normally */
+.unity-disabled
+{
+    opacity: 1;
+}
