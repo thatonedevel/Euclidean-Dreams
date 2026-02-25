@@ -70,7 +70,7 @@ namespace EGUI
         private void NextStageHandler()
         {
             screenRoot.visible = false;
-            GameController.Singleton.LoadGameLevel(GameController.Singleton.currentLevelIndex + 1);
+            GameController.Singleton.LoadGameLevel(GameController.Singleton.CurrentLevelIndex + 1);
         }
     
         private void GameStateChangedHandler(GameStates newState, GameStates oldState)
@@ -78,9 +78,6 @@ namespace EGUI
             Debug.Log("detected state change " + newState);
             switch (newState)
             {
-                case GameStates.PLAYING:
-                    // we entered a level
-                    break;
                 case GameStates.LEVEL_COMPLETE:
                     Debug.Log("UI Controller: showing UI");
                     ShowUI();
@@ -88,6 +85,7 @@ namespace EGUI
                 default:
                     // disable the ui
                     screenRoot.visible = false;
+                    ResetGemDisplays();
                     break;
             }
         }
@@ -127,6 +125,14 @@ namespace EGUI
             }
     
             GameController.Singleton.RestartLevel();
+        }
+
+        private void ResetGemDisplays()
+        {
+            foreach (VisualElement gauge in gemGauges)
+            {
+                gauge.visible = false;
+            }
         }
     }
 }

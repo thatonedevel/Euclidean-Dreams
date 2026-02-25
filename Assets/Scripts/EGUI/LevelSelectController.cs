@@ -12,6 +12,7 @@ namespace EGUI
         private Button titleScreenButton;
         private Button devGymButton;
         private List<Button> levelSelectionButtons = new();
+        private List<VisualElement> levelPadlocks = new();
     
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -24,7 +25,11 @@ namespace EGUI
             UQueryState<Button> buttonQuery = new UQueryBuilder<Button>(levelSelectDoc.rootVisualElement)
                 .Class("level-select-button")
                 .Build();
-    
+
+            UQueryState<VisualElement> lockQuery = new UQueryBuilder<VisualElement>(levelSelectDoc.rootVisualElement)
+                .Class("level-padlock")
+                .Build();
+            
             // subscribe to the events / register the callbacks
             titleScreenButton.clicked += () => GameController.Singleton.StartGame();
             devGymButton.clicked += () => GameController.Singleton.LoadDevGym();
@@ -33,6 +38,13 @@ namespace EGUI
                 levelSelectionButtons.Add(btn);
                 btn.RegisterCallback<ClickEvent>(LevelSelectedCallback); 
             });
+            
+            lockQuery.ForEach((VisualElement padlock) => {
+                levelPadlocks.Add(padlock);
+            });
+            
+            // once this is done we can update the level locks. call here since this is in a dedicated scene
+            UpdateLevelLocking();
         }
     
         private void LevelSelectedCallback(ClickEvent eventData)
@@ -45,6 +57,22 @@ namespace EGUI
             // search the button list to find it
             levelNum =  levelSelectionButtons.IndexOf(clickedButton);
             GameController.Singleton.LoadGameLevel(levelNum);
+        }
+
+        private void UpdateLevelLocking()
+        {
+            // use this method to update which levels are locked / unlocked
+            int lastToUnlock = LevelProgressManager.Singleton.LastUnlockedStageIndex;
+
+            for (int i = 0; i <= lastToUnlock; i++)
+            {
+                if (i > levelPadlocks.Count)
+                    break;
+                
+                // set the stage to unlocked & enable the button
+                levelPadlocks[i].visible = false;
+                levelSelectionButtons[i].enabledSelf = true;
+            }
         }
     }
 }

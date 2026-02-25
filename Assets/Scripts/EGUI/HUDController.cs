@@ -75,6 +75,7 @@ namespace EGUI
                    break;
                default: 
                    // hide the hud
+                   ResetGemDisplays();
                    displayRoot.visible = false;
                    break;
            }
