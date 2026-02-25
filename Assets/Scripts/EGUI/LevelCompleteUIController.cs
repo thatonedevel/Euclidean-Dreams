@@ -88,6 +88,7 @@ namespace EGUI
                 default:
                     // disable the ui
                     screenRoot.visible = false;
+                    ResetGemDisplays();
                     break;
             }
         }
@@ -127,6 +128,14 @@ namespace EGUI
             }
     
             GameController.Singleton.RestartLevel();
+        }
+
+        private void ResetGemDisplays()
+        {
+            foreach (VisualElement gauge in gemGauges)
+            {
+                gauge.visible = false;
+            }
         }
     }
 }
