@@ -70,7 +70,7 @@ namespace EGUI
         private void NextStageHandler()
         {
             screenRoot.visible = false;
-            GameController.Singleton.LoadGameLevel(GameController.Singleton.currentLevelIndex + 1);
+            GameController.Singleton.LoadGameLevel(GameController.Singleton.CurrentLevelIndex + 1);
         }
     
         private void GameStateChangedHandler(GameStates newState, GameStates oldState)
