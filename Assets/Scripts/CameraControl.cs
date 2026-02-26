@@ -79,6 +79,17 @@ public class CameraControl : MonoBehaviour
         {
             rotation.Set(-rotationAmount, 0, 0);
         }
+        
+        // check the rotation vector's x value - if it's not 0 and it would put
+        // the player over the limit, cancel it
+        if (rotation.x != 0)
+        {
+            print("target rotation:" + (Mathf.Round(transform.eulerAngles.x) + rotation.x));
+            if (transform.eulerAngles.x < 180)
+                rotation.x = Mathf.Abs(Mathf.Round(transform.eulerAngles.x) + rotation.x) > 90? 0 : rotation.x;
+            else
+                rotation.x = Mathf.Abs(Mathf.Round(transform.eulerAngles.x) + rotation.x) >= 270? rotation.x : 0;
+        }
     }
 
     private void ZoomCamera(Vector2 input)
