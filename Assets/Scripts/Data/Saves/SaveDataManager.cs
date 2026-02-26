@@ -37,9 +37,11 @@ namespace Data.Saves
             {
                 // check if the data is valid
                 bool isValid = ReadSaveData();
-                
+
                 if (!isValid)
                     WriteSaveData(); // this will override it with a blank object
+                else
+                    saveData = null; // for now discard it as we don't want this data yet
             }
             else
             {
@@ -71,8 +73,27 @@ namespace Data.Saves
         private bool ReadSaveData()
         {
             var text = File.ReadAllText(Application.persistentDataPath + "/ " + SAVE_NAME);
-            
-            JsonUtility.FromJson<SaveSlotData>(text);
+
+            SaveSlotData data = null;
+
+            try
+            {
+                data = JsonUtility.FromJson<SaveSlotData>(text);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            if (data != null)
+            {
+                saveData = data;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
