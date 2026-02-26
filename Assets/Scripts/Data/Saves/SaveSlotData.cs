@@ -20,9 +20,9 @@ namespace Data.Saves
             // take the level count in constructor so we can properly size the gem coll status array
             gemCollectionStatus = new bool[levelCount, 3];
             
-            for (int i = 0; i < gemCollectionStatus.Length; i++)
+            for (int i = 0; i < gemCollectionStatus.GetLength(0); i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < gemCollectionStatus.GetLength(1); j++)
                 {
                     gemCollectionStatus[i, j] = false;
                 }
