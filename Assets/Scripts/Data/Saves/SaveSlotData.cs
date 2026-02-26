@@ -1,16 +1,24 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Data.Saves
 {
-    public struct SaveSlotData
+    [Serializable]
+    public class SaveSlotData
     {
         // struct to store all data for a session. includes last level index, gem collection states & playtime
-        public int lastUnlockedMainStage;
-        public int lastUnlockedBonusStage;
+        public int lastUnlockedMainStage = 0;
+        public int lastUnlockedBonusStage = -1;
 
-        public float savePlayTime;
+        public float savePlayTime = 0;
         
         public bool[,] gemCollectionStatus;
+
+        public SaveSlotData(int levelCount)
+        {
+            // take the level count in constructor so we can properly size the gem coll status array
+            gemCollectionStatus = new bool[levelCount, 3];
+        }
     }
 }
