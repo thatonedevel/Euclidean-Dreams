@@ -2,6 +2,7 @@ using GameConstants;
 using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.ProBuilder;
 
 public class CameraControl : MonoBehaviour
 {
@@ -163,7 +164,7 @@ public class CameraControl : MonoBehaviour
             if (currentPercent >= 1)
             {
                 // stop rotation, reset values
-                transform.eulerAngles = targetAngles;
+                transform.eulerAngles = new Vector3(Mathf.Round(transform.eulerAngles.x), Mathf.Round(transform.eulerAngles.y), 0);
                 elapsedLerpTime = 0;
                 neededLerpTime = 0;
                 currentPercent = 0;
