@@ -11,6 +11,8 @@ namespace Data.Saves
 {
     public class SaveDataManager : MonoBehaviour
     {
+        // TODO: switch this over to use the .net serializer as unity's doesnt support 2d arrays
+        
         const string SAVE_NAME = "player_data.json";
         
         [Header("Debug Information")]
@@ -29,6 +31,8 @@ namespace Data.Saves
         {
             // check with the game controller how many stages exist
             int stageCount = GameController.Singleton.TotalLevelCount;
+            
+            print(Application.persistentDataPath);
             
             saveData = new SaveSlotData(stageCount);
             
@@ -90,10 +94,8 @@ namespace Data.Saves
                 saveData = data;
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
 }
