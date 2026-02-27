@@ -67,5 +67,12 @@ namespace Data.Saves
                 }
             }
         }
+
+        public void ConstructGemData()
+        {
+            int totalOuterLength = gemCollectionStatus_flat.Length / 3;
+            
+            gemCollectionStatus = new bool[totalOuterLength, 3];
+        }
     }
 }
