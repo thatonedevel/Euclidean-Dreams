@@ -92,6 +92,11 @@ namespace Data.Saves
             if (data != null)
             {
                 saveData = data;
+                
+                // check it contains the needed information. not unity type so we can use an is check
+                if (!CheckInputDataIsValid())
+                    return false;
+                
                 saveData.ConstructGemData();
                 saveData.UnflattenGemData();
                 return true;
@@ -115,6 +120,18 @@ namespace Data.Saves
             saveData.FlattenGemData();
             
             WriteSaveData();
+        }
+
+        private bool CheckInputDataIsValid()
+        {
+            if (saveData.lastUnlockedMainStage < 0)
+                return false;
+            if (saveData.lastUnlockedBonusStage < -1)
+                return false;
+            if (saveData.gemCollectionStatus_flat == null)
+                return false;
+            
+            return true;
         }
     }
 }
