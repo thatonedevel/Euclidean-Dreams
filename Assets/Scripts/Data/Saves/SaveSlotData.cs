@@ -53,5 +53,19 @@ namespace Data.Saves
             
             Debug.Log("FlattenGemData complete");
         }
+
+        public void UnflattenGemData()
+        {
+            int flatIndex = 0;
+
+            for (int i = 0; i < gemCollectionStatus.GetLength(0); i++)
+            {
+                for (int j = 0; j < gemCollectionStatus.GetLength(1); j++)
+                {
+                    gemCollectionStatus[i, j] = gemCollectionStatus_flat[flatIndex];
+                    flatIndex++;
+                }
+            }
+        }
     }
 }
