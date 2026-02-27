@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -44,13 +43,14 @@ namespace Data.Saves
 
                 if (!isValid)
                     WriteSaveData(); // this will override it with a blank object
-                else
-                    saveData = null; // for now discard it as we don't want this data yet
             }
             else
             {
                 WriteSaveData();
             }
+            
+            // subscribe to the level progress update event here
+            LevelProgressManager.LevelProgressUpdated += LevelCompletedListener;
         }
 
         private void WriteSaveData()
@@ -92,10 +92,29 @@ namespace Data.Saves
             if (data != null)
             {
                 saveData = data;
+                saveData.ConstructGemData();
+                saveData.UnflattenGemData();
                 return true;
             }
 
+            Debug.LogWarning("Save data is null");
+            
             return false;
+        }
+
+        private void LevelCompletedListener(int lastStageIndex, int currenStageIndex, float completionTime, bool[] gemData)
+        {
+            // called once a level is completed.
+            // retrieve the following data: time in stage, gems & level index
+            saveData.lastUnlockedMainStage = lastStageIndex;
+            saveData.savePlayTime +=  completionTime;
+            saveData.gemCollectionStatus[currenStageIndex, 0] = gemData[0];
+            saveData.gemCollectionStatus[currenStageIndex, 1] = gemData[1];
+            saveData.gemCollectionStatus[currenStageIndex, 2] = gemData[2];
+            
+            saveData.FlattenGemData();
+            
+            WriteSaveData();
         }
     }
 }
