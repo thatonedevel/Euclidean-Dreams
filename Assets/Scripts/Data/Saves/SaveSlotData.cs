@@ -36,5 +36,22 @@ namespace Data.Saves
                 }
             }
         }
+
+        public void FlattenGemData()
+        {
+            // converts the data stored in the gemCollectionsStatus array to 1d data
+            int flatIndex = 0;
+
+            for (int i = 0; i < gemCollectionStatus.GetLength(0); i++)
+            {
+                for (int j = 0; j < gemCollectionStatus.GetLength(1); j++)
+                {
+                    gemCollectionStatus_flat[flatIndex] =  gemCollectionStatus[i, j];
+                    flatIndex++;
+                }
+            }
+            
+            Debug.Log("FlattenGemData complete");
+        }
     }
 }
