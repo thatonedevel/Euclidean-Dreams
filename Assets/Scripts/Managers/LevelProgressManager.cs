@@ -12,7 +12,7 @@ namespace Managers
         // like other managers this uses the singleton pattern
         public static LevelProgressManager Singleton { get; private set; }
 
-        public static event Action<int, float, bool[]> LevelProgressUpdated;
+        public static event Action<int, int, float, bool[]> LevelProgressUpdated;
         
         public int LastUnlockedStageIndex { get; private set; } = 0;
         public int LastUnlockedBonusStageIndex { get; private set; } = -1; // TODO: use this once we implement bonus stages
@@ -42,7 +42,7 @@ namespace Managers
             // grab the gem info & completion time from the level data object
             var levelDat = GameObject.FindWithTag("LevelData").GetComponent<LevelData>();
             
-            LevelProgressUpdated?.Invoke(LastUnlockedStageIndex, levelDat.levelClearTime, levelDat.gemCollectionStatus);
+            LevelProgressUpdated?.Invoke(LastUnlockedStageIndex, currentStage, levelDat.levelClearTime, levelDat.gemCollectionStatus);
         }
     }
 }
