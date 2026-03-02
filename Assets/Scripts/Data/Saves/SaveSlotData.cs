@@ -73,6 +73,14 @@ namespace Data.Saves
             int totalOuterLength = gemCollectionStatus_flat.Length / 3;
             
             gemCollectionStatus = new bool[totalOuterLength, 3];
+
+            for (int i = 0; i < gemCollectionStatus.GetLength(0); i++)
+            {
+                for (int j = 0; j < gemCollectionStatus.GetLength(1); j++)
+                {
+                    gemCollectionStatus[i, j] = false;
+                }
+            }
         }
     }
 }
