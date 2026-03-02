@@ -3,6 +3,7 @@ using LevelObjects;
 using UnityEngine;
 using System;
 using Data;
+using Data.Saves;
 
 namespace Managers
 {
@@ -26,6 +27,7 @@ namespace Managers
             
             // subscribe to events
             LevelGoal.OnGoalReached += StageCompletedHandler;
+            SaveDataManager.SaveDataReadComplete +=  SaveLoadedHandler;
         }
         
         private void StageCompletedHandler()
@@ -43,6 +45,12 @@ namespace Managers
             var levelDat = GameObject.FindWithTag("LevelData").GetComponent<LevelData>();
             
             LevelProgressUpdated?.Invoke(LastUnlockedStageIndex, currentStage, levelDat.levelClearTime, levelDat.gemCollectionStatus);
+        }
+
+        private void SaveLoadedHandler(int mainLevelIndex, int bonusLevelIndex)
+        {
+            LastUnlockedBonusStageIndex = bonusLevelIndex;
+            LastUnlockedStageIndex = mainLevelIndex;
         }
     }
 }
