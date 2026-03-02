@@ -86,6 +86,7 @@ namespace Data.Saves
             }
             catch (Exception e)
             {
+                saveData =  new SaveSlotData(GameController.Singleton.TotalLevelCount);
                 return false;
             }
 
@@ -95,7 +96,12 @@ namespace Data.Saves
                 
                 // check it contains the needed information. not unity type so we can use an is check
                 if (!CheckInputDataIsValid())
+                {
+                    saveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+                    saveData.ConstructGemData();
+                    saveData.FlattenGemData();
                     return false;
+                }
                 
                 saveData.ConstructGemData();
                 saveData.UnflattenGemData();
@@ -103,7 +109,7 @@ namespace Data.Saves
             }
 
             Debug.LogWarning("Save data is null");
-            
+            saveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
             return false;
         }
 
@@ -130,7 +136,8 @@ namespace Data.Saves
                 return false;
             if (saveData.gemCollectionStatus_flat == null)
                 return false;
-            
+            if (saveData.gemCollectionStatus_flat.Length == 0)
+                return  false;
             return true;
         }
     }
