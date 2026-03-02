@@ -143,5 +143,26 @@ namespace Data.Saves
                 return  false;
             return true;
         }
+
+        public bool[] GetGemStatusForStage(int stageIndex, bool isBonus=false)
+        {
+            // gets the gem status array for the specified stage
+            // if the provided index is out of range, returns an empty array
+            
+            // TODO: add process for the bonus stages
+            if (stageIndex >= 0 && stageIndex < GameController.Singleton.TotalLevelCount)
+            {
+                bool[] retArr = new bool[3];
+                retArr[0] = saveData.gemCollectionStatus[stageIndex, 0];
+                retArr[0] = saveData.gemCollectionStatus[stageIndex, 1];
+                retArr[0] = saveData.gemCollectionStatus[stageIndex, 2];
+
+                return retArr;
+            }
+            else
+            {
+                return  new bool[] { };
+            }
+        }
     }
 }
