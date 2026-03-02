@@ -23,7 +23,7 @@ namespace Data.Saves
         
         // event fired once data is finished writing
         public static event Action<bool> SaveDataWriteComplete;
-        public static event Action<string> SaveDataReadComplete;
+        public static event Action<int, int> SaveDataReadComplete;
         
         // class to manage current save data, including serialisation & i/o operations
         private void Start()
@@ -43,6 +43,9 @@ namespace Data.Saves
 
                 if (!isValid)
                     WriteSaveData(); // this will override it with a blank object
+                
+                // fire save data read complete slot
+                SaveDataReadComplete?.Invoke(saveData.lastUnlockedMainStage, saveData.lastUnlockedBonusStage);
             }
             else
             {
@@ -136,7 +139,7 @@ namespace Data.Saves
                 return false;
             if (saveData.gemCollectionStatus_flat == null)
                 return false;
-            if (saveData.gemCollectionStatus_flat.Length == 0)
+            if (saveData.gemCollectionStatus_flat.Length != GameController.Singleton.TotalLevelCount * 3)
                 return  false;
             return true;
         }
