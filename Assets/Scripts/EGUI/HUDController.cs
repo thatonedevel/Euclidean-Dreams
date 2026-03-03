@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Managers;
 using System.Collections.Generic;
+using Data;
 using GameConstants.Enumerations;
 using ScriptableObjects;
 
@@ -18,7 +20,12 @@ namespace EGUI
        private Button restartButton;
 
        private List<VisualElement> gemDisplays = new();
-       
+
+       private void Awake()
+       {
+           LevelData.OnLevelInitComplete += LevelStartHandler;
+       }
+
        // Start is called once before the first execution of Update after the MonoBehaviour is created
        private void OnEnable()
        {
@@ -58,6 +65,17 @@ namespace EGUI
        private void GemCollectedHandler(GemOrders order)
        {
            gemDisplays[(int)order].visible = true;
+       }
+
+       private void LevelStartHandler(bool[] gems)
+       {
+           for (int i = 0; i < gemDisplays.Count; i++)
+           {
+               if (gems.Length != gemDisplays.Count)
+                   break;
+
+               gemDisplays[i].visible = gems[i];
+           }
        }
 
        private void GameStateChangedHandler(GameStates newState, GameStates oldState)
