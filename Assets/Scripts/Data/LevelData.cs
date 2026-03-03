@@ -1,6 +1,10 @@
+using Data.Saves;
 using GameConstants.Enumerations;
 using UnityEngine;
 using LevelObjects;
+using Managers;
+using Unity.VisualScripting;
+using System;
 
 namespace Data
 {
@@ -16,6 +20,9 @@ namespace Data
 
         // internal data
         private float levelStartTime;
+        
+        // event raised once level is initialised
+        public static event Action<bool[]> OnLevelInitComplete;
 
         public string GetStageName() => stageName;
 
@@ -25,6 +32,7 @@ namespace Data
             // subscribe to gem collected event
             Gem.OnGemCollected += GemCollectedHandler;
             levelStartTime = Time.time;
+            LevelInit();
         }
 
         private void OnDestroy()
@@ -44,7 +52,7 @@ namespace Data
 
         }
 
-        public void GemCollectedHandler(GemOrders num)
+        private void GemCollectedHandler(GemOrders num)
         {
             // gemorders is an enum so we can cast directly to an int to get the index
             gemCollectionStatus[(int)num] = true;
@@ -54,6 +62,24 @@ namespace Data
         {
             // call this when we want to get the stage's clear time
             levelClearTime = Mathf.Round(Time.time - levelStartTime);
+        }
+
+        private void LevelInit()
+        {
+            // get index of this stage
+            int index = GameController.Singleton.CurrentLevelIndex;
+
+            bool[] gems = SaveDataManager.Singleton.GetGemStatusForStage(index);
+
+            if (gems.Length == 3)
+            {
+                // update gem collection status 
+                gemCollectionStatus[0] = gems[0];
+                gemCollectionStatus[1] = gems[1];
+                gemCollectionStatus[2] = gems[2];
+            }
+            
+            OnLevelInitComplete?.Invoke(gems);
         }
     }
 }
