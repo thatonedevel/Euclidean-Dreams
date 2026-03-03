@@ -169,8 +169,8 @@ namespace Data.Saves
             {
                 bool[] retArr = new bool[3];
                 retArr[0] = saveData.gemCollectionStatus[stageIndex, 0];
-                retArr[0] = saveData.gemCollectionStatus[stageIndex, 1];
-                retArr[0] = saveData.gemCollectionStatus[stageIndex, 2];
+                retArr[1] = saveData.gemCollectionStatus[stageIndex, 1];
+                retArr[2] = saveData.gemCollectionStatus[stageIndex, 2];
 
                 return retArr;
             }
