@@ -1,4 +1,4 @@
-# Euclidean Dreams
+Euclidean Dreams
 -----------------
 
 Repository for the CI601 Computing Project @ Brighton Uni.
@@ -9,3 +9,8 @@ much intended as alpha versions - they do function but have a minimal feature se
 This project aims to present a game to explore how you (the player) can navigate the space in 2D vs 3D, by allowing you 
 to switch between either, and be subjected to the rules of physics in either dimension. What I eventually hope to be a 
 recurring theme for this project is having regular subversion of expectations with how you interact with this world.
+
+## Credits
+This project was made possible thanks to several artists who provided open assets for others to use
+
+- Buch from OpenGameArt for the physica expansion icons set: https://opengameart.org/content/physica-assets-expansion

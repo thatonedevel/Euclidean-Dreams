@@ -23,6 +23,8 @@ namespace Managers
         public bool isAtLastLevel { get; private set; } = false; // used to check if the current level is the last one
     
         public int CurrentLevelIndex { get; private set; } = -1; // default to 0 as level numbers begin at 01
+        
+        public int TotalLevelCount { get; private set; } = 0;
     
         [Header("Level object references")]
         [SerializeField] private GameObject playerCharacterObject;
@@ -50,6 +52,8 @@ namespace Managers
                 // subscribe to important events
                 LevelGoal.OnGoalReached += GoalReachedHandler;
                 SceneManager.sceneLoaded += SceneChangedHandler;
+                // set level count
+                TotalLevelCount =  levelKeys.Length;
             }
             else
             {

@@ -1,6 +1,9 @@
 using EGUI;
 using LevelObjects;
 using UnityEngine;
+using System;
+using Data;
+using Data.Saves;
 
 namespace Managers
 {
@@ -9,7 +12,8 @@ namespace Managers
         // class used to control player progression & unlock stages
         // like other managers this uses the singleton pattern
         public static LevelProgressManager Singleton { get; private set; }
-        
+
+        public static event Action<int, int, float, bool[]> LevelProgressUpdated;
         
         public int LastUnlockedStageIndex { get; private set; } = 0;
         public int LastUnlockedBonusStageIndex { get; private set; } = -1; // TODO: use this once we implement bonus stages
@@ -23,6 +27,7 @@ namespace Managers
             
             // subscribe to events
             LevelGoal.OnGoalReached += StageCompletedHandler;
+            SaveDataManager.SaveDataReadComplete +=  SaveLoadedHandler;
         }
         
         private void StageCompletedHandler()
@@ -35,6 +40,17 @@ namespace Managers
                 // we can unlock the next stage
                 LastUnlockedStageIndex++;
             }
+            
+            // grab the gem info & completion time from the level data object
+            var levelDat = GameObject.FindWithTag("LevelData").GetComponent<LevelData>();
+            
+            LevelProgressUpdated?.Invoke(LastUnlockedStageIndex, currentStage, levelDat.levelClearTime, levelDat.gemCollectionStatus);
+        }
+
+        private void SaveLoadedHandler(int mainLevelIndex, int bonusLevelIndex)
+        {
+            LastUnlockedBonusStageIndex = bonusLevelIndex;
+            LastUnlockedStageIndex = mainLevelIndex;
         }
     }
 }
