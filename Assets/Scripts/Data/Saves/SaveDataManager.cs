@@ -25,7 +25,22 @@ namespace Data.Saves
         public static event Action<bool> SaveDataWriteComplete;
         public static event Action<int, int> SaveDataReadComplete;
         
+        public static SaveDataManager Singleton { get; private set; }
+        
         // class to manage current save data, including serialisation & i/o operations
+
+        private void Awake()
+        {
+            // set up singleton here
+            if (Singleton != null)
+                Destroy(gameObject);
+            else
+            {
+                Singleton = this;
+            }
+        }
+        
+        
         private void Start()
         {
             // check with the game controller how many stages exist
