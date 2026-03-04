@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.UIElements;
 using System;
 using System.Linq;
-using Unity.VisualScripting;
 
 namespace EGUI
 {
@@ -29,27 +28,35 @@ namespace EGUI
         private Button titleScreenButton;
         private Button settingsButton;
         
+        // hierarchy root we made
+        private VisualElement customRoot;
+        
         // list for the queries
         UQueryState<VisualElement>[] widgetQueries = new UQueryState<VisualElement>[5];
         
+        [SerializeField] private UIDocument uiDocument;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+            customRoot = uiDocument.rootVisualElement.Query<VisualElement>("Root");
+            
             // queries for each of the "groups"
             CreateWidgetQueries();
 
             slotPanels = widgetQueries[0].ToList();
             buttonContainers = widgetQueries[1].ToList();
             CreateButtonArrays();
+            SubscribeToButtonEvents();
+            
+            // register the hover callback
+            foreach (var slot in slotPanels)
+            {
+                slot.RegisterCallback<MouseOverEvent>(SaveSlotHoverCallback);
+                //slot.RegisterCallback<MouseOutEvent>(SaveSlotExitCallback);
+            }
         }
-
-        // Update is called once per frame
-        void Update()
-        {
         
-        }
-
         private void CreateWidgetQueries()
         {
             string[] classes =
@@ -63,7 +70,7 @@ namespace EGUI
 
             for (int i = 0; i < classes.Length; i++)
             {
-                widgetQueries[i] = new UQueryBuilder<VisualElement>()
+                widgetQueries[i] = new UQueryBuilder<VisualElement>(uiDocument.rootVisualElement)
                     .Class(classes[i])
                     .Build();
             }
@@ -83,7 +90,44 @@ namespace EGUI
                 }
             }
         }
-        
+
+        private void SubscribeToButtonEvents()
+        {
+            Action[] buttonActions = {PlayButtonPressed, CopyButtonPressed, DeleteButtonPressed};
+            List<Button>[] buttonLists = { playSaveButtons, copySaveButtons, deleteSaveButtons };
+
+            for (int i = 0; i < buttonLists.Length; i++)
+            {
+                for (int j = 0; j < buttonLists[i].Count; j++)
+                {
+                    buttonLists[i][j].clicked += buttonActions[i];
+                }
+            }
+        }
+
+        private void SaveSlotHoverCallback(MouseOverEvent evt)
+        {
+            // check which of the slots we hovered over
+            var hovered = evt.target as VisualElement;
+
+            var ind = slotPanels.IndexOf(hovered);
+            if (ind != -1)
+            {
+                buttonContainers[ind].visible = true;
+            }
+        }
+
+        private void SaveSlotExitCallback(MouseOutEvent evt)
+        {
+            // check which of the slots we hovered over
+            var hovered = evt.target as VisualElement;
+
+            var ind = slotPanels.IndexOf(hovered);
+            if (ind != -1)
+            {
+                buttonContainers[ind].visible = false;
+            }
+        }
         
         // temp implementations to make sure references are set correctly
         private void PlayButtonPressed() => Debug.Log("PlayButtonPressed");
