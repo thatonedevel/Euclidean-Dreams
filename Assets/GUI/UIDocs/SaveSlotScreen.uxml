@@ -5,18 +5,32 @@
             <ui:VisualElement name="SavePanel0" class="save-panel" style="flex-grow: 1;">
                 <ui:Label text="Save 1" name="Save0_Label" />
                 <ui:Label text="Empty Save" name="MetaLabel_0" class="meta-label" style="letter-spacing: 0;" />
-                <ui:VisualElement name="ButtonGrp_0" style="flex-grow: 1;" />
+                <ui:VisualElement name="ButtonGrp_0" class="button-container" style="flex-grow: 1; visibility: hidden;">
+                    <ui:Button text="Play&#10;" name="Play_0" class="control-button" />
+                    <ui:Button text="Copy&#10;" name="Copy_0" class="control-button" />
+                    <ui:Button text="Delete" name="Del_0" class="control-button" />
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="SavePanel1" class="save-panel" style="flex-grow: 1;">
                 <ui:Label text="Save 2" name="Save1_Label" />
                 <ui:Label text="Empty  Save" name="MetaLabel_1" class="meta-label" />
-                <ui:VisualElement name="ButtonGrp_1" style="flex-grow: 1;" />
+                <ui:VisualElement name="ButtonGrp_1" class="button-container" style="flex-grow: 1; visibility: hidden;">
+                    <ui:Button text="Play" name="Play_1" class="control-button" />
+                    <ui:Button text="Copy" name="Copy_1" class="control-button" />
+                    <ui:Button text="Delete" name="Del_1" class="control-button" />
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="SavePanel2" class="save-panel" style="flex-grow: 1;">
                 <ui:Label text="Save 3" name="Save2_Label" />
                 <ui:Label text="Empty Save" name="MetaLabel_2" class="meta-label" />
-                <ui:VisualElement name="ButtonGrp_2" style="flex-grow: 1;" />
+                <ui:VisualElement name="ButtonGrp_2" class="button-container" style="flex-grow: 1; visibility: hidden;">
+                    <ui:Button text="Play" name="Play_2" class="control-button" />
+                    <ui:Button text="Copy" name="Copy_2" class="control-button" />
+                    <ui:Button text="Delete" name="Del_3" class="control-button" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
+        <ui:Button name="TitleBtn" text="Title" class="misc-button" style="top: 28px; left: 22px; background-image: none;" />
+        <ui:Button name="SettingsBtn" class="misc-button" style="top: 27px; left: 1827px; background-image: url(&quot;project://database/Assets/Sprites/physica_expansion.png?fileID=-2041197940&amp;guid=9d93081a9c559fe4f8d2b6b793002c8d&amp;type=3#physica_expansion_settings&quot;); -unity-background-image-tint-color: rgb(0, 0, 0);" />
     </ui:VisualElement>
 </ui:UXML>
