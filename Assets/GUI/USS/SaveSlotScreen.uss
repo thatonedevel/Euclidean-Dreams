@@ -24,3 +24,14 @@
     -unity-font-style: bold;
     font-size: 40px;
 }
+
+.meta-label {
+    padding-top: 20px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    margin-bottom: 125px;
+    -unity-font-style: normal;
+    font-size: 35px;
+    -unity-text-align: upper-center;
+}
