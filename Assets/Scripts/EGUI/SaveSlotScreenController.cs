@@ -53,7 +53,7 @@ namespace EGUI
             foreach (var slot in slotPanels)
             {
                 slot.RegisterCallback<MouseOverEvent>(SaveSlotHoverCallback);
-                //slot.RegisterCallback<MouseOutEvent>(SaveSlotExitCallback);
+                slot.RegisterCallback<MouseLeaveEvent>(SaveSlotExitCallback);
             }
         }
         
@@ -117,7 +117,7 @@ namespace EGUI
             }
         }
 
-        private void SaveSlotExitCallback(MouseOutEvent evt)
+        private void SaveSlotExitCallback(MouseLeaveEvent evt) // use this instead of MouseOutEvent, as pointed out by sebastiend-unity (2021)
         {
             // check which of the slots we hovered over
             var hovered = evt.target as VisualElement;
