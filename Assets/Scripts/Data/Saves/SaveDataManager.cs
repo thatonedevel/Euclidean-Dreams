@@ -15,7 +15,9 @@ namespace Data.Saves
         const string SAVE_NAME = "player_data.json";
         
         [Header("Debug Information")]
-        [SerializeField] private SaveSlotData saveData;
+        [SerializeField] private SaveSlotData activeSaveData;
+        [SerializeField] private SaveSlotData[] saveDataSlots;
+        [SerializeField] private int activeSlotIndex = 0;
 
         private string saveDataJsonString = String.Empty;
 
@@ -48,7 +50,7 @@ namespace Data.Saves
             
             print(Application.persistentDataPath);
             
-            saveData = new SaveSlotData(stageCount);
+            activeSaveData = new SaveSlotData(stageCount);
             
             // check if the save file exists. if not, create it
             if (File.Exists(Application.persistentDataPath + "/ " + SAVE_NAME))
@@ -60,7 +62,7 @@ namespace Data.Saves
                     WriteSaveData(); // this will override it with a blank object
                 
                 // fire save data read complete slot
-                SaveDataReadComplete?.Invoke(saveData.lastUnlockedMainStage, saveData.lastUnlockedBonusStage);
+                SaveDataReadComplete?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
             }
             else
             {
@@ -71,16 +73,19 @@ namespace Data.Saves
             LevelProgressManager.LevelProgressUpdated += LevelCompletedListener;
         }
 
-        private void WriteSaveData()
+        private void WriteSaveData(string fileName = "")
         {
             // serialize the stored save object to a json string
-            saveDataJsonString = JsonUtility.ToJson(saveData);
+            saveDataJsonString = JsonUtility.ToJson(activeSaveData);
             bool success = true;
             
             // use file write as it will be relatively small
             try
             {
-                File.WriteAllTextAsync(Application.persistentDataPath + "/ " + SAVE_NAME, saveDataJsonString);
+                if (fileName.Equals(""))
+                    File.WriteAllTextAsync(Application.persistentDataPath + "/" + SAVE_NAME, saveDataJsonString);
+                else
+                    File.WriteAllTextAsync(Application.persistentDataPath + "/" + fileName, saveDataJsonString);
             }
             catch (Exception e)
             {
@@ -92,9 +97,15 @@ namespace Data.Saves
             SaveDataWriteComplete?.Invoke(success);
         }
 
-        private bool ReadSaveData()
+        private bool ReadSaveData(string fileName="")
         {
-            var text = File.ReadAllText(Application.persistentDataPath + "/ " + SAVE_NAME);
+            string text = "";
+            
+            if (fileName.Equals(""))
+                text = File.ReadAllText(Application.persistentDataPath + "/" + SAVE_NAME);
+            else
+                text = File.ReadAllText(Application.persistentDataPath + "/" + fileName);
+            
 
             SaveSlotData data = null;
 
@@ -104,30 +115,30 @@ namespace Data.Saves
             }
             catch (Exception e)
             {
-                saveData =  new SaveSlotData(GameController.Singleton.TotalLevelCount);
+                activeSaveData =  new SaveSlotData(GameController.Singleton.TotalLevelCount);
                 return false;
             }
 
             if (data != null)
             {
-                saveData = data;
+                activeSaveData = data;
                 
                 // check it contains the needed information. not unity type so we can use an is check
                 if (!CheckInputDataIsValid())
                 {
-                    saveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
-                    saveData.ConstructGemData();
-                    saveData.FlattenGemData();
+                    activeSaveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+                    activeSaveData.ConstructGemData();
+                    activeSaveData.FlattenGemData();
                     return false;
                 }
                 
-                saveData.ConstructGemData();
-                saveData.UnflattenGemData();
+                activeSaveData.ConstructGemData();
+                activeSaveData.UnflattenGemData();
                 return true;
             }
 
             Debug.LogWarning("Save data is null");
-            saveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+            activeSaveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
             return false;
         }
 
@@ -135,29 +146,60 @@ namespace Data.Saves
         {
             // called once a level is completed.
             // retrieve the following data: time in stage, gems & level index
-            saveData.lastUnlockedMainStage = lastStageIndex;
-            saveData.savePlayTime +=  completionTime;
-            saveData.gemCollectionStatus[currenStageIndex, 0] = gemData[0];
-            saveData.gemCollectionStatus[currenStageIndex, 1] = gemData[1];
-            saveData.gemCollectionStatus[currenStageIndex, 2] = gemData[2];
+            activeSaveData.lastUnlockedMainStage = lastStageIndex;
+            activeSaveData.savePlayTime +=  completionTime;
+            activeSaveData.gemCollectionStatus[currenStageIndex, 0] = gemData[0];
+            activeSaveData.gemCollectionStatus[currenStageIndex, 1] = gemData[1];
+            activeSaveData.gemCollectionStatus[currenStageIndex, 2] = gemData[2];
             
-            saveData.FlattenGemData();
+            activeSaveData.FlattenGemData();
             
             WriteSaveData();
         }
 
         private bool CheckInputDataIsValid()
         {
-            if (saveData.lastUnlockedMainStage < 0)
+            if (activeSaveData.lastUnlockedMainStage < 0)
                 return false;
-            if (saveData.lastUnlockedBonusStage < -1)
+            if (activeSaveData.lastUnlockedBonusStage < -1)
                 return false;
-            if (saveData.gemCollectionStatus_flat == null)
+            if (activeSaveData.gemCollectionStatus_flat == null)
                 return false;
-            if (saveData.gemCollectionStatus_flat.Length != GameController.Singleton.TotalLevelCount * 3)
+            if (activeSaveData.gemCollectionStatus_flat.Length != GameController.Singleton.TotalLevelCount * 3)
                 return  false;
             return true;
         }
+
+        private void ValidateAllSaves()
+        {
+            // check with the game controller how many stages exist
+            int stageCount = GameController.Singleton.TotalLevelCount;
+            
+            //print(Application.persistentDataPath);
+            
+            // initialise all the saves
+            for (int i = 0; i < saveDataSlots.Length; i++)
+            {
+                saveDataSlots[i] = new SaveSlotData(stageCount);
+                // check if the save file exists. if not, create it
+                if (File.Exists(Application.persistentDataPath + "/ " + SAVE_NAME))
+                {
+                    // check if the data is valid
+                    bool isValid = ReadSaveData();
+                    
+                    if (!isValid)
+                        WriteSaveData(); // this will override it with a blank object
+                    
+                    // fire save data read complete slot
+                    SaveDataReadComplete?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
+                }
+                else
+                {
+                    WriteSaveData();
+                }
+            }
+        }
+        
 
         public bool[] GetGemStatusForStage(int stageIndex, bool isBonus=false)
         {
@@ -168,9 +210,9 @@ namespace Data.Saves
             if (stageIndex >= 0 && stageIndex < GameController.Singleton.TotalLevelCount)
             {
                 bool[] retArr = new bool[3];
-                retArr[0] = saveData.gemCollectionStatus[stageIndex, 0];
-                retArr[1] = saveData.gemCollectionStatus[stageIndex, 1];
-                retArr[2] = saveData.gemCollectionStatus[stageIndex, 2];
+                retArr[0] = activeSaveData.gemCollectionStatus[stageIndex, 0];
+                retArr[1] = activeSaveData.gemCollectionStatus[stageIndex, 1];
+                retArr[2] = activeSaveData.gemCollectionStatus[stageIndex, 2];
 
                 return retArr;
             }
