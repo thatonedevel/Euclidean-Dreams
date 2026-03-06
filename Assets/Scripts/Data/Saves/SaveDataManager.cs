@@ -12,7 +12,8 @@ namespace Data.Saves
     {
         // TODO: switch this over to use the .net serializer as unity's doesnt support 2d arrays
         
-        const string SAVE_NAME = "player_data.json";
+        const string SAVE_NAME = "player_data";
+        const string FILE_SUFFIX = ".json";
         
         [Header("Debug Information")]
         [SerializeField] private SaveSlotData activeSaveData;
@@ -51,24 +52,30 @@ namespace Data.Saves
             print(Application.persistentDataPath);
             
             activeSaveData = new SaveSlotData(stageCount);
+            saveDataSlots = new SaveSlotData[stageCount];
+
+            for (int i = 0; i < 3; i++)
+            {
+                saveDataSlots[i] = new SaveSlotData(stageCount);
+            }
             
             // check if the save file exists. if not, create it
-            if (File.Exists(Application.persistentDataPath + "/ " + SAVE_NAME))
-            {
-                // check if the data is valid
-                bool isValid = ReadSaveData();
+            //if (File.Exists(Application.persistentDataPath + "/" + SAVE_NAME))
+            //{
+            //    // check if the data is valid
+            //    bool isValid = ReadSaveData();
 
-                if (!isValid)
-                    WriteSaveData(); // this will override it with a blank object
-                
-                // fire save data read complete slot
-                SaveDataReadComplete?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
-            }
-            else
-            {
-                WriteSaveData();
-            }
-            
+            //    if (!isValid)
+            //        WriteSaveData(); // this will override it with a blank object
+            //    
+            //    // fire save data read complete slot
+            //    SaveDataReadComplete?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
+            //}
+            //else
+            //{
+            //    WriteSaveData();
+            //}
+            ValidateAllSaves();
             // subscribe to the level progress update event here
             LevelProgressManager.LevelProgressUpdated += LevelCompletedListener;
         }
@@ -182,20 +189,20 @@ namespace Data.Saves
             {
                 saveDataSlots[i] = new SaveSlotData(stageCount);
                 // check if the save file exists. if not, create it
-                if (File.Exists(Application.persistentDataPath + "/ " + SAVE_NAME))
+                if (File.Exists(Application.persistentDataPath + "/" + SAVE_NAME + i.ToString() + FILE_SUFFIX))
                 {
                     // check if the data is valid
-                    bool isValid = ReadSaveData();
+                    bool isValid = ReadSaveData(SAVE_NAME  + i.ToString() + FILE_SUFFIX);
                     
                     if (!isValid)
-                        WriteSaveData(); // this will override it with a blank object
+                        WriteSaveData(SAVE_NAME + i.ToString() + FILE_SUFFIX); // this will override it with a blank object
                     
                     // fire save data read complete slot
                     SaveDataReadComplete?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
                 }
                 else
                 {
-                    WriteSaveData();
+                    WriteSaveData(SAVE_NAME + i.ToString() + FILE_SUFFIX);
                 }
             }
         }
