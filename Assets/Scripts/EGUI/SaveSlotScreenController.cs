@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UIElements;
 using System;
 using System.Linq;
+using Data.Saves;
 
 namespace EGUI
 {
@@ -14,6 +15,7 @@ namespace EGUI
         private const string CLASS_PLAY_BUTTON = "play-button";
         private const string CLASS_COPY_BUTTON = "copy-button";
         private const string CLASS_DELETE_BUTTON = "delete-button";
+        private const string CLASS_META_LABEL = "meta-label";
         
         // lists for storing the widgets
         private List<VisualElement> slotPanels = new();
@@ -23,6 +25,9 @@ namespace EGUI
         private List<Button> playSaveButtons = new();
         private List<Button> copySaveButtons = new();
         private List<Button> deleteSaveButtons = new();
+        
+        // save metadata labels
+        private List<Label> metadataLabels = new();
         
         // buttons not belonging to a group
         private Button titleScreenButton;
@@ -55,6 +60,13 @@ namespace EGUI
                 slot.RegisterCallback<MouseOverEvent>(SaveSlotHoverCallback);
                 slot.RegisterCallback<MouseLeaveEvent>(SaveSlotExitCallback);
             }
+            
+            new UQueryBuilder<Label>(uiDocument.rootVisualElement)
+                .Class(CLASS_META_LABEL)
+                .Build()
+                .ForEach(label => metadataLabels.Add(label));
+            
+            // update information on the metadata labels
         }
         
         private void CreateWidgetQueries()
@@ -127,6 +139,36 @@ namespace EGUI
             {
                 buttonContainers[ind].visible = false;
             }
+        }
+
+        private void UpdateMetadataLabels()
+        {
+            // for each label, if a save exists, show the save info
+            const string TEMPLATE = "Play Time: {0}\nSave Completion: {1}%";
+
+            for (int i = 0; i < metadataLabels.Count; i++)
+            {
+                
+                float playTime = SaveDataManager.Singleton.GetSavePlayTime(i);
+            }
+            
+        }
+
+        private string FormatFloatTime(float inputTime)
+        {
+            // takes an input seconds time & returns a string using mm:ss format
+            int minutes = (int)inputTime / 60;
+            int seconds = 0;
+            if (minutes > 0)
+            {
+                seconds = (int)((float)inputTime % 60);
+            }
+            else
+            {
+                seconds = (int)inputTime;
+            }
+
+            return $"{minutes}:{seconds}";
         }
         
         // temp implementations to make sure references are set correctly
