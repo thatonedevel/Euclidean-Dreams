@@ -104,7 +104,7 @@ namespace Data.Saves
             SaveDataWriteComplete?.Invoke(success);
         }
 
-        private bool ReadSaveData(string fileName="")
+        private bool ReadSaveData(ref SaveSlotData save, string fileName="")
         {
             string text = "";
             
@@ -192,10 +192,17 @@ namespace Data.Saves
                 if (File.Exists(Application.persistentDataPath + "/" + SAVE_NAME + i.ToString() + FILE_SUFFIX))
                 {
                     // check if the data is valid
-                    bool isValid = ReadSaveData(SAVE_NAME  + i.ToString() + FILE_SUFFIX);
-                    
+                    bool isValid = ReadSaveData(ref saveDataSlots[i],SAVE_NAME  + i.ToString() + FILE_SUFFIX);
+
                     if (!isValid)
+                    {
                         WriteSaveData(SAVE_NAME + i.ToString() + FILE_SUFFIX); // this will override it with a blank object
+                        // set the current save too
+                        saveDataSlots[i] = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+                        saveDataSlots[i].ConstructGemData();
+                        saveDataSlots[i].FlattenGemData();
+                    }
+                        
                     
                     // fire save data read complete slot
                     SaveDataReadComplete?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
@@ -253,6 +260,11 @@ namespace Data.Saves
             float totalPercentage = (stageBeatenPercentage + gemPercentage) / 2;
             
             return (int)totalPercentage;
+        }
+
+        public bool IsSaveSlotEmpty(int saveIndex)
+        {
+            return false;
         }
     }
 }
