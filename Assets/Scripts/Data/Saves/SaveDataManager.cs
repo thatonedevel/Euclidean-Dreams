@@ -228,5 +228,31 @@ namespace Data.Saves
                 return  new bool[] { };
             }
         }
+
+        public float GetSavePlayTime(int saveIndex)
+        {
+            return saveDataSlots[saveIndex].savePlayTime;
+        }
+        
+        public int GetSaveCompletionPercentage(int saveIndex)
+        {
+            // this calculates the actual completion percentage of the provided save
+            // TODO: adjust once bonus stages are implemented
+            float stageBeatenPercentage = ((float)saveDataSlots[saveIndex].lastUnlockedMainStage 
+                                          / (float)GameController.Singleton.TotalLevelCount) * 100;
+
+            int totalGemCount = 0;
+            
+            for (int i = 0; i < saveDataSlots[saveIndex].gemCollectionStatus_flat.Length; i++)
+            {
+                if (saveDataSlots[saveIndex].gemCollectionStatus_flat[i]) totalGemCount++;
+            }
+            
+            float gemPercentage = ((float)totalGemCount / (float)saveDataSlots[saveIndex].gemCollectionStatus_flat.Length) * 100;
+            
+            float totalPercentage = (stageBeatenPercentage + gemPercentage) / 2;
+            
+            return (int)totalPercentage;
+        }
     }
 }
