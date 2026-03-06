@@ -212,6 +212,11 @@ namespace Managers
             if (CurrentGameState == GameStates.PAUSED)
                 UpdateGameState(GameStates.PLAYING);
         }
+
+        public void GoToSaveScreen()
+        {
+            Addressables.LoadSceneAsync(Constants.SCENE_SAVE_SELECT);
+        }
     }
 }
 

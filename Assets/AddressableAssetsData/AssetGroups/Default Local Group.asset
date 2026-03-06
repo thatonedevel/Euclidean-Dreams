@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - default
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c8eef2d157a12f44b8758c46cd52f50
+    m_Address: SaveSelectScene
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e9711000f71f6e34d808e0f093734d70
     m_Address: TestScene
     m_ReadOnly: 0
