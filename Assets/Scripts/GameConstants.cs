@@ -22,6 +22,7 @@ namespace GameConstants
         // scene names
         public const string SCENE_TITLE = "TitleScreen";
         public const string SCENE_LEVEL_SELECT = "LevelSelectScreen";
+        public const string SCENE_SAVE_SELECT = "SaveSelectScene";
 
         // input actions
         public const string ACTION_MOVE = "Move";
