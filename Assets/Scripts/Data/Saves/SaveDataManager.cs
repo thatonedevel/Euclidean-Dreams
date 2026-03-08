@@ -11,25 +11,26 @@ namespace Data.Saves
     public class SaveDataManager : MonoBehaviour
     {
         // TODO: switch this over to use the .net serializer as unity's doesnt support 2d arrays
-        
+
         const string SAVE_NAME = "player_data";
         const string FILE_SUFFIX = ".json";
-        
-        [Header("Debug Information")]
-        [SerializeField] private SaveSlotData activeSaveData;
+
+        [Header("Debug Information")] [SerializeField]
+        private SaveSlotData activeSaveData;
+
         [SerializeField] private SaveSlotData[] saveDataSlots;
-        [SerializeField] private int activeSlotIndex = 0;
+        [SerializeField] private int activeSlotIndex = -1;
 
         private string saveDataJsonString = String.Empty;
 
         private Task<string> fileReadTask;
-        
+
         // event fired once data is finished writing
         public static event Action<bool> SaveDataWriteComplete;
-        public static event Action<int, int> SaveDataReadComplete;
-        
+        public static event Action<int, int> OnActiveSaveSet;
+
         public static SaveDataManager Singleton { get; private set; }
-        
+
         // class to manage current save data, including serialisation & i/o operations
 
         private void Awake()
@@ -42,15 +43,15 @@ namespace Data.Saves
                 Singleton = this;
             }
         }
-        
-        
+
+
         private void Start()
         {
             // check with the game controller how many stages exist
             int stageCount = GameController.Singleton.TotalLevelCount;
-            
+
             print(Application.persistentDataPath);
-            
+
             activeSaveData = new SaveSlotData(stageCount);
             saveDataSlots = new SaveSlotData[stageCount];
 
@@ -58,7 +59,7 @@ namespace Data.Saves
             {
                 saveDataSlots[i] = new SaveSlotData(stageCount);
             }
-            
+
             // check if the save file exists. if not, create it
             //if (File.Exists(Application.persistentDataPath + "/" + SAVE_NAME))
             //{
@@ -85,7 +86,7 @@ namespace Data.Saves
             // serialize the stored save object to a json string
             saveDataJsonString = JsonUtility.ToJson(activeSaveData);
             bool success = true;
-            
+
             // use file write as it will be relatively small
             try
             {
@@ -99,7 +100,7 @@ namespace Data.Saves
                 Console.WriteLine(e);
                 success = false;
             }
-            
+
             // raise the event to say we're done
             SaveDataWriteComplete?.Invoke(success);
         }
@@ -153,15 +154,15 @@ namespace Data.Saves
         {
             // called once a level is completed.
             // retrieve the following data: time in stage, gems & level index
-            activeSaveData.lastUnlockedMainStage = lastStageIndex;
-            activeSaveData.savePlayTime +=  completionTime;
-            activeSaveData.gemCollectionStatus[currenStageIndex, 0] = gemData[0];
-            activeSaveData.gemCollectionStatus[currenStageIndex, 1] = gemData[1];
-            activeSaveData.gemCollectionStatus[currenStageIndex, 2] = gemData[2];
+            saveDataSlots[activeSlotIndex].lastUnlockedMainStage = lastStageIndex;
+            saveDataSlots[activeSlotIndex].savePlayTime +=  completionTime;
+            saveDataSlots[activeSlotIndex].gemCollectionStatus[currenStageIndex, 0] = gemData[0];
+            saveDataSlots[activeSlotIndex].gemCollectionStatus[currenStageIndex, 1] = gemData[1];
+            saveDataSlots[activeSlotIndex].gemCollectionStatus[currenStageIndex, 2] = gemData[2];
             
-            activeSaveData.FlattenGemData();
+            saveDataSlots[activeSlotIndex].FlattenGemData();
             
-            WriteSaveData();
+            WriteSaveData(SAVE_NAME + activeSlotIndex + FILE_SUFFIX);
         }
 
         private bool CheckInputDataIsValid()
@@ -202,10 +203,6 @@ namespace Data.Saves
                         saveDataSlots[i].ConstructGemData();
                         saveDataSlots[i].FlattenGemData();
                     }
-                        
-                    
-                    // fire save data read complete slot
-                    SaveDataReadComplete?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
                 }
                 else
                 {
@@ -266,6 +263,13 @@ namespace Data.Saves
         {
             // check if playtime on save < 0
             return  saveDataSlots[saveIndex].savePlayTime < 0;
+        }
+
+        public void SetActiveSaveAndStart(int saveIndex)
+        {
+            activeSlotIndex = saveIndex; // index of the save to write to when playing
+            OnActiveSaveSet?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
+            GameController.Singleton.GoToStageSelect();
         }
     }
 }
