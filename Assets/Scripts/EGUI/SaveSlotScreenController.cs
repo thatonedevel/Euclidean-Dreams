@@ -215,7 +215,12 @@ namespace EGUI
         }
         
         // temp implementations to make sure references are set correctly
-        private void PlayButtonPressed(int saveIndex) => Debug.Log("PlayButtonPressed: " + saveIndex);
+        private void PlayButtonPressed(int saveIndex)
+        {
+            // set the active save here & start the game
+            SaveDataManager.Singleton.SetActiveSaveAndStart(saveIndex);
+        }
+        
         private void CopyButtonPressed(int saveIndex) => Debug.Log("CopyButtonPressed: " + saveIndex);
         private void DeleteButtonPressed(int saveIndex) => Debug.Log("DeleteButtonPressed: " + saveIndex);
 
