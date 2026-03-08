@@ -33,6 +33,10 @@ namespace EGUI
         private Button titleScreenButton;
         private Button settingsButton;
         
+        // flag for if we're selecting a target save for copy / deletion
+        private bool isSelectingTargetSave = false;
+        
+        
         // hierarchy root we made
         private VisualElement customRoot;
         
@@ -106,14 +110,14 @@ namespace EGUI
 
         private void SubscribeToButtonEvents()
         {
-            Action[] buttonActions = {PlayButtonPressed, CopyButtonPressed, DeleteButtonPressed};
-            List<Button>[] buttonLists = { playSaveButtons, copySaveButtons, deleteSaveButtons };
+            List<Button>[] buttonLists = {playSaveButtons, copySaveButtons, deleteSaveButtons};
+            ButtonType[] buttonModes = { ButtonType.PLAY , ButtonType.COPY, ButtonType.DELETE };
 
-            for (int i = 0; i < buttonLists.Length; i++)
+            for (int typeIndex = 0; typeIndex < buttonModes.Length; typeIndex++)
             {
-                for (int j = 0; j < buttonLists[i].Count; j++)
+                for (int buttonIndex = 0; buttonIndex < buttonLists[typeIndex].Count; buttonIndex++)
                 {
-                    buttonLists[i][j].clicked += buttonActions[i];
+                    buttonLists[typeIndex][buttonIndex].clicked += MakeButtonAction(buttonIndex, buttonModes[typeIndex]);
                 }
             }
         }
@@ -188,10 +192,38 @@ namespace EGUI
 
             return $"{minutes}:{seconds}";
         }
+
+        // helper method to prevent late binding
+        private Action MakeButtonAction(int buttonIndex, ButtonType buttonType)
+        {
+            Action outAction = null;
+            
+            switch (buttonType)
+            {
+                case ButtonType.PLAY:
+                    outAction = () => PlayButtonPressed(buttonIndex);
+                    break;
+                case ButtonType.COPY:
+                    outAction = () => CopyButtonPressed(buttonIndex);
+                    break;
+                case  ButtonType.DELETE:
+                    outAction = () => DeleteButtonPressed(buttonIndex);
+                    break;
+            }
+
+            return outAction;
+        }
         
         // temp implementations to make sure references are set correctly
-        private void PlayButtonPressed() => Debug.Log("PlayButtonPressed");
-        private void CopyButtonPressed() => Debug.Log("CopyButtonPressed");
-        private void DeleteButtonPressed() => Debug.Log("DeleteButtonPressed");
+        private void PlayButtonPressed(int saveIndex) => Debug.Log("PlayButtonPressed: " + saveIndex);
+        private void CopyButtonPressed(int saveIndex) => Debug.Log("CopyButtonPressed: " + saveIndex);
+        private void DeleteButtonPressed(int saveIndex) => Debug.Log("DeleteButtonPressed: " + saveIndex);
+
+        private enum ButtonType
+        {
+            PLAY,
+            COPY,
+            DELETE
+        }
     }
 }
