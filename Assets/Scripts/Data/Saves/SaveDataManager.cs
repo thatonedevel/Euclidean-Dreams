@@ -128,24 +128,24 @@ namespace Data.Saves
 
             if (data != null)
             {
-                activeSaveData = data;
+                save = data;
                 
                 // check it contains the needed information. not unity type so we can use an is check
                 if (!CheckInputDataIsValid())
                 {
-                    activeSaveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
-                    activeSaveData.ConstructGemData();
-                    activeSaveData.FlattenGemData();
+                    save = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+                    save.ConstructGemData();
+                    save.FlattenGemData();
                     return false;
                 }
                 
-                activeSaveData.ConstructGemData();
-                activeSaveData.UnflattenGemData();
+                save.ConstructGemData();
+                save.UnflattenGemData();
                 return true;
             }
 
             Debug.LogWarning("Save data is null");
-            activeSaveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+            save = new SaveSlotData(GameController.Singleton.TotalLevelCount);
             return false;
         }
 
