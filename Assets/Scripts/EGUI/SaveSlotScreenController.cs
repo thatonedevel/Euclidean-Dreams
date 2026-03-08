@@ -67,6 +67,7 @@ namespace EGUI
                 .ForEach(label => metadataLabels.Add(label));
             
             // update information on the metadata labels
+            UpdateSaveStatus();
         }
         
         private void CreateWidgetQueries()
@@ -141,17 +142,34 @@ namespace EGUI
             }
         }
 
-        private void UpdateMetadataLabels()
+        private void UpdateSaveStatus()
         {
             // for each label, if a save exists, show the save info
-            const string TEMPLATE = "Play Time: {0}\nSave Completion: {1}%";
-
+            const string template = "Play Time: {0}\nSave Completion: {1}%";
+            string outputTxt = "";
+            
             for (int i = 0; i < metadataLabels.Count; i++)
             {
-                
-                float playTime = SaveDataManager.Singleton.GetSavePlayTime(i);
+                // check if save is empty or not
+                if (SaveDataManager.Singleton.IsSaveSlotEmpty(i))
+                {
+                    outputTxt = "Empty Save";
+                    metadataLabels[i].text = outputTxt;
+                    copySaveButtons[i].enabledSelf = false;
+                    deleteSaveButtons[i].enabledSelf = false;
+                }
+                else
+                {
+                    float playTime = SaveDataManager.Singleton.GetSavePlayTime(i);
+                    string timeString = FormatFloatTime(playTime);
+                    int percent = SaveDataManager.Singleton.GetSaveCompletionPercentage(i);
+
+                    outputTxt += string.Format(template, timeString, percent);
+                    metadataLabels[i].text = outputTxt;
+                    deleteSaveButtons[i].enabledSelf = true;
+                    copySaveButtons[i].enabledSelf = true;
+                }
             }
-            
         }
 
         private string FormatFloatTime(float inputTime)
