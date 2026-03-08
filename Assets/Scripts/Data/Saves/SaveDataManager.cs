@@ -268,6 +268,11 @@ namespace Data.Saves
         public void SetActiveSaveAndStart(int saveIndex)
         {
             activeSlotIndex = saveIndex; // index of the save to write to when playing
+            
+            // if the save is marked "empty" (i.e. playtime < 0), update that
+            saveDataSlots[activeSlotIndex].savePlayTime = saveDataSlots[saveIndex].savePlayTime < 0 ? 
+                0 : saveDataSlots[saveIndex].savePlayTime;
+            
             OnActiveSaveSet?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
             GameController.Singleton.GoToStageSelect();
         }
