@@ -11,7 +11,7 @@ namespace Data.Saves
         public int lastUnlockedMainStage = 0;
         public int lastUnlockedBonusStage = -1;
 
-        public float savePlayTime = 0;
+        public float savePlayTime = -1;
         
         public bool[,] gemCollectionStatus;
 

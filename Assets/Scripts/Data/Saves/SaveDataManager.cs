@@ -264,7 +264,8 @@ namespace Data.Saves
 
         public bool IsSaveSlotEmpty(int saveIndex)
         {
-            return false;
+            // check if playtime on save < 0
+            return  saveDataSlots[saveIndex].savePlayTime < 0;
         }
     }
 }
