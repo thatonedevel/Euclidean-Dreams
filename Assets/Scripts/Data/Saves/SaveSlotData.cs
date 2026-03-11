@@ -89,13 +89,14 @@ namespace Data.Saves
             var tmp = new SaveSlotData(this.gemCollectionStatus.GetLength(0));
             
             tmp.ConstructGemData();
+            tmp.FlattenGemData();
 
             tmp.lastUnlockedBonusStage = lastUnlockedBonusStage;
             tmp.lastUnlockedMainStage = lastUnlockedMainStage;
             tmp.savePlayTime = savePlayTime;
             
-            gemCollectionStatus.CopyTo(tmp.gemCollectionStatus, 0);
-            tmp.FlattenGemData();
+            gemCollectionStatus_flat.CopyTo(tmp.gemCollectionStatus_flat, 0);
+            tmp.UnflattenGemData();
 
             return tmp;
         }
