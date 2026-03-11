@@ -11,7 +11,7 @@ namespace Data.Saves
         public int lastUnlockedMainStage = 0;
         public int lastUnlockedBonusStage = -1;
 
-        public float savePlayTime = 0;
+        public float savePlayTime = -1;
         
         public bool[,] gemCollectionStatus;
 
@@ -81,6 +81,24 @@ namespace Data.Saves
                     gemCollectionStatus[i, j] = false;
                 }
             }
+        }
+
+        public SaveSlotData Copy()
+        {
+            // returns a copy of this object
+            var tmp = new SaveSlotData(this.gemCollectionStatus.GetLength(0));
+            
+            tmp.ConstructGemData();
+            tmp.FlattenGemData();
+
+            tmp.lastUnlockedBonusStage = lastUnlockedBonusStage;
+            tmp.lastUnlockedMainStage = lastUnlockedMainStage;
+            tmp.savePlayTime = savePlayTime;
+            
+            gemCollectionStatus_flat.CopyTo(tmp.gemCollectionStatus_flat, 0);
+            tmp.UnflattenGemData();
+
+            return tmp;
         }
     }
 }

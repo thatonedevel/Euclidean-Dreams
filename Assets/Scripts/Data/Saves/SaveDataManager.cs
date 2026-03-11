@@ -5,28 +5,34 @@ using UnityEngine.Serialization;
 using System.IO;
 using System.Threading.Tasks;
 using Managers;
+using Unity.VisualScripting;
+using UnityEditor.Overlays;
 
 namespace Data.Saves
 {
     public class SaveDataManager : MonoBehaviour
     {
         // TODO: switch this over to use the .net serializer as unity's doesnt support 2d arrays
-        
-        const string SAVE_NAME = "player_data.json";
-        
-        [Header("Debug Information")]
-        [SerializeField] private SaveSlotData saveData;
+
+        const string SAVE_NAME = "player_data";
+        const string FILE_SUFFIX = ".json";
+
+        [Header("Debug Information")] [SerializeField]
+        private SaveSlotData activeSaveData;
+
+        [SerializeField] private SaveSlotData[] saveDataSlots;
+        [SerializeField] private int activeSlotIndex = -1;
 
         private string saveDataJsonString = String.Empty;
 
         private Task<string> fileReadTask;
-        
+
         // event fired once data is finished writing
         public static event Action<bool> SaveDataWriteComplete;
-        public static event Action<int, int> SaveDataReadComplete;
-        
+        public static event Action<int, int> OnActiveSaveSet;
+
         public static SaveDataManager Singleton { get; private set; }
-        
+
         // class to manage current save data, including serialisation & i/o operations
 
         private void Awake()
@@ -39,62 +45,86 @@ namespace Data.Saves
                 Singleton = this;
             }
         }
-        
-        
+
+
         private void Start()
         {
             // check with the game controller how many stages exist
             int stageCount = GameController.Singleton.TotalLevelCount;
-            
-            print(Application.persistentDataPath);
-            
-            saveData = new SaveSlotData(stageCount);
-            
-            // check if the save file exists. if not, create it
-            if (File.Exists(Application.persistentDataPath + "/ " + SAVE_NAME))
-            {
-                // check if the data is valid
-                bool isValid = ReadSaveData();
 
-                if (!isValid)
-                    WriteSaveData(); // this will override it with a blank object
-                
-                // fire save data read complete slot
-                SaveDataReadComplete?.Invoke(saveData.lastUnlockedMainStage, saveData.lastUnlockedBonusStage);
-            }
-            else
+            print(Application.persistentDataPath);
+
+            activeSaveData = new SaveSlotData(stageCount);
+            saveDataSlots = new SaveSlotData[stageCount];
+
+            for (int i = 0; i < 3; i++)
             {
-                WriteSaveData();
+                saveDataSlots[i] = new SaveSlotData(stageCount);
             }
-            
+
+            // check if the save file exists. if not, create it
+            //if (File.Exists(Application.persistentDataPath + "/" + SAVE_NAME))
+            //{
+            //    // check if the data is valid
+            //    bool isValid = ReadSaveData();
+
+            //    if (!isValid)
+            //        WriteSaveData(); // this will override it with a blank object
+            //    
+            //    // fire save data read complete slot
+            //    SaveDataReadComplete?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
+            //}
+            //else
+            //{
+            //    WriteSaveData();
+            //}
+            ValidateAllSaves();
             // subscribe to the level progress update event here
             LevelProgressManager.LevelProgressUpdated += LevelCompletedListener;
         }
+        
+        private SaveSlotData MakeBlankSaveSlot()
+        {
+            var tmp = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+            tmp.ConstructGemData();
+            tmp.FlattenGemData();
+            return tmp;
+        }
 
-        private void WriteSaveData()
+        private bool WriteSaveData(SaveSlotData slot, string fileName = "")
         {
             // serialize the stored save object to a json string
-            saveDataJsonString = JsonUtility.ToJson(saveData);
+            saveDataJsonString = JsonUtility.ToJson(slot);
             bool success = true;
-            
+
             // use file write as it will be relatively small
             try
             {
-                File.WriteAllTextAsync(Application.persistentDataPath + "/ " + SAVE_NAME, saveDataJsonString);
+                if (fileName.Equals(""))
+                    File.WriteAllTextAsync(Application.persistentDataPath + "/" + SAVE_NAME, saveDataJsonString);
+                else
+                    File.WriteAllTextAsync(Application.persistentDataPath + "/" + fileName, saveDataJsonString);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 success = false;
             }
-            
+
             // raise the event to say we're done
             SaveDataWriteComplete?.Invoke(success);
+            return success;
         }
 
-        private bool ReadSaveData()
+        private bool ReadSaveData(ref SaveSlotData save, string fileName="")
         {
-            var text = File.ReadAllText(Application.persistentDataPath + "/ " + SAVE_NAME);
+            string text = "";
+            
+            if (fileName.Equals(""))
+                text = File.ReadAllText(Application.persistentDataPath + "/" + SAVE_NAME);
+            else
+                text = File.ReadAllText(Application.persistentDataPath + "/" + fileName);
+            
 
             SaveSlotData data = null;
 
@@ -104,30 +134,28 @@ namespace Data.Saves
             }
             catch (Exception e)
             {
-                saveData =  new SaveSlotData(GameController.Singleton.TotalLevelCount);
+                activeSaveData = MakeBlankSaveSlot();
                 return false;
             }
 
             if (data != null)
             {
-                saveData = data;
+                save = data;
                 
                 // check it contains the needed information. not unity type so we can use an is check
                 if (!CheckInputDataIsValid())
                 {
-                    saveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
-                    saveData.ConstructGemData();
-                    saveData.FlattenGemData();
+                    save = MakeBlankSaveSlot();
                     return false;
                 }
                 
-                saveData.ConstructGemData();
-                saveData.UnflattenGemData();
+                save.ConstructGemData();
+                save.UnflattenGemData();
                 return true;
             }
 
             Debug.LogWarning("Save data is null");
-            saveData = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+            save = MakeBlankSaveSlot();
             return false;
         }
 
@@ -135,29 +163,61 @@ namespace Data.Saves
         {
             // called once a level is completed.
             // retrieve the following data: time in stage, gems & level index
-            saveData.lastUnlockedMainStage = lastStageIndex;
-            saveData.savePlayTime +=  completionTime;
-            saveData.gemCollectionStatus[currenStageIndex, 0] = gemData[0];
-            saveData.gemCollectionStatus[currenStageIndex, 1] = gemData[1];
-            saveData.gemCollectionStatus[currenStageIndex, 2] = gemData[2];
+            saveDataSlots[activeSlotIndex].lastUnlockedMainStage = lastStageIndex;
+            saveDataSlots[activeSlotIndex].savePlayTime +=  completionTime;
+            saveDataSlots[activeSlotIndex].gemCollectionStatus[currenStageIndex, 0] = gemData[0];
+            saveDataSlots[activeSlotIndex].gemCollectionStatus[currenStageIndex, 1] = gemData[1];
+            saveDataSlots[activeSlotIndex].gemCollectionStatus[currenStageIndex, 2] = gemData[2];
             
-            saveData.FlattenGemData();
+            saveDataSlots[activeSlotIndex].FlattenGemData();
             
-            WriteSaveData();
+            WriteSaveData(saveDataSlots[activeSlotIndex], SAVE_NAME + activeSlotIndex + FILE_SUFFIX);
         }
 
         private bool CheckInputDataIsValid()
         {
-            if (saveData.lastUnlockedMainStage < 0)
+            if (activeSaveData.lastUnlockedMainStage < 0)
                 return false;
-            if (saveData.lastUnlockedBonusStage < -1)
+            if (activeSaveData.lastUnlockedBonusStage < -1)
                 return false;
-            if (saveData.gemCollectionStatus_flat == null)
+            if (activeSaveData.gemCollectionStatus_flat == null)
                 return false;
-            if (saveData.gemCollectionStatus_flat.Length != GameController.Singleton.TotalLevelCount * 3)
+            if (activeSaveData.gemCollectionStatus_flat.Length != GameController.Singleton.TotalLevelCount * 3)
                 return  false;
             return true;
         }
+
+        private void ValidateAllSaves()
+        {
+            // check with the game controller how many stages exist
+            int stageCount = GameController.Singleton.TotalLevelCount;
+            
+            //print(Application.persistentDataPath);
+            
+            // initialise all the saves
+            for (int i = 0; i < saveDataSlots.Length; i++)
+            {
+                saveDataSlots[i] = new SaveSlotData(stageCount);
+                // check if the save file exists. if not, create it
+                if (File.Exists(Application.persistentDataPath + "/" + SAVE_NAME + i.ToString() + FILE_SUFFIX))
+                {
+                    // check if the data is valid
+                    bool isValid = ReadSaveData(ref saveDataSlots[i],SAVE_NAME  + i.ToString() + FILE_SUFFIX);
+
+                    if (!isValid)
+                    {
+                        // set the current save too
+                        saveDataSlots[i] = MakeBlankSaveSlot();
+                        WriteSaveData(saveDataSlots[i], SAVE_NAME + i + FILE_SUFFIX);
+                    }
+                }
+                else
+                {
+                    WriteSaveData(saveDataSlots[i], SAVE_NAME + i.ToString() + FILE_SUFFIX);
+                }
+            }
+        }
+        
 
         public bool[] GetGemStatusForStage(int stageIndex, bool isBonus=false)
         {
@@ -168,9 +228,9 @@ namespace Data.Saves
             if (stageIndex >= 0 && stageIndex < GameController.Singleton.TotalLevelCount)
             {
                 bool[] retArr = new bool[3];
-                retArr[0] = saveData.gemCollectionStatus[stageIndex, 0];
-                retArr[1] = saveData.gemCollectionStatus[stageIndex, 1];
-                retArr[2] = saveData.gemCollectionStatus[stageIndex, 2];
+                retArr[0] = activeSaveData.gemCollectionStatus[stageIndex, 0];
+                retArr[1] = activeSaveData.gemCollectionStatus[stageIndex, 1];
+                retArr[2] = activeSaveData.gemCollectionStatus[stageIndex, 2];
 
                 return retArr;
             }
@@ -178,6 +238,84 @@ namespace Data.Saves
             {
                 return  new bool[] { };
             }
+        }
+
+        public float GetSavePlayTime(int saveIndex)
+        {
+            return saveDataSlots[saveIndex].savePlayTime;
+        }
+        
+        public int GetSaveCompletionPercentage(int saveIndex)
+        {
+            // this calculates the actual completion percentage of the provided save
+            // TODO: adjust once bonus stages are implemented
+            float stageBeatenPercentage = ((float)saveDataSlots[saveIndex].lastUnlockedMainStage 
+                                          / (float)GameController.Singleton.TotalLevelCount) * 100;
+
+            int totalGemCount = 0;
+            
+            for (int i = 0; i < saveDataSlots[saveIndex].gemCollectionStatus_flat.Length; i++)
+            {
+                if (saveDataSlots[saveIndex].gemCollectionStatus_flat[i]) totalGemCount++;
+            }
+            
+            float gemPercentage = ((float)totalGemCount / (float)saveDataSlots[saveIndex].gemCollectionStatus_flat.Length) * 100;
+            
+            float totalPercentage = (stageBeatenPercentage + gemPercentage) / 2;
+            
+            return (int)totalPercentage;
+        }
+
+        public bool IsSaveSlotEmpty(int saveIndex)
+        {
+            // check if playtime on save < 0
+            return  saveDataSlots[saveIndex].savePlayTime < 0;
+        }
+
+        public void SetActiveSaveAndStart(int saveIndex)
+        {
+            activeSlotIndex = saveIndex; // index of the save to write to when playing
+            
+            // if the save is marked "empty" (i.e. playtime < 0), update that
+            saveDataSlots[activeSlotIndex].savePlayTime = saveDataSlots[saveIndex].savePlayTime < 0 ? 
+                0 : saveDataSlots[saveIndex].savePlayTime;
+            
+            // write the data so we know this save is now in use
+            var worked = WriteSaveData(saveDataSlots[activeSlotIndex], SAVE_NAME + activeSlotIndex + FILE_SUFFIX);
+            
+            Debug.Log("did the write work?: " +  worked);
+            
+            OnActiveSaveSet?.Invoke(saveDataSlots[activeSlotIndex].lastUnlockedMainStage,
+                saveDataSlots[activeSlotIndex].lastUnlockedBonusStage);
+            GameController.Singleton.GoToStageSelect();
+        }
+
+        public bool CopySaveData(int originalIndex, int targetIndex)
+        {
+            Debug.Log($"Copying save {originalIndex} to {targetIndex}");
+            
+            // make sure both indices are valid
+            if (originalIndex < 0 || targetIndex < 0 ||
+                originalIndex >= saveDataSlots.Length || targetIndex >= saveDataSlots.Length)
+                return false;
+            
+            // both indices are valid, so write the data
+            saveDataSlots[targetIndex] = saveDataSlots[originalIndex].Copy();
+            
+            return WriteSaveData(saveDataSlots[targetIndex],SAVE_NAME + targetIndex + FILE_SUFFIX);
+        }
+
+        public bool DeleteSaveData(int targetIndex)
+        {
+            Debug.Log($"Deleting save {targetIndex}");
+            
+            if (targetIndex < 0 || targetIndex >= saveDataSlots.Length)
+                return false;
+            
+            // replace the save with a blank one
+            saveDataSlots[targetIndex] = MakeBlankSaveSlot();
+            
+            return WriteSaveData(saveDataSlots[targetIndex], SAVE_NAME + targetIndex + FILE_SUFFIX);
         }
     }
 }

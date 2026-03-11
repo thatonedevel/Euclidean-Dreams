@@ -22,7 +22,7 @@ namespace EGUI
             quitButton = titleDoc.rootVisualElement.Query<Button>("QuitButton");
     
             // event subscription
-            playButton.clicked += () => GameController.Singleton.GoToStageSelect();
+            playButton.clicked += () => GameController.Singleton.GoToSaveScreen();
             settingsButton.clicked += () => Debug.Log("Settings clicked"); // TODO: change this to open settings when implemented
             quitButton.clicked += () => Application.Quit();
         }

@@ -27,7 +27,7 @@ namespace Managers
             
             // subscribe to events
             LevelGoal.OnGoalReached += StageCompletedHandler;
-            SaveDataManager.SaveDataReadComplete +=  SaveLoadedHandler;
+            SaveDataManager.OnActiveSaveSet +=  OnActiveSaveLoadedHandler;
         }
         
         private void StageCompletedHandler()
@@ -47,7 +47,7 @@ namespace Managers
             LevelProgressUpdated?.Invoke(LastUnlockedStageIndex, currentStage, levelDat.levelClearTime, levelDat.gemCollectionStatus);
         }
 
-        private void SaveLoadedHandler(int mainLevelIndex, int bonusLevelIndex)
+        private void OnActiveSaveLoadedHandler(int mainLevelIndex, int bonusLevelIndex)
         {
             LastUnlockedBonusStageIndex = bonusLevelIndex;
             LastUnlockedStageIndex = mainLevelIndex;

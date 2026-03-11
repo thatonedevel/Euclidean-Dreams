@@ -1,0 +1,51 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/GUI/USS/SaveSlotScreen.uss?fileID=7433441132597879392&amp;guid=a052906c81950bb419c094539a6e7ae3&amp;type=3#SaveSlotScreen" />
+    <ui:VisualElement name="Root" style="flex-grow: 1; padding-top: 75px; padding-right: 150px; padding-bottom: 75px; padding-left: 150px; background-color: rgb(255, 255, 255);">
+        <ui:VisualElement name="SavesBKG" style="flex-grow: 1; flex-direction: column; background-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; padding-top: 40px; padding-right: 40px; padding-bottom: 40px; padding-left: 40px;">
+            <ui:VisualElement name="PanelContainer" style="flex-grow: 1; flex-direction: row;">
+                <ui:VisualElement name="SavePanel0" class="save-panel" style="flex-grow: 1; visibility: visible;">
+                    <ui:Label text="Save 1" name="Save0_Label" />
+                    <ui:Label text="Completion: {}%&#10;Play Time: {}:{}" name="MetaLabel_0" class="meta-label" style="letter-spacing: 0;" />
+                    <ui:VisualElement name="ButtonGrp_0" class="button-container" style="flex-grow: 1; visibility: hidden;">
+                        <ui:Button text="Play&#10;" name="Play_0" class="control-button play-button" />
+                        <ui:Button text="Copy&#10;" name="Copy_0" class="control-button copy-button" />
+                        <ui:Button text="Delete" name="Del_0" class="control-button delete-button" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="SavePanel1" class="save-panel" style="flex-grow: 1;">
+                    <ui:Label text="Save 2" name="Save1_Label" />
+                    <ui:Label text="Completion: {}%&#10;Play Time: {}:{}" name="MetaLabel_1" class="meta-label" />
+                    <ui:VisualElement name="ButtonGrp_1" class="button-container" style="flex-grow: 1; visibility: hidden;">
+                        <ui:Button text="Play" name="Play_1" class="control-button play-button" />
+                        <ui:Button text="Copy" name="Copy_1" class="control-button copy-button" />
+                        <ui:Button text="Delete" name="Del_1" class="control-button delete-button" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="SavePanel2" class="save-panel" style="flex-grow: 1;">
+                    <ui:Label text="Save 3" name="Save2_Label" />
+                    <ui:Label text="Completion: {}%&#10;Play Time: {}:{}" name="MetaLabel_2" class="meta-label" />
+                    <ui:VisualElement name="ButtonGrp_2" class="button-container" style="flex-grow: 1; visibility: hidden;">
+                        <ui:Button text="Play" name="Play_2" class="control-button play-button" />
+                        <ui:Button text="Copy" name="Copy_2" class="control-button copy-button" />
+                        <ui:Button text="Delete" name="Del_2" class="control-button delete-button" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="{HintMessage}" name="HintLabel" style="-unity-text-align: upper-center; font-size: 25px; visibility: hidden;" />
+        </ui:VisualElement>
+        <ui:Button name="TitleBtn" text="Title" class="misc-button" style="top: 28px; left: 22px; background-image: none;" />
+        <ui:Button name="SettingsBtn" class="misc-button" style="top: 27px; left: 1827px; background-image: url(&quot;project://database/Assets/Sprites/physica_expansion.png?fileID=-2041197940&amp;guid=9d93081a9c559fe4f8d2b6b793002c8d&amp;type=3#physica_expansion_settings&quot;); -unity-background-image-tint-color: rgb(0, 0, 0);" />
+        <ui:VisualElement name="WarningDialogueRoot" class="warning-dialogue-root" style="background-image: none; visibility: hidden;">
+            <ui:VisualElement name="WarningDialogueMain" style="flex-grow: 1; background-color: rgb(255, 255, 255); border-top-left-radius: 50px; border-top-right-radius: 50px; border-bottom-right-radius: 50px; border-bottom-left-radius: 50px; padding-top: 30px; padding-right: 30px; padding-left: 30px; padding-bottom: 30px;">
+                <ui:VisualElement name="WarningContainer" style="flex-grow: 1; flex-direction: row; align-items: flex-start;">
+                    <ui:VisualElement name="Icon" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Sprites/warningico.png?fileID=2800000&amp;guid=b1c883fc575a75f4aa93f192719c232a&amp;type=3#warningico&quot;); height: 178px;" />
+                    <ui:Label text="{Warning}" name="WarningLabel" style="-unity-text-align: upper-left; height: 231px; font-size: 30px; width: 368px; white-space: normal;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="DialogueButtonContainer" style="flex-grow: 1; flex-direction: row; align-items: stretch; justify-content: center;">
+                    <ui:Button text="Cancel&#10;" name="CancelButton" class="dialogue-button" />
+                    <ui:Button text="Ok&#10;" name="OkButton" class="dialogue-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
