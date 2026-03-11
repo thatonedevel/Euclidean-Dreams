@@ -82,5 +82,21 @@ namespace Data.Saves
                 }
             }
         }
+
+        public SaveSlotData Copy()
+        {
+            // returns a copy of this object
+            var tmp = new SaveSlotData(this.gemCollectionStatus.GetLength(0));
+            
+            tmp.ConstructGemData();
+
+            tmp.lastUnlockedBonusStage = lastUnlockedBonusStage;
+            tmp.lastUnlockedMainStage = lastUnlockedMainStage;
+            
+            gemCollectionStatus.CopyTo(tmp.gemCollectionStatus, 0);
+            tmp.FlattenGemData();
+
+            return tmp;
+        }
     }
 }
