@@ -33,9 +33,19 @@ namespace EGUI
         private Button titleScreenButton;
         private Button settingsButton;
         
+        // widgets for save manipulation (copy / delete)
+        private Label hintLabel;
+        private VisualElement warningDialogueRoot;
+        private Label warningLabel;
+        
+        // buttons for the warning dialogue
+        private Button cancelButton;
+        private Button okButton;
+        
         // flag for if we're selecting a target save for copy / deletion
         private bool isSelectingTargetSave = false;
-        
+        private int originSaveIndex = -1;
+        private int targetSaveIndex = -1;
         
         // hierarchy root we made
         private VisualElement customRoot;
@@ -63,12 +73,26 @@ namespace EGUI
             {
                 slot.RegisterCallback<MouseOverEvent>(SaveSlotHoverCallback);
                 slot.RegisterCallback<MouseLeaveEvent>(SaveSlotExitCallback);
+                slot.RegisterCallback<ClickEvent>(OnSaveSlotClicked);
             }
             
             new UQueryBuilder<Label>(uiDocument.rootVisualElement)
                 .Class(CLASS_META_LABEL)
                 .Build()
                 .ForEach(label => metadataLabels.Add(label));
+            
+            
+            
+            // set up references for the save manipulation widgets
+            hintLabel = uiDocument.rootVisualElement.Query<Label>("HintLabel");
+            warningDialogueRoot = uiDocument.rootVisualElement.Query<VisualElement>("WarningDialogueRoot");
+            cancelButton = uiDocument.rootVisualElement.Query<Button>("CancelButton");
+            okButton = uiDocument.rootVisualElement.Query<Button>("OkButton");
+            warningLabel = uiDocument.rootVisualElement.Query<Label>("WarningLabel");
+            
+            // button clicks for the dialogue box
+            okButton.clicked += OkClicked;
+            cancelButton.clicked += CloseWarningDialogue;
             
             // update information on the metadata labels
             UpdateSaveStatus();
@@ -224,13 +248,87 @@ namespace EGUI
             // set the active save here & start the game
             SaveDataManager.Singleton.SetActiveSaveAndStart(saveIndex);
         }
+
+        private void CopyButtonPressed(int saveIndex)
+        {
+            isSelectingTargetSave = true;
+            originSaveIndex = saveIndex;
+
+            hintLabel.text = $"Choose the save that you want to copy the data from slot {saveIndex+1} to";
+            hintLabel.visible = true;
+        }
         
-        private void CopyButtonPressed(int saveIndex) => Debug.Log("CopyButtonPressed: " + saveIndex);
-        private void DeleteButtonPressed(int saveIndex) => Debug.Log("DeleteButtonPressed: " + saveIndex);
+        private void DeleteButtonPressed(int saveIndex)
+        {
+            // get the button that was pressed by index
+            targetSaveIndex = saveIndex;
+            OpenWarningDialogue(DialogueModes.DELETE);
+        }
+
+        private void OnSaveSlotClicked(ClickEvent clickEvent)
+        {
+            if (!isSelectingTargetSave)
+                return;
+            
+            // get the visual element that was clicked by index
+            int saveIndex = slotPanels.IndexOf(clickEvent.target as VisualElement);
+            if (saveIndex != -1)
+            {
+                // set the target index & open the dialogue under the copy mode
+                targetSaveIndex = saveIndex;
+                OpenWarningDialogue(DialogueModes.COPY);
+            }
+        }
+        
+        private void OpenWarningDialogue(DialogueModes mode)
+        {
+            warningDialogueRoot.visible = true;
+            
+            // show different dialogue depending on the mode
+            if (mode == DialogueModes.COPY)
+            {
+                warningLabel.text = "Are you sure you want to copy to this save?\nThis action cannot be undone";
+            }
+            else
+            {
+                warningLabel.text = "Are you sure you want to delete this save?\nThis action cannot be undone";
+            }
+        }
+
+        private void CloseWarningDialogue()
+        {
+            isSelectingTargetSave =  false;
+            targetSaveIndex = -1;
+            originSaveIndex = -1;
+            warningDialogueRoot.visible = false;
+            hintLabel.visible = false;
+        }
+
+        private void OkClicked()
+        {
+            // either delete the save or copy depending on the target selection flag
+            if (!isSelectingTargetSave)
+            {
+                SaveDataManager.Singleton.DeleteSaveData(targetSaveIndex);
+            }
+            else
+            {
+                SaveDataManager.Singleton.CopySaveData(originSaveIndex, targetSaveIndex);
+            }
+            
+            CloseWarningDialogue(); // call this as a shortcut lol
+            UpdateSaveStatus();
+        }
 
         private enum ButtonType
         {
             PLAY,
+            COPY,
+            DELETE
+        }
+
+        private enum DialogueModes
+        {
             COPY,
             DELETE
         }
