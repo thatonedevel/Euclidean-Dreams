@@ -92,6 +92,7 @@ namespace Data.Saves
 
             tmp.lastUnlockedBonusStage = lastUnlockedBonusStage;
             tmp.lastUnlockedMainStage = lastUnlockedMainStage;
+            tmp.savePlayTime = savePlayTime;
             
             gemCollectionStatus.CopyTo(tmp.gemCollectionStatus, 0);
             tmp.FlattenGemData();
