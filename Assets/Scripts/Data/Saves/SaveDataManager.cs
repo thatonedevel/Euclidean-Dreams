@@ -5,6 +5,7 @@ using UnityEngine.Serialization;
 using System.IO;
 using System.Threading.Tasks;
 using Managers;
+using UnityEditor.Overlays;
 
 namespace Data.Saves
 {
@@ -81,10 +82,10 @@ namespace Data.Saves
             LevelProgressManager.LevelProgressUpdated += LevelCompletedListener;
         }
 
-        private void WriteSaveData(string fileName = "")
+        private bool WriteSaveData(SaveSlotData slot, string fileName = "")
         {
             // serialize the stored save object to a json string
-            saveDataJsonString = JsonUtility.ToJson(activeSaveData);
+            saveDataJsonString = JsonUtility.ToJson(slot);
             bool success = true;
 
             // use file write as it will be relatively small
@@ -103,6 +104,7 @@ namespace Data.Saves
 
             // raise the event to say we're done
             SaveDataWriteComplete?.Invoke(success);
+            return success;
         }
 
         private bool ReadSaveData(ref SaveSlotData save, string fileName="")
@@ -162,7 +164,7 @@ namespace Data.Saves
             
             saveDataSlots[activeSlotIndex].FlattenGemData();
             
-            WriteSaveData(SAVE_NAME + activeSlotIndex + FILE_SUFFIX);
+            WriteSaveData(saveDataSlots[activeSlotIndex], SAVE_NAME + activeSlotIndex + FILE_SUFFIX);
         }
 
         private bool CheckInputDataIsValid()
@@ -197,16 +199,16 @@ namespace Data.Saves
 
                     if (!isValid)
                     {
-                        WriteSaveData(SAVE_NAME + i.ToString() + FILE_SUFFIX); // this will override it with a blank object
                         // set the current save too
                         saveDataSlots[i] = new SaveSlotData(GameController.Singleton.TotalLevelCount);
                         saveDataSlots[i].ConstructGemData();
                         saveDataSlots[i].FlattenGemData();
+                        WriteSaveData(saveDataSlots[i], SAVE_NAME + i + FILE_SUFFIX);
                     }
                 }
                 else
                 {
-                    WriteSaveData(SAVE_NAME + i.ToString() + FILE_SUFFIX);
+                    WriteSaveData(saveDataSlots[i], SAVE_NAME + i.ToString() + FILE_SUFFIX);
                 }
             }
         }
@@ -272,6 +274,11 @@ namespace Data.Saves
             // if the save is marked "empty" (i.e. playtime < 0), update that
             saveDataSlots[activeSlotIndex].savePlayTime = saveDataSlots[saveIndex].savePlayTime < 0 ? 
                 0 : saveDataSlots[saveIndex].savePlayTime;
+            
+            // write the data so we know this save is now in use
+            var worked = WriteSaveData(saveDataSlots[activeSlotIndex], SAVE_NAME + activeSlotIndex + FILE_SUFFIX);
+            
+            Debug.Log("did the write work?: " +  worked);
             
             OnActiveSaveSet?.Invoke(saveDataSlots[activeSlotIndex].lastUnlockedMainStage,
                 saveDataSlots[activeSlotIndex].lastUnlockedBonusStage);
