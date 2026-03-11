@@ -168,7 +168,7 @@ namespace EGUI
                     string timeString = FormatFloatTime(playTime);
                     int percent = SaveDataManager.Singleton.GetSaveCompletionPercentage(i);
 
-                    outputTxt += string.Format(template, timeString, percent);
+                    outputTxt = string.Format(template, timeString, percent);
                     metadataLabels[i].text = outputTxt;
                     deleteSaveButtons[i].enabledSelf = true;
                     copySaveButtons[i].enabledSelf = true;
@@ -189,8 +189,12 @@ namespace EGUI
             {
                 seconds = (int)inputTime;
             }
-
-            return $"{minutes}:{seconds}";
+            
+            // make sure we show the correct amount of digits
+            var secString = seconds.ToString().Length == 1 ? "0" + seconds.ToString() : seconds.ToString();
+            var minString = minutes.ToString().Length == 1 ? "0" + minutes.ToString() : minutes.ToString();
+            
+            return $"{minString}:{secString}";
         }
 
         // helper method to prevent late binding
