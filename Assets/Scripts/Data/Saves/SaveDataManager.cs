@@ -82,6 +82,14 @@ namespace Data.Saves
             // subscribe to the level progress update event here
             LevelProgressManager.LevelProgressUpdated += LevelCompletedListener;
         }
+        
+        private SaveSlotData MakeBlankSaveSlot()
+        {
+            var tmp = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+            tmp.ConstructGemData();
+            tmp.FlattenGemData();
+            return tmp;
+        }
 
         private bool WriteSaveData(SaveSlotData slot, string fileName = "")
         {
@@ -126,7 +134,7 @@ namespace Data.Saves
             }
             catch (Exception e)
             {
-                activeSaveData =  new SaveSlotData(GameController.Singleton.TotalLevelCount);
+                activeSaveData = MakeBlankSaveSlot();
                 return false;
             }
 
@@ -137,9 +145,7 @@ namespace Data.Saves
                 // check it contains the needed information. not unity type so we can use an is check
                 if (!CheckInputDataIsValid())
                 {
-                    save = new SaveSlotData(GameController.Singleton.TotalLevelCount);
-                    save.ConstructGemData();
-                    save.FlattenGemData();
+                    save = MakeBlankSaveSlot();
                     return false;
                 }
                 
@@ -149,7 +155,7 @@ namespace Data.Saves
             }
 
             Debug.LogWarning("Save data is null");
-            save = new SaveSlotData(GameController.Singleton.TotalLevelCount);
+            save = MakeBlankSaveSlot();
             return false;
         }
 
@@ -201,9 +207,7 @@ namespace Data.Saves
                     if (!isValid)
                     {
                         // set the current save too
-                        saveDataSlots[i] = new SaveSlotData(GameController.Singleton.TotalLevelCount);
-                        saveDataSlots[i].ConstructGemData();
-                        saveDataSlots[i].FlattenGemData();
+                        saveDataSlots[i] = MakeBlankSaveSlot();
                         WriteSaveData(saveDataSlots[i], SAVE_NAME + i + FILE_SUFFIX);
                     }
                 }
@@ -304,7 +308,14 @@ namespace Data.Saves
         public bool DeleteSaveData(int targetIndex)
         {
             Debug.Log($"Deleting save {targetIndex}");
-            return false;
+            
+            if (targetIndex < 0 || targetIndex >= saveDataSlots.Length)
+                return false;
+            
+            // replace the save with a blank one
+            saveDataSlots[targetIndex] = MakeBlankSaveSlot();
+            
+            return WriteSaveData(saveDataSlots[targetIndex], SAVE_NAME + targetIndex + FILE_SUFFIX);
         }
     }
 }
