@@ -273,7 +273,8 @@ namespace Data.Saves
             saveDataSlots[activeSlotIndex].savePlayTime = saveDataSlots[saveIndex].savePlayTime < 0 ? 
                 0 : saveDataSlots[saveIndex].savePlayTime;
             
-            OnActiveSaveSet?.Invoke(activeSaveData.lastUnlockedMainStage, activeSaveData.lastUnlockedBonusStage);
+            OnActiveSaveSet?.Invoke(saveDataSlots[activeSlotIndex].lastUnlockedMainStage,
+                saveDataSlots[activeSlotIndex].lastUnlockedBonusStage);
             GameController.Singleton.GoToStageSelect();
         }
     }
