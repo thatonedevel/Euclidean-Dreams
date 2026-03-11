@@ -5,6 +5,7 @@ using UnityEngine.Serialization;
 using System.IO;
 using System.Threading.Tasks;
 using Managers;
+using Unity.VisualScripting;
 using UnityEditor.Overlays;
 
 namespace Data.Saves
@@ -283,6 +284,27 @@ namespace Data.Saves
             OnActiveSaveSet?.Invoke(saveDataSlots[activeSlotIndex].lastUnlockedMainStage,
                 saveDataSlots[activeSlotIndex].lastUnlockedBonusStage);
             GameController.Singleton.GoToStageSelect();
+        }
+
+        public bool CopySaveData(int originalIndex, int targetIndex)
+        {
+            Debug.Log($"Copying save {originalIndex} to {targetIndex}");
+            
+            // make sure both indices are valid
+            if (originalIndex < 0 || targetIndex < 0 ||
+                originalIndex >= saveDataSlots.Length || targetIndex >= saveDataSlots.Length)
+                return false;
+            
+            // both indices are valid, so write the data
+            saveDataSlots[targetIndex] = saveDataSlots[originalIndex].Copy();
+            
+            return WriteSaveData(saveDataSlots[targetIndex],SAVE_NAME + targetIndex + FILE_SUFFIX);
+        }
+
+        public bool DeleteSaveData(int targetIndex)
+        {
+            Debug.Log($"Deleting save {targetIndex}");
+            return false;
         }
     }
 }
