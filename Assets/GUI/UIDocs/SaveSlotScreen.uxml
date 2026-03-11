@@ -39,7 +39,7 @@
             <ui:VisualElement name="WarningDialogueMain" style="flex-grow: 1; background-color: rgb(255, 255, 255); border-top-left-radius: 50px; border-top-right-radius: 50px; border-bottom-right-radius: 50px; border-bottom-left-radius: 50px; padding-top: 30px; padding-right: 30px; padding-left: 30px; padding-bottom: 30px;">
                 <ui:VisualElement name="WarningContainer" style="flex-grow: 1; flex-direction: row; align-items: flex-start;">
                     <ui:VisualElement name="Icon" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Sprites/warningico.png?fileID=2800000&amp;guid=b1c883fc575a75f4aa93f192719c232a&amp;type=3#warningico&quot;); height: 178px;" />
-                    <ui:Label text="{Warning}" name="WarningLabel" style="-unity-text-align: upper-center; height: 231px; font-size: 30px; width: 368px;" />
+                    <ui:Label text="{Warning}" name="WarningLabel" style="-unity-text-align: upper-left; height: 231px; font-size: 30px; width: 368px; white-space: normal;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="DialogueButtonContainer" style="flex-grow: 1; flex-direction: row; align-items: stretch; justify-content: center;">
                     <ui:Button text="Cancel&#10;" name="CancelButton" class="dialogue-button" />
