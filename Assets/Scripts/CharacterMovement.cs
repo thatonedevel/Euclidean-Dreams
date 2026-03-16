@@ -145,9 +145,14 @@ public class CharacterMovement : MonoBehaviour
     public void SetCustomGravity(Vector3 newGravityAcceleration)
     {
         // set custom gravity using a constant force component (Ryiah, 2015)
-        customGravityForce.force = newGravityAcceleration = newGravityAcceleration;
+        customGravityForce.force = newGravityAcceleration;
         characterRigidbody.useGravity = false;
         customGravityForce.enabled = true;
+        
+        // also when called, make sure to stop the current movement of the character on this frame & adjust up direction
+        destination = transform.position;
+        // gravity pulls down so use the reverse direction as the new up
+        transform.up = newGravityAcceleration.normalized * -1;
     }
 
     public void DisableCustomGravity()
