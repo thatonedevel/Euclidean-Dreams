@@ -159,5 +159,6 @@ public class CharacterMovement : MonoBehaviour
     {
         customGravityForce.enabled = false;
         characterRigidbody.useGravity = true;
+        transform.up = Physics.gravity.normalized * -1;
     }
 }
