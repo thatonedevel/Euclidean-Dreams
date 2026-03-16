@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using GameConstants.Enumerations;
 using GameConstants;
+using LevelObjects.ForceManipulators;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class CharacterMovement : MonoBehaviour
         jumpAction = InputSystem.actions.FindAction(Constants.ACTION_JUMP);
 
         PerspectiveSwitcher.OnDimensionsSwitched += DimensionSwitchHandler;
+        AGravityManipulator.OnGravityChanged += GravityChangedHandler;
     }
 
     // Update is called once per frame
@@ -140,6 +142,26 @@ public class CharacterMovement : MonoBehaviour
                     break;
             }
         }
+    }
+
+    private void GravityChangedHandler(Vector3 mavity)
+    {
+        if (mavity == Physics.gravity)
+        {
+            DisableCustomGravity();
+        }
+        else
+        {
+            SetCustomGravity(mavity);
+        }
+
+        if (mavity.y != 0)
+            movableAxes = MovementAxisCombos.XZ; // normal gravity
+        else if (mavity.x != 0)
+            movableAxes = MovementAxisCombos.YZ;
+        else if (mavity.z != 0)
+            movableAxes = MovementAxisCombos.XY;
+        
     }
 
     public void SetCustomGravity(Vector3 newGravityAcceleration)

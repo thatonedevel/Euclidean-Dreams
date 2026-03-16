@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2738569609736607122
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1900061039662349007}
+  m_Layer: 0
+  m_Name: WallSnapPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1900061039662349007
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2738569609736607122}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.5000005, y: -0.80000037, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6360425026289350601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3715519470478355434
 GameObject:
   m_ObjectHideFlags: 0
@@ -15,6 +46,7 @@ GameObject:
   - component: {fileID: 8888606678587158680}
   - component: {fileID: 5030278739636471993}
   - component: {fileID: 444798247248117778}
+  - component: {fileID: 4127298297504470975}
   m_Layer: 0
   m_Name: GravitySlope
   m_TagString: Untagged
@@ -36,6 +68,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2296316135500754044}
+  - {fileID: 1807048134007216184}
+  - {fileID: 1900061039662349007}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8805612073855931025
@@ -331,9 +365,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction1: {x: 0, y: 0, z: 0}
   direction2: {x: 0, y: 0, z: 0}
-  snapPoint1: {fileID: 0}
-  snapPoint2: {fileID: 0}
+  snapPoint1: {fileID: 1807048134007216184}
+  snapPoint2: {fileID: 1900061039662349007}
   slopeNormal: {fileID: 2296316135500754044}
+--- !u!65 &4127298297504470975
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3715519470478355434}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.0000012, y: 3.0000012, z: 6}
+  m_Center: {x: 0.0000004768373, y: 0.75000036, z: 0}
 --- !u!1 &6248311914895928327
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,10 +413,41 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6248311914895928327}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.5, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.46174863, w: 0.8870109}
+  m_LocalPosition: {x: -0.040872663, y: 0.63900757, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6360425026289350601}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 60}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 55}
+--- !u!1 &8200631429107490097
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1807048134007216184}
+  m_Layer: 0
+  m_Name: BaseSnapPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1807048134007216184
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8200631429107490097}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: 0.70710635, w: 0.7071073}
+  m_LocalPosition: {x: 1.000001, y: 2.7000003, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6360425026289350601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}

@@ -5,6 +5,9 @@ namespace LevelObjects.ForceManipulators
 {
     public abstract class AGravityManipulator : MonoBehaviour
     {
+        // main gravity changed event
+        public static event Action<Vector3> OnGravityChanged;
+        
         [Header("Gravity Snap Points")]
         [SerializeField] protected Transform snapPoint1;
         [SerializeField] protected Transform snapPoint2;
@@ -32,12 +35,19 @@ namespace LevelObjects.ForceManipulators
                 {
                     // use default gravity
                     mov.DisableCustomGravity();
+                    FireGravityChanged(Physics.gravity);
                 }
                 else
                 {
                     mov.SetCustomGravity(newGravityAcceleration);
+                    FireGravityChanged(newGravityAcceleration);
                 }
             }
+        }
+
+        protected void FireGravityChanged(Vector3 newGrav)
+        {
+            OnGravityChanged?.Invoke(newGrav);
         }
     }
 }
