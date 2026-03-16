@@ -15,6 +15,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private Collider characterCollider;
     [SerializeField] private GameObject cameraRigDownAnchor;
     [SerializeField] private GameObject cameraParent;
+    [SerializeField] private ConstantForce customGravityForce;
 
     // input actions
     private InputAction movementAction;
@@ -139,5 +140,19 @@ public class CharacterMovement : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void SetCustomGravity(Vector3 newGravityAcceleration)
+    {
+        // set custom gravity using a constant force component (Ryiah, 2015)
+        customGravityForce.force = newGravityAcceleration = newGravityAcceleration;
+        characterRigidbody.useGravity = false;
+        customGravityForce.enabled = true;
+    }
+
+    public void DisableCustomGravity()
+    {
+        customGravityForce.enabled = false;
+        characterRigidbody.useGravity = true;
     }
 }
