@@ -1,4 +1,7 @@
+using System;
 using UnityEngine;
+using UnityEditor;
+using UnityEngine.Experimental.Rendering;
 
 namespace LevelObjects
 {
@@ -10,18 +13,32 @@ namespace LevelObjects
         [SerializeField] private MeshRenderer planeRenderer;
         
         public RenderTexture portalCameraOutput { get; private set; }
-        
+
+
+        private void Awake()
+        {
+            // initialise materials & out texture here
+        }
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
+        
         void Start()
         {
-            // create a new render texture which our camera writes to
-            portalCameraOutput = new RenderTexture(Screen.width, Screen.height, 24);
+            // if the linked portal exists, grab its output render texture
+        }
 
-            if (linkedPortal != null)
-            {
-                // make the plane attached to this portal render the output from the other portal
-                planeRenderer.material.mainTexture = linkedPortal.portalCameraOutput;
-            }
+        private void InitialisePortal()
+        {
+            // make a new material & render texture that is displayed on the output plane
+            Material planeMaterial = new Material(Shader.Find("Standard"));
+            RenderTexture output = new RenderTexture(128, 256, 24);
+
+            portalCameraOutput = output;
+            portalCamera.targetTexture = output;
+            planeMaterial.SetTexture("_MainTex", output);
+            // set the emission
+            planeMaterial.SetTexture("_EmissionColorMap", output);
+            planeMaterial.SetTexture("_EmissiveColor", Texture2D.whiteTexture);
         }
     }
 }
