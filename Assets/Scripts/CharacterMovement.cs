@@ -152,6 +152,7 @@ public class CharacterMovement : MonoBehaviour
         }
         else
         {
+            Debug.Log("Setting new gravity: " + mavity * Physics.gravity.magnitude);
             SetCustomGravity(mavity);
         }
 
