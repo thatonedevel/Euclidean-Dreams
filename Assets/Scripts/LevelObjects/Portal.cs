@@ -14,22 +14,13 @@ namespace LevelObjects
         [SerializeField] private MeshRenderer planeRenderer;
         
         private HashSet<GameObject> expectedObjects = new HashSet<GameObject>();
+        private HashSet<GameObject> visualClones = new HashSet<GameObject>();
         
         public RenderTexture portalCameraOutput { get; private set; }
 
-
-        private void Awake()
-        {
-            // initialise materials & out texture here
-        }
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        public static event Action<Portal> OnPlayerLeftPortal;
         
-        void Start()
-        {
-            // if the linked portal exists, grab its output render texture
-        }
-
+        
         private void InitialisePortal()
         {
             // make a new material & render texture that is displayed on the output plane
@@ -93,6 +84,9 @@ namespace LevelObjects
                 cf.relativeForce = Vector3.Reflect(cf.relativeForce, transform.forward);
                 cf.force = Vector3.Reflect(cf.force, transform.forward);
             }
+            
+            if (target.CompareTag("Player"))
+                OnPlayerLeftPortal?.Invoke(this);
         }
     }
 }

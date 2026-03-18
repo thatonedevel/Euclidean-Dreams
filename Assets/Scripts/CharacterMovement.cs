@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using GameConstants.Enumerations;
 using GameConstants;
 using LevelObjects.ForceManipulators;
+using LevelObjects;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class CharacterMovement : MonoBehaviour
     private bool isFirstUpdate = true;
 
     private Vector3 destination = Vector3.zero;
+    private bool isMovingFromPortal = false;
+    private Portal exitPortal = null;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -56,22 +59,21 @@ public class CharacterMovement : MonoBehaviour
                 break;
         }
         
-        destination = cameraRigDownAnchor.transform.TransformDirection(moveVector) + transform.position;
-
-        // move rigidbody
-        /*characterRigidbody.MovePosition(destination);
-
-        transform.LookAt(new Vector3(destination.x, transform.position.y, destination.z));
-
-        // if we're in 2D, perform the grounding check
-        if (PerspectiveSwitcher.CurrentDimension == Dimensions.SECOND)
+        // check if we need to reset the portal flag
+        if (moveVector.magnitude < 0.1f)
         {
-            // check the angle of the camera
-            if (cameraParent.transform.localEulerAngles.x == 90)
-            {
-                HandleFallingWhenTopDown();
-            }
-        }*/
+            isMovingFromPortal  = false;
+            exitPortal = null;
+        }
+
+        if (isMovingFromPortal)
+        {
+            // make sure that the movement is reflected based on the forward direction of the exit portal then rotated
+            
+            
+        }
+        
+        destination = cameraRigDownAnchor.transform.TransformDirection(moveVector) + transform.position;
     }
 
     private void FixedUpdate()
@@ -183,5 +185,11 @@ public class CharacterMovement : MonoBehaviour
         customGravityForce.enabled = false;
         characterRigidbody.useGravity = true;
         transform.up = Physics.gravity.normalized * -1;
+    }
+
+    private void PortalExitHandler(Portal exit)
+    {
+        isMovingFromPortal = true;
+        exitPortal =  exit;
     }
 }
