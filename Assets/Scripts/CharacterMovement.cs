@@ -70,8 +70,10 @@ public class CharacterMovement : MonoBehaviour
         {
             Debug.Log("handling from portal");
             
+            // calculate the target direction
             var transDir = cameraRigDownAnchor.transform.InverseTransformDirection(moveVector);
-            dir = Vector3.RotateTowards(transDir, exitPortal.transform.forward * transDir.magnitude,
+            Vector3 targetDir = exitPortal.transform.InverseTransformDirection(transDir);
+            dir = Vector3.RotateTowards(transDir, targetDir * transDir.magnitude,
                 Mathf.Rad2Deg * 360, 0.1f);
         }
     }
@@ -92,7 +94,7 @@ public class CharacterMovement : MonoBehaviour
         Debug.DrawLine(transform.position, transform.position + dir, Color.red, 5);
 
         //characterRigidbody.MovePosition(destination);
-        characterRigidbody.linearVelocity = dir * movementSpeed;
+        characterRigidbody.MovePosition(transform.position + dir * movementSpeed * Time.fixedDeltaTime);
         
         transform.LookAt(transform.position + dir);
 
