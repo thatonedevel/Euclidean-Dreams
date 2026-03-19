@@ -67,26 +67,38 @@ namespace LevelObjects
             // set position of the target
             target.transform.position = transform.position + relativeTranslation;
             
-            // reflect the rotation of the object that passed through
-            target.transform.rotation = Quaternion.Euler(Vector3.Reflect(relativeEulerRotation, transform.forward));
-            
             // if the object has a rigidbody, reflect the linear velocity & forces
-            Rigidbody r;
-            ConstantForce cf;
-
-            if (target.TryGetComponent<Rigidbody>(out r))
-            {
-                r.linearVelocity = Vector3.Reflect(r.linearVelocity, transform.forward);
-            }
-
-            if (target.TryGetComponent<ConstantForce>(out cf) && !target.CompareTag("Player"))
-            {
-                cf.relativeForce = Vector3.Reflect(cf.relativeForce, transform.forward);
-                cf.force = Vector3.Reflect(cf.force, transform.forward);
-            }
             
             if (target.CompareTag("Player"))
                 OnPlayerLeftPortal?.Invoke(this);
+            else
+            {
+                RotateObjectOnExit(target);
+            }
+        }
+
+        private void RotateObjectOnExit(GameObject target)
+        {
+            // rotates the target object to follow the direction of the exit portal
+            Vector3 targetLocation = target.transform.position + transform.forward;
+
+            // if the object has forces acting on it and/or velocity, rotate these
+            Rigidbody r;
+            ConstantForce cf;
+
+            if (target.TryGetComponent(out r))
+            {
+                r.linearVelocity = Vector3.RotateTowards(r.linearVelocity,
+                    transform.forward * r.linearVelocity.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+            }
+
+            if (target.TryGetComponent(out cf) && !target.CompareTag("Player"))
+            {
+                cf.relativeForce = Vector3.RotateTowards(cf.relativeForce, 
+                    transform.forward * cf.relativeForce.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+                cf.force = Vector3.RotateTowards(cf.force, 
+                    transform.forward * cf.force.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+            }
         }
     }
 }
