@@ -4,6 +4,7 @@ using GameConstants.Enumerations;
 using GameConstants;
 using LevelObjects.ForceManipulators;
 using LevelObjects;
+using UnityEngine.ProBuilder;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class CharacterMovement : MonoBehaviour
     private bool isFirstUpdate = true;
 
     private Vector3 destination = Vector3.zero;
+    private Vector3 dir =  Vector3.zero;
     private bool isMovingFromPortal = false;
     private Portal exitPortal = null;
 
@@ -37,6 +39,7 @@ public class CharacterMovement : MonoBehaviour
 
         PerspectiveSwitcher.OnDimensionsSwitched += DimensionSwitchHandler;
         AGravityManipulator.OnGravityChanged += GravityChangedHandler;
+        Portal.OnPlayerLeftPortal += PortalExitHandler;
     }
 
     // Update is called once per frame
@@ -45,35 +48,32 @@ public class CharacterMovement : MonoBehaviour
         // get move vector
         Vector2 moveInput = movementAction.ReadValue<Vector2>();
         Vector3 moveVector = Vector3.zero;
-
+        Vector3 finalDirection = Vector3.zero;
+        
+        
         switch (movableAxes)
         {
             case MovementAxisCombos.XZ:
-                moveVector = new Vector3(moveInput.x, 0, moveInput.y) * movementSpeed * Time.deltaTime;
+                moveVector = new Vector3(moveInput.x, 0, moveInput.y);
                 break;
             case MovementAxisCombos.XY:
-                moveVector = new Vector3(moveInput.x, 0, 0) * movementSpeed * Time.deltaTime;
+                moveVector = new Vector3(moveInput.x, 0, 0);
                 break;
             case MovementAxisCombos.YZ:
-                moveVector = new Vector3(moveInput.x, 0, 0) * movementSpeed * Time.deltaTime;
+                moveVector = new Vector3(moveInput.x, 0, 0);
                 break;
         }
-        
-        // check if we need to reset the portal flag
-        if (moveVector.magnitude < 0.1f)
-        {
-            isMovingFromPortal  = false;
-            exitPortal = null;
-        }
 
-        if (isMovingFromPortal)
+        if (!isMovingFromPortal)
+            dir = cameraRigDownAnchor.transform.TransformDirection(moveVector);
+        else
         {
-            // make sure that the movement is reflected based on the forward direction of the exit portal then rotated
+            Debug.Log("handling from portal");
             
-            
+            var transDir = cameraRigDownAnchor.transform.InverseTransformDirection(moveVector);
+            dir = Vector3.RotateTowards(transDir, exitPortal.transform.forward * transDir.magnitude,
+                Mathf.Rad2Deg * 360, 0.1f);
         }
-        
-        destination = cameraRigDownAnchor.transform.TransformDirection(moveVector) + transform.position;
     }
 
     private void FixedUpdate()
@@ -87,9 +87,14 @@ public class CharacterMovement : MonoBehaviour
             isFirstUpdate = false;
             return;
         }
+        
+        // draw a line from the player character's current position to their destination position
+        Debug.DrawLine(transform.position, transform.position + dir, Color.red, 5);
 
-        characterRigidbody.MovePosition(destination);
-        transform.LookAt(new Vector3(destination.x, transform.position.y, destination.z));
+        //characterRigidbody.MovePosition(destination);
+        characterRigidbody.linearVelocity = dir * movementSpeed;
+        
+        transform.LookAt(transform.position + dir);
 
         if (PerspectiveSwitcher.CurrentDimension == Dimensions.SECOND)
         {
