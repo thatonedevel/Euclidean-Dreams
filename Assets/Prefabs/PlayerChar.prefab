@@ -101,6 +101,7 @@ GameObject:
   - component: {fileID: 7744027571720696057}
   - component: {fileID: 3933791462712212039}
   - component: {fileID: 4254330866762786646}
+  - component: {fileID: 4998214103462156070}
   m_Layer: 0
   m_Name: PlayerChar
   m_TagString: Player
@@ -186,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 366a665fafb4c2c45beea51eb1bd13db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 30
+  movementSpeed: 15
   movableAxes: 0
   groundingMask:
     serializedVersion: 2
@@ -229,6 +230,20 @@ ConstantForce:
   m_RelativeForce: {x: 0, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
+--- !u!114 &4998214103462156070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3311720189761192454}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5bde2826d45d3e49ae56a2debbcb50c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useGlobalGravityMagnitude: 1
+  gravityDirection: {x: 0, y: -1, z: 0}
 --- !u!1 &8558276340464673302
 GameObject:
   m_ObjectHideFlags: 0
