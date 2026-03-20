@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LevelObjects.ForceManipulators;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Experimental.Rendering;
@@ -75,6 +76,22 @@ namespace LevelObjects
             {
                 RotateObjectOnExit(target);
             }
+            
+            // if we have a custom gravity comp adjust it
+            if (target.TryGetComponent(out CustomGravity cg))
+            {
+                if (transform.up.normalized != new Vector3(0, -1, 0).normalized)
+                {
+                    // non standard gravity
+                    cg.enabled = true;
+                    cg.SetGravityDirection(transform.up * -1);
+                }
+                else
+                {
+                    // normal mavity
+                    cg.enabled = false;
+                }
+            }
         }
 
         private void RotateObjectOnExit(GameObject target)
@@ -83,16 +100,14 @@ namespace LevelObjects
             Vector3 targetLocation = target.transform.position + transform.forward;
 
             // if the object has forces acting on it and/or velocity, rotate these
-            Rigidbody r;
-            ConstantForce cf;
 
-            if (target.TryGetComponent(out r))
+            if (target.TryGetComponent(out Rigidbody r))
             {
                 r.linearVelocity = Vector3.RotateTowards(r.linearVelocity,
                     transform.forward * r.linearVelocity.magnitude, Mathf.Deg2Rad * 360, 0.1f);
             }
 
-            if (target.TryGetComponent(out cf) && !target.CompareTag("Player"))
+            if (target.TryGetComponent(out ConstantForce cf) && !target.CompareTag("Player"))
             {
                 cf.relativeForce = Vector3.RotateTowards(cf.relativeForce, 
                     transform.forward * cf.relativeForce.magnitude, Mathf.Deg2Rad * 360, 0.1f);

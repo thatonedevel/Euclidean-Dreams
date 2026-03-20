@@ -15,21 +15,16 @@ namespace LevelObjects.ForceManipulators
         private Rigidbody objectRb;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-            force = GetComponent<ConstantForce>();
-            objectRb = GetComponent<Rigidbody>();
-            
-            // apply the custom gravity
-            force.force = useGlobalGravityMagnitude? 
-                gravityDirection.normalized * Physics.gravity.magnitude : gravityDirection;
-        }
 
         public void SetGravityDirection(Vector3 newGravityDirection)
         {
             gravityDirection = newGravityDirection;
             force.force = useGlobalGravityMagnitude? 
                 gravityDirection.normalized * Physics.gravity.magnitude : gravityDirection;
+            
+            // adjust the directional vectors of the transform
+            transform.up = newGravityDirection.normalized * -1;
+            // we read the gravity as a down direction, so from here, calculate the left & forward directions
         }
 
         public void SetUseGlobalGravityMagnitude(bool newVal)
@@ -50,7 +45,15 @@ namespace LevelObjects.ForceManipulators
 
         private void OnEnable()
         {
+            // check if we need to set references to the components
+            if (objectRb == null)
+                objectRb = GetComponent<Rigidbody>();
+            if (force == null)
+                force = GetComponent<ConstantForce>();
+            
             objectRb.useGravity = false;
+            // set the constant force to use the provided gravity direction
+            force.force =  useGlobalGravityMagnitude? gravityDirection.normalized * Physics.gravity.magnitude : gravityDirection;
         }
 
         private void OnDisable()

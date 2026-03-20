@@ -68,6 +68,9 @@ public class CharacterMovement : MonoBehaviour
             dir = cameraRigDownAnchor.transform.TransformDirection(moveVector);
         else
         {
+            // check if we need to reset the flag
+            
+            
             Debug.Log("handling from portal");
             
             // calculate the target direction
