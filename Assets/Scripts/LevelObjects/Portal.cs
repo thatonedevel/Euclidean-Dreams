@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using LevelObjects.ForceManipulators;
+using TreeEditor;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Experimental.Rendering;
@@ -80,7 +81,7 @@ namespace LevelObjects
             // if we have a custom gravity comp adjust it
             if (target.TryGetComponent(out CustomGravity cg))
             {
-                if (transform.up.normalized != new Vector3(0, -1, 0).normalized)
+                if ((int)transform.rotation.eulerAngles.x != 0 || (int)transform.rotation.eulerAngles.z != 0)
                 {
                     // non standard gravity
                     cg.enabled = true;
@@ -100,19 +101,37 @@ namespace LevelObjects
             Vector3 targetLocation = target.transform.position + transform.forward;
 
             // if the object has forces acting on it and/or velocity, rotate these
-
-            if (target.TryGetComponent(out Rigidbody r))
+            
+            // we need to check if the entry portal has the same rotation as the exit portal
+            if (linkedPortal.transform.rotation == transform.rotation)
             {
-                r.linearVelocity = Vector3.RotateTowards(r.linearVelocity,
-                    transform.forward * r.linearVelocity.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+                // in this case we *reflect* the forces rather than rotating them
+                if (target.TryGetComponent(out Rigidbody r))
+                {
+                    r.linearVelocity = Vector3.Reflect(r.linearVelocity, transform.forward);
+                }
+                
+                if (target.TryGetComponent(out ConstantForce cf) && !target.CompareTag("Player"))
+                {
+                    cf.relativeForce = Vector3.Reflect(cf.relativeForce, transform.forward);
+                    cf.force = Vector3.Reflect(cf.force, transform.forward);
+                }
             }
-
-            if (target.TryGetComponent(out ConstantForce cf) && !target.CompareTag("Player"))
+            else
             {
-                cf.relativeForce = Vector3.RotateTowards(cf.relativeForce, 
-                    transform.forward * cf.relativeForce.magnitude, Mathf.Deg2Rad * 360, 0.1f);
-                cf.force = Vector3.RotateTowards(cf.force, 
-                    transform.forward * cf.force.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+                if (target.TryGetComponent(out Rigidbody r))
+                {
+                    r.linearVelocity = Vector3.RotateTowards(r.linearVelocity,
+                        transform.forward * r.linearVelocity.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+                }
+                
+                if (target.TryGetComponent(out ConstantForce cf) && !target.CompareTag("Player"))
+                {
+                    cf.relativeForce = Vector3.RotateTowards(cf.relativeForce, 
+                        transform.forward * cf.relativeForce.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+                    cf.force = Vector3.RotateTowards(cf.force, 
+                        transform.forward * cf.force.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+                }
             }
         }
     }
