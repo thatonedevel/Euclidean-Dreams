@@ -103,7 +103,7 @@ namespace LevelObjects
             // if the object has forces acting on it and/or velocity, rotate these
             
             // we need to check if the entry portal has the same rotation as the exit portal
-            if (linkedPortal.transform.rotation == transform.rotation)
+            if (DoesRotationMatchLinkedPortal())
             {
                 // in this case we *reflect* the forces rather than rotating them
                 if (target.TryGetComponent(out Rigidbody r))
@@ -133,6 +133,11 @@ namespace LevelObjects
                         transform.forward * cf.force.magnitude, Mathf.Deg2Rad * 360, 0.1f);
                 }
             }
+        }
+
+        public bool DoesRotationMatchLinkedPortal()
+        {
+            return transform.rotation ==  linkedPortal.transform.rotation;
         }
     }
 }
