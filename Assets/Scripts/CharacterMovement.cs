@@ -69,15 +69,33 @@ public class CharacterMovement : MonoBehaviour
         else
         {
             // check if we need to reset the flag
-            
-            
-            Debug.Log("handling from portal");
-            
-            // calculate the target direction
-            var transDir = cameraRigDownAnchor.transform.InverseTransformDirection(moveVector);
-            Vector3 targetDir = exitPortal.transform.InverseTransformDirection(transDir);
-            dir = Vector3.RotateTowards(transDir, targetDir * transDir.magnitude,
-                Mathf.Rad2Deg * 360, 0.1f);
+            if (moveVector.magnitude != 0)
+            {
+                Debug.Log("handling from portal");
+                
+                // calculate the target direction
+                var transDir = cameraRigDownAnchor.transform.InverseTransformDirection(moveVector);
+                Vector3 targetDir = exitPortal.transform.InverseTransformDirection(transDir);
+    
+                if (exitPortal.DoesRotationMatchLinkedPortal())
+                {
+                    dir = Vector3.Reflect(transDir, exitPortal.transform.forward);
+                }
+                else
+                {
+                    dir = Vector3.RotateTowards(transDir, targetDir * transDir.magnitude,
+                                    Mathf.Rad2Deg * 360, 0.1f);
+                }                
+            }
+            else
+            {
+                // if we're facing down, we can safely reset the portal flag to restore standard movement
+                if (transform.up.normalized == new Vector3(0, 1, 0))
+                {
+                    exitPortal = null;
+                    isMovingFromPortal = false;                
+                }
+            }
         }
     }
 
