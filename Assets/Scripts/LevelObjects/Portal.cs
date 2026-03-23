@@ -116,9 +116,28 @@ namespace LevelObjects
                     cf.relativeForce = Vector3.Reflect(cf.relativeForce, transform.forward);
                     cf.force = Vector3.Reflect(cf.force, transform.forward);
                 }
+                
+                if (IsPortalNotUpright())
+                {
+                    // get directional vector between us and object
+                    Vector3 untDir =  target.transform.position - transform.position;
+                    untDir = Vector3.Reflect(untDir, transform.forward);
+                    target.transform.position = transform.position + untDir;
+                }
             }
             else
             {
+                // we need to check if we need to adjust the relative position of the object on exit (i.e. the exit is
+                // not facing straight down)
+
+                if (IsPortalNotUpright())
+                {
+                    // get directional vector between us and object
+                    Vector3 untDir =  target.transform.position - transform.position;
+                    untDir = Vector3.RotateTowards(untDir, transform.forward, 360 * Mathf.Deg2Rad, 0.1f);
+                    target.transform.position = transform.position + untDir;
+                }
+                
                 if (target.TryGetComponent(out Rigidbody r))
                 {
                     r.linearVelocity = Vector3.RotateTowards(r.linearVelocity,
@@ -138,6 +157,11 @@ namespace LevelObjects
         public bool DoesRotationMatchLinkedPortal()
         {
             return transform.rotation ==  linkedPortal.transform.rotation;
+        }
+
+        public bool IsPortalNotUpright()
+        {
+            return transform.up.normalized != Vector3.up;
         }
     }
 }
