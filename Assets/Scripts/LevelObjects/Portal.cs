@@ -98,13 +98,9 @@ namespace LevelObjects
             // rotates the target object to follow the direction of the exit portal
 
             // get the axis we need to check
-            Axes axisToCheck;
-
-            if (transform.up.normalized == Vector3.up) axisToCheck = Axes.Y;
-            else if (transform.up.normalized == Vector3.forward) axisToCheck = Axes.X;
-            else axisToCheck = Axes.Z;
             
-            if (DoesRotationMatchLinkedPortal(axisToCheck))
+            
+            if (DoesRotationMatchLinkedPortal())
             {
                 ReflectObjectAtExit(target);
             }
@@ -120,10 +116,21 @@ namespace LevelObjects
                     
                     untDir = Vector3.RotateTowards(untDir, transform.forward, 360 * Mathf.Deg2Rad, 0.1f);
                     target.transform.position = transform.position + untDir;
-                    // adjust forces
+                    // check if the forward vectors are parallel
+                    if (Vector3.Angle(transform.forward, linkedPortal.transform.forward) == 0)
+                    {
+                        // reflect the object
+                        ReflectObjectAtExit(target);
+                    }
+                    else
+                    {
+                        RotateObjectOnExit(target);
+                    }
                 }
-                
-                RotateObjectAtExit(target);
+                else
+                {
+                    RotateObjectAtExit(target);
+                }
             }
         }
 
