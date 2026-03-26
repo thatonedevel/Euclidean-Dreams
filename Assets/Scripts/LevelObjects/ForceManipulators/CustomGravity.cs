@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace LevelObjects.ForceManipulators
 {
@@ -9,6 +10,9 @@ namespace LevelObjects.ForceManipulators
         [Header("Gravity Settings")] 
         [SerializeField] private bool useGlobalGravityMagnitude = true;
         [SerializeField] private Vector3 gravityDirection = Vector3.down;
+        
+        // event fired when this has a new gravity direction set
+        public event Action<Vector3> OnGravityDirectionChanged;
         
         // internal references
         private ConstantForce force;
@@ -39,6 +43,9 @@ namespace LevelObjects.ForceManipulators
             transform.up = newGravityDirection.normalized * -1;
             objectRb.useGravity = false;
             // we read the gravity as a down direction, so from here, calculate the left & forward directions
+            // enable self on call
+            force.enabled = true;
+            OnGravityDirectionChanged?.Invoke(newGravityDirection);
         }
 
         public void SetUseGlobalGravityMagnitude(bool newVal)
