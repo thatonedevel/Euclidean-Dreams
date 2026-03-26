@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using GameConstants.Enumerations;
@@ -29,7 +30,7 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 destination = Vector3.zero;
     private Vector3 dir =  Vector3.zero;
     private bool isMovingFromPortal = false;
-    private Portal exitPortal = null;
+    private Portal lastExitPortal = null;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,8 +39,18 @@ public class CharacterMovement : MonoBehaviour
         jumpAction = InputSystem.actions.FindAction(Constants.ACTION_JUMP);
 
         PerspectiveSwitcher.OnDimensionsSwitched += DimensionSwitchHandler;
-        AGravityManipulator.OnGravityChanged += GravityChangedHandler;
+        GetComponent<CustomGravity>().OnGravityDirectionChanged += GravityChangedHandler;
+        GetComponent<CustomGravity>().OnGravityRestored +=  GravityRestoredHandler;
         Portal.OnPlayerLeftPortal += PortalExitHandler;
+    }
+
+    private void OnDestroy()
+    {
+        // unsubscribe from all events
+        PerspectiveSwitcher.OnDimensionsSwitched -= DimensionSwitchHandler;
+        GetComponent<CustomGravity>().OnGravityDirectionChanged -= GravityChangedHandler;
+        GetComponent<CustomGravity>().OnGravityDirectionChanged -= GravityChangedHandler;
+        Portal.OnPlayerLeftPortal -= PortalExitHandler;
     }
 
     // Update is called once per frame
@@ -48,8 +59,6 @@ public class CharacterMovement : MonoBehaviour
         // get move vector
         Vector2 moveInput = movementAction.ReadValue<Vector2>();
         Vector3 moveVector = Vector3.zero;
-        Vector3 finalDirection = Vector3.zero;
-        
         
         switch (movableAxes)
         {
@@ -75,11 +84,12 @@ public class CharacterMovement : MonoBehaviour
                 
                 // calculate the target direction
                 var transDir = cameraRigDownAnchor.transform.InverseTransformDirection(moveVector);
-                Vector3 targetDir = exitPortal.transform.InverseTransformDirection(transDir);
+                Vector3 targetDir = lastExitPortal.transform.InverseTransformDirection(transDir);
     
-                if (exitPortal.DoesRotationMatchLinkedPortal())
+                if (lastExitPortal.DoesRotationMatchLinkedPortal() || (lastExitPortal.IsPortalNotUpright() && lastExitPortal.ArePortalsParrallel()))
                 {
-                    dir = Vector3.Reflect(transDir, exitPortal.transform.forward);
+                    dir = Vector3.Reflect(transDir, lastExitPortal.transform.forward);
+                    Debug.DrawLine(transform.position, transform.position + (dir * 5), Color.red, 5);
                 }
                 else
                 {
@@ -89,12 +99,7 @@ public class CharacterMovement : MonoBehaviour
             }
             else
             {
-                // if we're facing down, we can safely reset the portal flag to restore standard movement
-                if (transform.up.normalized == new Vector3(0, 1, 0))
-                {
-                    exitPortal = null;
-                    isMovingFromPortal = false;                
-                }
+                isMovingFromPortal = false;
             }
         }
     }
@@ -176,23 +181,20 @@ public class CharacterMovement : MonoBehaviour
 
     private void GravityChangedHandler(Vector3 mavity)
     {
-        if (mavity == Physics.gravity)
-        {
-            DisableCustomGravity();
-        }
-        else
-        {
-            Debug.Log("Setting new gravity: " + mavity * Physics.gravity.magnitude);
-            SetCustomGravity(mavity);
-        }
-
-        if (mavity.y != 0)
-            movableAxes = MovementAxisCombos.XZ; // normal gravity
-        else if (mavity.x != 0)
-            movableAxes = MovementAxisCombos.YZ;
-        else if (mavity.z != 0)
-            movableAxes = MovementAxisCombos.XY;
+        // used to adjust how the character should move when custom gravoty is applied
         
+        // work out movement axis combo
+        if (mavity.normalized == Vector3.up)
+            movableAxes = MovementAxisCombos.XZ;
+        else if (mavity.normalized == Vector3.right || mavity.normalized == Vector3.left)
+            movableAxes = MovementAxisCombos.YZ;
+        else if (mavity.normalized == Vector3.forward || mavity.normalized == Vector3.back)
+            movableAxes = MovementAxisCombos.XY;
+    }
+
+    private void GravityRestoredHandler()
+    {
+        movableAxes = MovementAxisCombos.XZ;
     }
 
     public void SetCustomGravity(Vector3 newGravityAcceleration)
@@ -218,6 +220,6 @@ public class CharacterMovement : MonoBehaviour
     private void PortalExitHandler(Portal exit)
     {
         isMovingFromPortal = true;
-        exitPortal =  exit;
+        lastExitPortal =  exit;
     }
 }
