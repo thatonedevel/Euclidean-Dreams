@@ -63,19 +63,6 @@ namespace LevelObjects
         
         private void ReceiveObject(GameObject target, Vector3 relativeTranslation, Vector3 relativeEulerRotation)
         {
-            expectedObjects.Add(target);
-            // set position of the target
-            target.transform.position = transform.position + relativeTranslation;
-            
-            // if the object has a rigidbody, reflect the linear velocity & forces
-            
-            if (target.CompareTag("Player"))
-                OnPlayerLeftPortal?.Invoke(this);
-            else
-            {
-                RotateObjectOnExit(target);
-            }
-            
             // if we have a custom gravity comp adjust it
             if (target.TryGetComponent(out CustomGravity cg))
             {
@@ -91,6 +78,20 @@ namespace LevelObjects
                     cg.enabled = false;
                 }
             }
+            expectedObjects.Add(target);
+            // set position of the target
+            target.transform.position = transform.position + relativeTranslation;
+            
+            // if the object has a rigidbody, reflect the linear velocity & forces
+            
+            if (target.CompareTag("Player"))
+                OnPlayerLeftPortal?.Invoke(this);
+            else
+            {
+                RotateObjectOnExit(target);
+            }
+            
+            
         }
 
         private void RotateObjectOnExit(GameObject target)
