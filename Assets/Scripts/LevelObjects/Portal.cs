@@ -117,7 +117,7 @@ namespace LevelObjects
                     untDir = Vector3.RotateTowards(untDir, transform.forward, 360 * Mathf.Deg2Rad, 0.1f);
                     target.transform.position = transform.position + untDir;
                     // check if the forward vectors are parallel
-                    if (Vector3.Angle(transform.forward, linkedPortal.transform.forward) == 0)
+                    if (ArePortalsParrallel())
                     {
                         // reflect the object
                         ReflectObjectAtExit(target);
@@ -197,6 +197,11 @@ namespace LevelObjects
         public bool IsPortalNotUpright()
         {
             return transform.up.normalized != Vector3.up;
+        }
+        
+        public bool ArePortalsParrallel()
+        {
+            return Vector3.Angle(transform.forward, linkedPortal.transform.forward) == 0;
         }
     }
 }
