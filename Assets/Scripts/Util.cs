@@ -1,6 +1,9 @@
 using System;
+using System.Data;
+using System.Threading;
 using UnityEngine;
 using GameConstants.Enumerations;
+using UnityEditor;
 
 namespace EDreams
 {
@@ -81,6 +84,72 @@ namespace EDreams
             }
 
             return IsValueInRange(checkValue, target, range) && IsValueInRange(secondAxis, 0, 5) && IsValueInRange(thirdAxis, 0, 5);
+        }
+    }
+
+    public struct Matrix
+    {
+        public float[,] data;
+        public (int rows, int cols) order;
+
+        public Matrix(int rows, int cols)
+        {
+            data = new float[rows, cols];
+            order = (rows, cols);
+        }
+
+        public float this[int row, int col]
+        {
+            get { return data[row, col]; }
+            set { data[row, col] = value; }
+        }
+        
+        public static Matrix operator +(Matrix m1, Matrix m2)
+        {
+            // orders must match
+            if (m1.order != m2.order)
+            {
+                throw new ArithmeticException("Orders do not match");
+            }
+            
+            Matrix result = new Matrix(m1.order.rows, m1.order.cols);
+
+            for (int i = 0; i < m1.order.rows; i++)
+            {
+                for (int j = 0; j < m1.order.cols; j++)
+                {
+                    result.data[i, j] = m2.data[i, j] + m1.data[i, j];
+                }
+            }
+            
+            return result;
+        }
+
+        public static Matrix operator *(Matrix m1, Matrix m2)
+        {
+            // make sure that we have the correct orders
+            if (m1.order.cols != m2.order.rows)
+            {
+                throw new ArithmeticException("Amount of columns in first matrix must match amount of rows in second matrix");
+            }
+            
+            (int r, int c) resOrder = (m1.order.rows, m2.order.cols);
+            
+            Matrix result = new Matrix(resOrder.r, resOrder.c);
+
+            for (int i = 0; i < resOrder.r; i++)
+            {
+                for (int j = 0; j < resOrder.c; j++)
+                {
+                    // inner loop to calculate the needed summations
+                    for (int k = 0; k < m1.order.cols; k++)
+                    {
+                        result[i, k] += m2.data[i, k] * m1.data[k, j];
+                    }
+                }
+            }
+            
+            return result;
         }
     }
 }
