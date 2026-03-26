@@ -43,7 +43,7 @@ namespace LevelObjects.ForceManipulators
                 gravityDirection.normalized * Physics.gravity.magnitude : gravityDirection;
             
             // adjust the directional vectors of the transform
-            transform.up = newGravityDirection.normalized * -1;
+            transform.rotation = Quaternion.LookRotation(transform.forward, newGravityDirection.normalized * -1);
             objectRb.useGravity = false;
             // we read the gravity as a down direction, so from here, calculate the left & forward directions
             // enable self on call
