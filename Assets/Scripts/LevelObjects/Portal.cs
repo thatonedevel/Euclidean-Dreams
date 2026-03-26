@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
+using GameConstants.Enumerations;
 using LevelObjects.ForceManipulators;
-using TreeEditor;
 using UnityEngine;
-using UnityEditor;
-using UnityEngine.Experimental.Rendering;
 
 namespace LevelObjects
 {
@@ -98,32 +96,17 @@ namespace LevelObjects
         private void RotateObjectOnExit(GameObject target)
         {
             // rotates the target object to follow the direction of the exit portal
-            Vector3 targetLocation = target.transform.position + transform.forward;
 
-            // if the object has forces acting on it and/or velocity, rotate these
+            // get the axis we need to check
+            Axes axisToCheck;
+
+            if (transform.up.normalized == Vector3.up) axisToCheck = Axes.Y;
+            else if (transform.up.normalized == Vector3.forward) axisToCheck = Axes.X;
+            else axisToCheck = Axes.Z;
             
-            // we need to check if the entry portal has the same rotation as the exit portal
-            if (DoesRotationMatchLinkedPortal())
+            if (DoesRotationMatchLinkedPortal(axisToCheck))
             {
-                // in this case we *reflect* the forces rather than rotating them
-                if (target.TryGetComponent(out Rigidbody r))
-                {
-                    r.linearVelocity = Vector3.Reflect(r.linearVelocity, transform.forward);
-                }
-                
-                if (target.TryGetComponent(out ConstantForce cf) && !target.CompareTag("Player"))
-                {
-                    cf.relativeForce = Vector3.Reflect(cf.relativeForce, transform.forward);
-                    cf.force = Vector3.Reflect(cf.force, transform.forward);
-                }
-                
-                if (IsPortalNotUpright())
-                {
-                    // get directional vector between us and object
-                    Vector3 untDir =  target.transform.position - transform.position;
-                    untDir = Vector3.Reflect(untDir, transform.forward);
-                    target.transform.position = transform.position + untDir;
-                }
+                ReflectObjectAtExit(target);
             }
             else
             {
@@ -134,29 +117,74 @@ namespace LevelObjects
                 {
                     // get directional vector between us and object
                     Vector3 untDir =  target.transform.position - transform.position;
+                    
                     untDir = Vector3.RotateTowards(untDir, transform.forward, 360 * Mathf.Deg2Rad, 0.1f);
                     target.transform.position = transform.position + untDir;
+                    // adjust forces
                 }
                 
-                if (target.TryGetComponent(out Rigidbody r))
-                {
-                    r.linearVelocity = Vector3.RotateTowards(r.linearVelocity,
-                        transform.forward * r.linearVelocity.magnitude, Mathf.Deg2Rad * 360, 0.1f);
-                }
+                RotateObjectAtExit(target);
+            }
+        }
+
+        private void RotateObjectAtExit(GameObject target)
+        {
+            // adjusts forces active n target objects that passed through this portal
+            // if we're upside down, apply needed things here
+            if (target.TryGetComponent(out Rigidbody r))
+            {
+                r.linearVelocity = Vector3.RotateTowards(r.linearVelocity,
+                    transform.forward * r.linearVelocity.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+            }
                 
-                if (target.TryGetComponent(out ConstantForce cf) && !target.CompareTag("Player"))
-                {
-                    cf.relativeForce = Vector3.RotateTowards(cf.relativeForce, 
-                        transform.forward * cf.relativeForce.magnitude, Mathf.Deg2Rad * 360, 0.1f);
-                    cf.force = Vector3.RotateTowards(cf.force, 
-                        transform.forward * cf.force.magnitude, Mathf.Deg2Rad * 360, 0.1f);
-                }
+            if (target.TryGetComponent(out ConstantForce cf) && !target.CompareTag("Player"))
+            {
+                cf.relativeForce = Vector3.RotateTowards(cf.relativeForce, 
+                    transform.forward * cf.relativeForce.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+                cf.force = Vector3.RotateTowards(cf.force, 
+                    transform.forward * cf.force.magnitude, Mathf.Deg2Rad * 360, 0.1f);
+            }
+        }
+
+        private void ReflectObjectAtExit(GameObject target)
+        {
+            // in this case we *reflect* the forces rather than rotating them
+            if (target.TryGetComponent(out Rigidbody r))
+            {
+                r.linearVelocity = Vector3.Reflect(r.linearVelocity, transform.forward);
+            }
+                
+            if (target.TryGetComponent(out ConstantForce cf) && !target.CompareTag("Player"))
+            {
+                cf.relativeForce = Vector3.Reflect(cf.relativeForce, transform.forward);
+                cf.force = Vector3.Reflect(cf.force, transform.forward);
             }
         }
 
         public bool DoesRotationMatchLinkedPortal()
         {
             return transform.rotation ==  linkedPortal.transform.rotation;
+        }
+
+        public bool DoesRotationMatchLinkedPortal(Axes axisToCheck)
+        {
+            // checks if rotation of the portal matches on the specified axis
+            bool match = false;
+
+            switch (axisToCheck)
+            {
+                // check based on euler rotation
+                case Axes.X:
+                    match = (int)linkedPortal.transform.eulerAngles.x == (int)transform.eulerAngles.x;
+                    break;
+                case Axes.Y:
+                    match = (int)linkedPortal.transform.eulerAngles.y == (int)transform.eulerAngles.y;
+                    break;
+                case Axes.Z:
+                    match = (int)linkedPortal.transform.eulerAngles.z == (int)transform.eulerAngles.z;
+                    break;
+            }
+            return match;
         }
 
         public bool IsPortalNotUpright()
