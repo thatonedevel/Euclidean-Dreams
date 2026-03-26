@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+using UnityEditor;
+using UnityEngine.Diagnostics;
 
 namespace LevelObjects.ForceManipulators
 {
@@ -13,6 +15,7 @@ namespace LevelObjects.ForceManipulators
         
         // event fired when this has a new gravity direction set
         public event Action<Vector3> OnGravityDirectionChanged;
+        public event Action OnGravityRestored;
         
         // internal references
         private ConstantForce force;
@@ -80,6 +83,9 @@ namespace LevelObjects.ForceManipulators
         private void OnDisable()
         {
             objectRb.useGravity = true;
+            force.enabled = false;
+            
+            OnGravityRestored?.Invoke();
         }
     }
 }
