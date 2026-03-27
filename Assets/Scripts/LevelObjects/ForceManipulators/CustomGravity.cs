@@ -44,6 +44,9 @@ namespace LevelObjects.ForceManipulators
             
             // adjust the directional vectors of the transform
             transform.rotation = Quaternion.LookRotation(transform.forward, newGravityDirection.normalized * -1);
+            
+            Debug.Log("New rotation euler: " + transform.eulerAngles);
+            
             objectRb.useGravity = false;
             // we read the gravity as a down direction, so from here, calculate the left & forward directions
             // enable self on call
@@ -82,6 +85,11 @@ namespace LevelObjects.ForceManipulators
 
         private void OnDisable()
         {
+            Debug.Log("disabling custom gravity");
+            
+            // restore object rotation
+            transform.rotation = Quaternion.LookRotation(transform.forward, Physics.gravity.normalized * -1);
+            
             objectRb.useGravity = true;
             force.enabled = false;
             
