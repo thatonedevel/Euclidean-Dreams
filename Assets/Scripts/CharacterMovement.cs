@@ -31,6 +31,9 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 dir =  Vector3.zero;
     private bool isMovingFromPortal = false;
     private Portal lastExitPortal = null;
+    
+    // used to preseverve rotation on movement
+    Vector3 forwardDirectionForRotaton = Vector3.forward;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -122,7 +125,9 @@ public class CharacterMovement : MonoBehaviour
         //characterRigidbody.MovePosition(destination);
         characterRigidbody.MovePosition(transform.position + dir * movementSpeed * Time.fixedDeltaTime);
         
-        transform.LookAt(transform.position + dir);
+        transform.rotation = dir.magnitude != 0? Quaternion.LookRotation(dir, transform.up) : transform.rotation;
+        
+        //transform.LookAt(transform.position + dir); don't use this as it overrides rotation (StarManta, 2021)
 
         if (PerspectiveSwitcher.CurrentDimension == Dimensions.SECOND)
         {
