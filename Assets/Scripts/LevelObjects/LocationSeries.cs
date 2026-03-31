@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+using Vector3 = UnityEngine.Vector3;
 
 namespace LevelObjects
 {
@@ -14,6 +16,13 @@ namespace LevelObjects
 
         private float neededLerpTime = 0;
         private bool isMoving = false;
+        private Vector3 currentLerpStartLocation = Vector3.zero;
+        private float currentLerpTime = -1;
+        
+        private const float DISTANCE_THRESHOLD = 0.1f;
+        
+        // sends an event once a location is reached
+        public event Action<int, Vector3> OnDestinationReached; 
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -26,7 +35,31 @@ namespace LevelObjects
         {
             if (isMoving)
             {
+                // calculate the current t value for the lerp
+                // t = current lerp time / needed
+                float t = currentLerpTime / neededLerpTime;
+                transform.position = Vector3.Lerp(currentLerpStartLocation, destinations[destinationIndex], t);
                 
+                // check for the snap
+                if (Vector3.Distance(transform.position, destinations[destinationIndex]) <= DISTANCE_THRESHOLD || t >= 1)
+                {
+                    // snap to destination
+                    isMoving = false;
+                    transform.position = destinations[destinationIndex];
+                    if (loop)
+                        destinationIndex = destinationIndex >= destinations.Count - 1 ? 0 : destinationIndex + 1;
+                    else
+                    {
+                        destinationIndex++;
+                        if (destinationIndex >= destinations.Count) enabled = false;
+                    }
+                        
+
+                    if (continuous)
+                    {
+                        StartMovingToNextLocation();
+                    }
+                }
             }
         }
 
@@ -38,11 +71,19 @@ namespace LevelObjects
                 // calculate the needed lerp time (t = dist / speed)
                 neededLerpTime = Vector3.Distance(transform.position, destinations[destinationIndex]);
                 isMoving = true;
+                currentLerpStartLocation = transform.position;
             }
             else
             {
                 Debug.Log("already moving");
             }
+        }
+
+        public void StopMovingToNextLocation()
+        {
+            isMoving = false;
+            neededLerpTime = -1;
+            currentLerpTime = -1;
         }
     }
 }
