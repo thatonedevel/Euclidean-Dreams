@@ -53,8 +53,7 @@ namespace LevelObjects
                         destinationIndex++;
                         if (destinationIndex >= destinations.Count) enabled = false;
                     }
-                        
-
+                    
                     if (continuous)
                     {
                         StartMovingToNextLocation();
