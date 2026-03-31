@@ -217,6 +217,33 @@ namespace Managers
         {
             Addressables.LoadSceneAsync(Constants.SCENE_SAVE_SELECT);
         }
+
+        public float GetPlayerAxisValue(Axes axis)
+        {
+            float val = 0;
+
+            if (playerCharacterObject != null)
+            {
+                switch (axis)
+                {
+                    case Axes.X:
+                        val = playerCharacterObject.transform.position.x;
+                        break;
+                    case Axes.Y:
+                        val = playerCharacterObject.transform.position.y;
+                        break;
+                    case Axes.Z:
+                        val = playerCharacterObject.transform.position.z;
+                        break;
+                }
+            }
+            else
+            {
+                val = float.MaxValue;
+            }
+            
+            return val;
+        }
     }
 }
 
