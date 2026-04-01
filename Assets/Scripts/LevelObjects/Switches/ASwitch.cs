@@ -57,8 +57,10 @@ namespace LevelObjects.Switches
                 {
                     // if it's a box collider set the center bounds
                         Axes axis = PerspectiveSwitcher.CurrentObservedAxis;
-                        attachedColliders[i].center = SetValueOnAxis(attachedColliders[i].center,
-                            GameController.Singleton.GetPlayerAxisValue(axis), axis);
+                        attachedColliders[i].center = attachedColliders[i].transform.InverseTransformPoint(
+                            SetValueOnAxis(attachedColliders[i].center,
+                            GameController.Singleton.GetPlayerAxisValue(axis), axis)
+                            );
                 }
             }
         }
@@ -92,23 +94,18 @@ public struct ColliderSettings
     public Vector3 size;
     public bool isTrigger;
 
-    public ColliderSettings(Collider target)
+    public ColliderSettings(BoxCollider target)
     {
         // copies specified info from target collider
-        position = target.bounds.center;
-        size = target.bounds.size;
+        position = target.center;
+        size = target.size;
         isTrigger = target.isTrigger;
     }
     
-    public void CopySettingsToCollider(Collider target)
+    public void CopySettingsToCollider(BoxCollider target)
     {
-        var targetB = target as BoxCollider;
-
-        if (targetB != null)
-        {
-            targetB.center = position;
-            targetB.size = size;
-            targetB.isTrigger = isTrigger;
-        }
+        target.center = position;
+        target.size = size;
+        target.isTrigger = isTrigger;
     }
 }
