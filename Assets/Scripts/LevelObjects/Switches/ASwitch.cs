@@ -13,7 +13,7 @@ namespace LevelObjects.Switches
         [SerializeField] public UnityEvent onSwitchEnabled;
         [SerializeField] protected string[] validTags;
 
-        private List<BoxCollider> attachedColliders;
+        private List<BoxCollider> attachedColliders = new();
         private List<ColliderSettings> defaultSettings = new();
 
         // event listener for the dimension switch to adjust colliders
