@@ -30,6 +30,14 @@ namespace LevelObjects.Switches
             {
                 defaultSettings.Add(new ColliderSettings(attachedColliders[i]));
             }
+            
+            // subscribe to dim switch event
+            PerspectiveSwitcher.OnDimensionsSwitched += DimensionSwitchHandler;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            PerspectiveSwitcher.OnDimensionsSwitched -= DimensionSwitchHandler;
         }
 
         protected virtual void DimensionSwitchHandler(Dimensions newDim)
