@@ -79,7 +79,7 @@ namespace LevelObjects
                 // set lerp time to 0
                 currentLerpTime = 0;
                 // calculate the needed lerp time (t = dist / speed)
-                neededLerpTime = Vector3.Distance(transform.position, destinations[destinationIndex]);
+                neededLerpTime = Vector3.Distance(transform.position, destinations[destinationIndex]) / movementSpeed;
                 isMoving = true;
                 currentLerpStartLocation = transform.position;
             }
