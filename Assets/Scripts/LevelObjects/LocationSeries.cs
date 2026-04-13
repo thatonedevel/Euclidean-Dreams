@@ -13,6 +13,7 @@ namespace LevelObjects
         [SerializeField] private bool loop = false;
         [SerializeField] private int destinationIndex = 0;
         [SerializeField] private bool continuous = false; // do we keep moving between points when we reach the current target?
+        [SerializeField] private bool startAutomatically = false;
 
         private float neededLerpTime = 0;
         private bool isMoving = false;
@@ -27,7 +28,8 @@ namespace LevelObjects
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-        
+            if (startAutomatically)
+                StartMovingToNextLocation();
         }
 
         // Update is called once per frame
@@ -43,6 +45,7 @@ namespace LevelObjects
                 // check for the snap
                 if (Vector3.Distance(transform.position, destinations[destinationIndex]) <= DISTANCE_THRESHOLD || t >= 1)
                 {
+                    Debug.Log("Snapping to destination");
                     // snap to destination
                     isMoving = false;
                     transform.position = destinations[destinationIndex];
@@ -59,14 +62,22 @@ namespace LevelObjects
                         StartMovingToNextLocation();
                     }
                 }
+                else
+                {
+                    // make sure we update the current lerp time
+                    currentLerpTime += Time.deltaTime;
+                }
             }
         }
 
         public void StartMovingToNextLocation()
         {
+            Debug.Log("moving to next lerp destination");
             // if the object is idle, start moving it to the next location in the array
             if (!isMoving)
             {
+                // set lerp time to 0
+                currentLerpTime = 0;
                 // calculate the needed lerp time (t = dist / speed)
                 neededLerpTime = Vector3.Distance(transform.position, destinations[destinationIndex]);
                 isMoving = true;
