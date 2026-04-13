@@ -56,11 +56,13 @@ namespace LevelObjects.Switches
                 for (int i = 0; i < attachedColliders.Count; i++)
                 {
                     // if it's a box collider set the center bounds
-                        Axes axis = PerspectiveSwitcher.CurrentObservedAxis;
-                        attachedColliders[i].center = attachedColliders[i].transform.InverseTransformPoint(
+                    Axes axis = PerspectiveSwitcher.CurrentObservedAxis;
+                    attachedColliders[i].center = attachedColliders[i].transform.InverseTransformPoint(
                             SetValueOnAxis(attachedColliders[i].center,
-                            GameController.Singleton.GetPlayerAxisValue(axis), axis)
-                            );
+                                GameController.Singleton.GetPlayerAxisValue(axis), axis)
+                        );
+                    // HACK: do this to make sure that the button collider's y position isn't changed
+                    attachedColliders[i].center = SetValueOnAxis(attachedColliders[i].center, defaultSettings[i].position.y, Axes.Y);
                 }
             }
         }
