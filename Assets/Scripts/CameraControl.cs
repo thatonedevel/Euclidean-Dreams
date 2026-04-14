@@ -3,6 +3,8 @@ using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.ProBuilder;
+using LevelObjects;
+using Managers;
 
 public class CameraControl : MonoBehaviour
 {
@@ -23,6 +25,10 @@ public class CameraControl : MonoBehaviour
     // camera controls etc
     private InputAction cameraLookAction;
     private InputAction cameraProfZoomAction; // IT WAS ME BARRY, I'M THE ONE WHO MADE YOUR UNIT TESTS FAIL
+    
+    // relative positions for automatic camera adjustment & player reference
+    private Vector3 relativeDirectionToPlayer = Vector3.zero;
+    private GameObject playerCharacter;
 
     // angle tracking
     [Header("Debug Info - Rotation information")]
@@ -42,6 +48,12 @@ public class CameraControl : MonoBehaviour
 
         // test lerp for negative angles
         //Debug.Log("Test lerp on a negative target (12%): " + Vector3.Lerp(Vector3.zero, new Vector3(0, -45, 0), 0.12f));
+
+        if (playerCharacter == null)
+            playerCharacter = GameObject.FindWithTag(Constants.TAG_PLAYER);
+        
+        relativeDirectionToPlayer = playerCharacter.transform.position - transform.parent.position;
+        Portal.OnPlayerLeftPortal += PortalExitHandler;
     }
 
     // Update is called once per frame
@@ -170,6 +182,19 @@ public class CameraControl : MonoBehaviour
                 currentPercent = 0;
                 isRotating = false;
             }
+        }
+    }
+
+    private void PortalExitHandler(Portal exitPortal, bool shouldAdjustCamera)
+    {
+        if (shouldAdjustCamera)
+        {
+            // calculate relative position to entry portal
+            Vector3 relPosToPortal = transform.parent.position - exitPortal.GetLinkedPortalPosition();
+            
+            // adjust the height of the camera so that the player can see this section of the level more easily
+            Vector3 newPosition = playerCharacter.transform.InverseTransformPoint(relPosToPortal);
+            transform.parent.position = newPosition;
         }
     }
 }

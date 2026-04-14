@@ -204,5 +204,10 @@ namespace LevelObjects
         {
             return Vector3.Angle(transform.forward, linkedPortal.transform.forward) == 0;
         }
+
+        public Vector3 GetLinkedPortalPosition()
+        {
+            return linkedPortal.transform.position;
+        }
     }
 }
