@@ -21,7 +21,8 @@ namespace LevelObjects
         public static event Action<Portal, bool> OnPlayerLeftPortal;
 
 
-        [Header("Portal Settings")] private bool adjustCameraOnExit;
+        [Header("Portal Settings")]
+        [SerializeField] private bool adjustCameraOnExit;
         
         private void InitialisePortal()
         {
@@ -208,6 +209,21 @@ namespace LevelObjects
         public Vector3 GetLinkedPortalPosition()
         {
             return linkedPortal.transform.position;
+        }
+
+        public Vector3 GetLinkedPortalEulerAngles()
+        {
+            return linkedPortal.transform.eulerAngles;
+        }
+
+        public int GetLinkedPortalID()
+        {
+            return linkedPortal.GetInstanceID();
+        }
+
+        public Transform GetLinkedPortalTransform()
+        {
+            return linkedPortal.transform;
         }
     }
 }
