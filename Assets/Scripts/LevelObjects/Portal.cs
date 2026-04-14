@@ -18,8 +18,10 @@ namespace LevelObjects
         
         public RenderTexture portalCameraOutput { get; private set; }
 
-        public static event Action<Portal> OnPlayerLeftPortal;
-        
+        public static event Action<Portal, bool> OnPlayerLeftPortal;
+
+
+        [Header("Portal Settings")] private bool adjustCameraOnExit;
         
         private void InitialisePortal()
         {
@@ -85,13 +87,11 @@ namespace LevelObjects
             // if the object has a rigidbody, reflect the linear velocity & forces
             
             if (target.CompareTag("Player"))
-                OnPlayerLeftPortal?.Invoke(this);
+                OnPlayerLeftPortal?.Invoke(this, adjustCameraOnExit);
             else
             {
                 RotateObjectOnExit(target);
             }
-            
-            
         }
 
         private void RotateObjectOnExit(GameObject target)
