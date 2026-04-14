@@ -222,7 +222,7 @@ public class CharacterMovement : MonoBehaviour
         transform.up = Physics.gravity.normalized * -1;
     }
 
-    private void PortalExitHandler(Portal exit)
+    private void PortalExitHandler(Portal exit, bool t)
     {
         isMovingFromPortal = true;
         lastExitPortal =  exit;
