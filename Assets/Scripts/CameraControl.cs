@@ -1,10 +1,8 @@
+using System.Collections.Generic;
 using GameConstants;
-using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.ProBuilder;
 using LevelObjects;
-using Managers;
 
 public class CameraControl : MonoBehaviour
 {
@@ -29,16 +27,17 @@ public class CameraControl : MonoBehaviour
     // relative positions for automatic camera adjustment & player reference
     private Vector3 relativeDirectionToPlayer = Vector3.zero;
     private GameObject playerCharacter;
+    private Dictionary<int, CameraTransformSnapshot> transformSnapshots = new();
 
     // angle tracking
     [Header("Debug Info - Rotation information")]
-    [SerializeField] private Vector3 targetAngles = Vector3.zero;
-    [SerializeField] private bool isRotating = false;
-    [SerializeField] private float percentInc = 0;
-    [SerializeField] private float currentPercent = 0;
-    [SerializeField] private Vector3 lerpStartAngles = Vector3.zero;
-    [SerializeField] private float elapsedLerpTime = 0;
-    [SerializeField] private float neededLerpTime = 0;
+    [SerializeField] private Vector3 targetAngles;
+    [SerializeField] private bool isRotating;
+    [SerializeField] private float percentInc;
+    [SerializeField] private float currentPercent;
+    [SerializeField] private Vector3 lerpStartAngles;
+    [SerializeField] private float elapsedLerpTime;
+    [SerializeField] private float neededLerpTime;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -187,14 +186,85 @@ public class CameraControl : MonoBehaviour
 
     private void PortalExitHandler(Portal exitPortal, bool shouldAdjustCamera)
     {
+        var linkedTransform = exitPortal.GetLinkedPortalTransform();
         if (shouldAdjustCamera)
         {
-            // calculate relative position to entry portal
-            Vector3 relPosToPortal = transform.parent.position - exitPortal.GetLinkedPortalPosition();
-            
-            // adjust the height of the camera so that the player can see this section of the level more easily
-            Vector3 newPosition = playerCharacter.transform.InverseTransformPoint(relPosToPortal);
-            transform.parent.position = newPosition;
+            // check if an entry for the portal we're coming out of exists
+            if (transformSnapshots.ContainsKey(exitPortal.gameObject.GetInstanceID()))
+            {
+                // restore to the settings stored here
+                var snap = transformSnapshots[exitPortal.gameObject.GetInstanceID()];
+                Vector3 relPortalPos = snap.relativeCamPosition;
+                Vector3 parentForward = snap.parentForwardDir;
+                Vector3 parentUp = snap.parentUpDir;
+                Vector3 parentRight = snap.parentRightDir;
+                
+                transform.parent.position = relPortalPos + exitPortal.transform.position;
+                
+                transform.parent.forward = parentForward;
+                transform.parent.up = parentUp;
+                transform.parent.right = parentRight;
+            }
+            else
+            {
+                MakeEntryForPortal(exitPortal);
+            }
         }
+    }
+
+    private void MakeEntryForPortal(Portal exitPortal)
+    {
+        var linkedTransform = exitPortal.GetLinkedPortalTransform();
+        
+        // calculate new transform and create an entry for the current transform settings
+        // calculate relative position to entry portal & rotation
+        Vector3 relPosToPortal = exitPortal.GetLinkedPortalPosition() - transform.parent.position;
+        Vector3 relEulerRot = transform.parent.eulerAngles - exitPortal.GetLinkedPortalEulerAngles();
+        // adjust the height of the camera so that the player can see this section of the level more easily
+        Vector3 newPosition = exitPortal.transform.InverseTransformDirection(relPosToPortal);
+                
+        Vector3 newForward = transform.parent.forward;
+        Vector3 newUp = transform.parent.up;
+        Vector3 newRight = transform.parent.right;
+            
+        // make sure our up matches the exit portal's up
+        transform.parent.up = exitPortal.transform.up;
+            
+        // next check if either the forward or right directions of the entry portal matched
+        // if they did, apply this to the camera
+        if (transform.forward == linkedTransform.forward)
+            newForward = exitPortal.transform.forward;
+        if (transform.right == linkedTransform.right)
+            newRight = exitPortal.transform.right;
+                
+        // create the snapshot
+        var snapshot = new CameraTransformSnapshot(relPosToPortal, transform.parent.forward, transform.parent.up, transform.parent.right);
+                
+        transformSnapshots.Add(exitPortal.GetLinkedPortalID(), snapshot);
+                
+        transform.parent.position = newPosition;
+                
+        transform.parent.forward = newForward;
+        transform.parent.up = newUp;
+        transform.parent.right = newRight;
+                
+        //transform.parent.eulerAngles = newRotation;
+    }
+}
+
+public struct CameraTransformSnapshot
+{
+    // struct used for holding snapshots of the camera's transform state
+    public Vector3 relativeCamPosition;
+    public Vector3 parentForwardDir;
+    public Vector3 parentUpDir;
+    public Vector3 parentRightDir;
+
+    public CameraTransformSnapshot(Vector3 relativeCamPosition, Vector3 parentForwardDir, Vector3 parentUpDir, Vector3 parentRightDir)
+    {
+        this.relativeCamPosition = relativeCamPosition;
+        this.parentForwardDir = parentForwardDir;
+        this.parentUpDir = parentUpDir;
+        this.parentRightDir = parentRightDir;
     }
 }
