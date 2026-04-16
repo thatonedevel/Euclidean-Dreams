@@ -32,6 +32,9 @@ public class ColliderAdjuster : MonoBehaviour
     
     protected virtual void DimensionSwitchHandler(Dimensions newDim)
     {
+        // grab a reference to the player
+        GameObject playerObject = GameObject.FindWithTag(Constants.TAG_PLAYER);
+        
         if (newDim == Dimensions.THIRD)
         {
             // restore colliders to their default settings
@@ -47,12 +50,25 @@ public class ColliderAdjuster : MonoBehaviour
             {
                 // if it's a box collider set the center bounds
                 Axes axis = PerspectiveSwitcher.CurrentObservedAxis;
-                attachedColliders[i].center = attachedColliders[i].transform.InverseTransformPoint(
-                    SetValueOnAxis(attachedColliders[i].center,
-                        GameController.Singleton.GetPlayerAxisValue(axis), axis)
-                );
-                // HACK: do this to make sure that the button collider's y position isn't changed
-                attachedColliders[i].center = SetValueOnAxis(attachedColliders[i].center, defaultSettings[i].position.y, Axes.Y);
+                Vector3 colCenterGlobal = new();
+                if (axis == Axes.X)
+                {
+                    // set collider center x to consider the player's x position
+                    colCenterGlobal = attachedColliders[i].bounds.center;
+                    colCenterGlobal = new Vector3(playerObject.transform.position.x, colCenterGlobal.y, colCenterGlobal.z);
+                    
+                    // transform back to local space
+                    attachedColliders[i].center = transform.InverseTransformPoint(colCenterGlobal);
+                }
+                else if (axis == Axes.Z)
+                {
+                    // set collider center x to consider the player's x position
+                    colCenterGlobal =  attachedColliders[i].bounds.center;
+                    colCenterGlobal = new Vector3(colCenterGlobal.x, colCenterGlobal.y, playerObject.transform.position.z);
+                    
+                    // transform back to local space
+                    attachedColliders[i].center = transform.InverseTransformPoint(colCenterGlobal);
+                }
             }
         }
     }
