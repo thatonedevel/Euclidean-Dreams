@@ -92,13 +92,6 @@ public class ColliderAdjuster : MonoBehaviour
 
         return vec;
     }
-
-    private void YAxisColliderAdjustment()
-    {
-        // adjust the position of the colliders to be just under the player - make sure heighest collider is directly under
-        // means buttons will still work etc
-        attachedColliders.Sort((a, b) => (int)(a.center.y - b.center.y));
-    }
 }
 
 public struct ColliderSettings
