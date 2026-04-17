@@ -1,21 +1,53 @@
-using UnityEngine;
 using GameConstants;
+using UnityEngine;
 
-public class MovingPlatformParenter : MonoBehaviour
+namespace LevelObjects
 {
-    private void OnTriggerEnter(Collider other)
+    public class MovingPlatformParenter : MonoBehaviour
     {
-        if (other.CompareTag(Constants.TAG_PLAYER))
+        private void Start()
         {
-            other.transform.SetParent(transform);
+            // subscribe to the raycast events
+            RaycastTriggerTarget.RaycastTriggered += RaycastTriggerEnterHandler;
+            RaycastTriggerTarget.RaycastTriggerExit += RaycastTExitHandler;
         }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag(Constants.TAG_PLAYER))
+        private void OnDestroy()
         {
-            other.transform.SetParent(null);
+            RaycastTriggerTarget.RaycastTriggered -= RaycastTriggerEnterHandler;
+            RaycastTriggerTarget.RaycastTriggerExit -= RaycastTExitHandler;
+        }
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag(Constants.TAG_PLAYER))
+            {
+                other.transform.SetParent(transform);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag(Constants.TAG_PLAYER))
+            {
+                other.transform.SetParent(null);
+            }
+        }
+
+        private void RaycastTriggerEnterHandler(RaycastCollision collision)
+        {
+            if (collision.SourceGamemeObject.CompareTag(Constants.TAG_PLAYER))
+            {
+                collision.SourceGamemeObject.transform.SetParent(transform);
+            }
+        }
+        
+        private void RaycastTExitHandler(RaycastCollision collision)
+        {
+            if (collision.SourceGamemeObject.CompareTag(Constants.TAG_PLAYER))
+            {
+                collision.SourceGamemeObject.transform.SetParent(null);
+            }
         }
     }
 }
