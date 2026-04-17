@@ -149,12 +149,22 @@ public class CharacterMovement : MonoBehaviour
         RaycastHit hit;
 
         Debug.DrawRay(groundCheckRay.origin, groundCheckRay.direction * Constants.MAX_RAYCAST_DISTANCE, Color.yellow, 1);
-        Physics.Raycast(ray: groundCheckRay, hitInfo: out hit, Constants.MAX_RAYCAST_DISTANCE, layerMask: groundingMask.value);
+        Physics.Raycast(ray: groundCheckRay, hitInfo: out hit, Constants.MAX_RAYCAST_DISTANCE, layerMask: groundingMask.value, queryTriggerInteraction: QueryTriggerInteraction.Collide);
 
         if (hit.collider == null)
         {
             // we're not grounded
             characterRigidbody.useGravity = true;
+        }
+        else
+        {
+            // see if it has a raycast trigger
+            if (hit.collider.TryGetComponent<RaycastTriggerTarget>(out var target))
+            {
+                RaycastCollision col = new(hit, gameObject);
+                hit.collider.gameObject.SendMessage("OnRaycastTriggerEnter", col);
+                
+            }
         }
     }
 
