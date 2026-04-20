@@ -96,8 +96,12 @@ public class CharacterMovement : MonoBehaviour
                 }
                 else
                 {
-                    dir = Vector3.RotateTowards(transDir, targetDir * transDir.magnitude,
-                                    Mathf.Rad2Deg * 360, 0.1f);
+                    if ((int)lastExitPortal.GetLinkedPortalEulerAngles().y == (int)lastExitPortal.transform.eulerAngles.y)
+                        dir = Vector3.RotateTowards(transDir, lastExitPortal.transform.forward * transDir.magnitude,
+                                    Mathf.Deg2Rad * 360, 0.1f) * -1;
+                    else 
+                        dir = Vector3.RotateTowards(transDir, targetDir * transDir.magnitude,
+                            Mathf.Rad2Deg * 360, 0.1f);
                 }                
             }
             else
@@ -149,12 +153,22 @@ public class CharacterMovement : MonoBehaviour
         RaycastHit hit;
 
         Debug.DrawRay(groundCheckRay.origin, groundCheckRay.direction * Constants.MAX_RAYCAST_DISTANCE, Color.yellow, 1);
-        Physics.Raycast(ray: groundCheckRay, hitInfo: out hit, Constants.MAX_RAYCAST_DISTANCE, layerMask: groundingMask.value);
+        Physics.Raycast(ray: groundCheckRay, hitInfo: out hit, Constants.MAX_RAYCAST_DISTANCE, layerMask: groundingMask.value, queryTriggerInteraction: QueryTriggerInteraction.Collide);
 
         if (hit.collider == null)
         {
             // we're not grounded
             characterRigidbody.useGravity = true;
+        }
+        else
+        {
+            // see if it has a raycast trigger
+            if (hit.collider.TryGetComponent<RaycastTriggerTarget>(out var target))
+            {
+                RaycastCollision col = new(hit, gameObject);
+                hit.collider.gameObject.SendMessage("OnRaycastTriggerEnter", col);
+                
+            }
         }
     }
 
@@ -222,7 +236,7 @@ public class CharacterMovement : MonoBehaviour
         transform.up = Physics.gravity.normalized * -1;
     }
 
-    private void PortalExitHandler(Portal exit)
+    private void PortalExitHandler(Portal exit, bool t)
     {
         isMovingFromPortal = true;
         lastExitPortal =  exit;

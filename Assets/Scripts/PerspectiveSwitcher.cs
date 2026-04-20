@@ -7,6 +7,7 @@ using GameConstants;
 using GameConstants.Enumerations;
 using LevelObjects;
 using Unity.VisualScripting;
+using UnityEngine.Serialization;
 
 public class PerspectiveSwitcher : MonoBehaviour
 {
@@ -23,7 +24,8 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     [Header("Collision Settings")]
     [SerializeField] private float collisionThickness;
-    [SerializeField] private LayerMask raycastingMask;
+    [FormerlySerializedAs("raycastingMask")] [SerializeField] private LayerMask flipTo2DMask;
+    [SerializeField] private LayerMask flipTo3DMask;
 
     private const int CHECK_ANGLE = 90;
     private const int ANGLE_THRESHOLD = 5;
@@ -149,7 +151,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
                 // draw the ray
                 Debug.DrawRay(outRay.origin, outRay.direction * rayLen, Color.white, 1);
-                Physics.Raycast(ray: outRay, hitInfo: out hitData, maxDistance: rayLen, layerMask: raycastingMask.value);
+                Physics.Raycast(ray: outRay, hitInfo: out hitData, maxDistance: rayLen, layerMask: flipTo2DMask.value);
 
                 // if the ray hit level geometry, add it to the hash set
                 if (hitData.collider != null)
@@ -277,7 +279,7 @@ public class PerspectiveSwitcher : MonoBehaviour
             Debug.DrawRay(playerRay.origin, playerRay.direction * Constants.MAX_RAYCAST_DISTANCE, Color.red, 1);
             RaycastHit hit;
 
-            Physics.Raycast(ray: playerRay, hitInfo: out hit, Constants.MAX_RAYCAST_DISTANCE, layerMask: raycastingMask.value);
+            Physics.Raycast(ray: playerRay, hitInfo: out hit, Constants.MAX_RAYCAST_DISTANCE, layerMask: flipTo3DMask.value);
 
             if (hit.collider != null)
             {
@@ -308,7 +310,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
         // regular raycast
         Debug.DrawRay(groundRay.origin, groundRay.direction * Constants.MAX_RAYCAST_DISTANCE, Color.green, 1);
-        Physics.Raycast(ray: groundRay, hitInfo: out currentHit, maxDistance: Constants.MAX_RAYCAST_DISTANCE, layerMask: raycastingMask.value);
+        Physics.Raycast(ray: groundRay, hitInfo: out currentHit, maxDistance: Constants.MAX_RAYCAST_DISTANCE, layerMask: flipTo2DMask.value);
 
         // check for a hit & set position
         if (currentHit.collider != null) 

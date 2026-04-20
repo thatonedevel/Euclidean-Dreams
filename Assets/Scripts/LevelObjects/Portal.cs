@@ -18,8 +18,11 @@ namespace LevelObjects
         
         public RenderTexture portalCameraOutput { get; private set; }
 
-        public static event Action<Portal> OnPlayerLeftPortal;
-        
+        public static event Action<Portal, bool> OnPlayerLeftPortal;
+
+
+        [Header("Portal Settings")]
+        [SerializeField] private bool adjustCameraOnExit;
         
         private void InitialisePortal()
         {
@@ -85,13 +88,11 @@ namespace LevelObjects
             // if the object has a rigidbody, reflect the linear velocity & forces
             
             if (target.CompareTag("Player"))
-                OnPlayerLeftPortal?.Invoke(this);
+                OnPlayerLeftPortal?.Invoke(this, adjustCameraOnExit);
             else
             {
                 RotateObjectOnExit(target);
             }
-            
-            
         }
 
         private void RotateObjectOnExit(GameObject target)
@@ -203,6 +204,26 @@ namespace LevelObjects
         public bool ArePortalsParrallel()
         {
             return Vector3.Angle(transform.forward, linkedPortal.transform.forward) == 0;
+        }
+
+        public Vector3 GetLinkedPortalPosition()
+        {
+            return linkedPortal.transform.position;
+        }
+
+        public Vector3 GetLinkedPortalEulerAngles()
+        {
+            return linkedPortal.transform.eulerAngles;
+        }
+
+        public int GetLinkedPortalID()
+        {
+            return linkedPortal.GetInstanceID();
+        }
+
+        public Transform GetLinkedPortalTransform()
+        {
+            return linkedPortal.transform;
         }
     }
 }

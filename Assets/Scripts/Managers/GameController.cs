@@ -92,6 +92,8 @@ namespace Managers
                 case GameStates.LEVEL_COMPLETE:
                     // disable char movement
                     playerCharacterObject.GetComponent<CharacterMovement>().enabled = false;
+                    // also disable the rigidbody
+                    playerCharacterObject.GetComponent<Rigidbody>().isKinematic = true;
                     levelCameraRig.GetComponent<CameraControl>().enabled = false;
                     break;
                 default:
@@ -216,6 +218,33 @@ namespace Managers
         public void GoToSaveScreen()
         {
             Addressables.LoadSceneAsync(Constants.SCENE_SAVE_SELECT);
+        }
+
+        public float GetPlayerAxisValue(Axes axis)
+        {
+            float val = 0;
+
+            if (playerCharacterObject != null)
+            {
+                switch (axis)
+                {
+                    case Axes.X:
+                        val = playerCharacterObject.transform.position.x;
+                        break;
+                    case Axes.Y:
+                        val = playerCharacterObject.transform.position.y;
+                        break;
+                    case Axes.Z:
+                        val = playerCharacterObject.transform.position.z;
+                        break;
+                }
+            }
+            else
+            {
+                val = float.MaxValue;
+            }
+            
+                return val;
         }
     }
 }

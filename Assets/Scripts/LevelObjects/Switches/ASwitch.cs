@@ -1,5 +1,9 @@
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections.Generic;
+using GameConstants.Enumerations;
+using Managers;
+using UnityEngine.UIElements;
 
 namespace LevelObjects.Switches
 {
@@ -8,5 +12,6 @@ namespace LevelObjects.Switches
         [Header("Common Settings")]
         [SerializeField] public UnityEvent onSwitchEnabled;
         [SerializeField] protected string[] validTags;
+        // event listener for the dimension switch to adjust colliders
     }
 }
