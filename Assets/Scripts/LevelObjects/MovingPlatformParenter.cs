@@ -23,6 +23,16 @@ namespace LevelObjects
             if (other.CompareTag(Constants.TAG_PLAYER))
             {
                 other.transform.SetParent(transform);
+                
+                var playerRb = other.GetComponent<Rigidbody>();
+                
+                // (Carry the Sword Game Studio, 2021)
+                // set interpolation to non here to prevent jittery movement
+                playerRb.interpolation = RigidbodyInterpolation.Interpolate;
+                playerRb.linearVelocity = Vector3.zero;
+                playerRb.isKinematic = true;
+                
+                Debug.Log("Player entered");
             }
         }
 
@@ -31,6 +41,9 @@ namespace LevelObjects
             if (other.CompareTag(Constants.TAG_PLAYER))
             {
                 other.transform.SetParent(null);
+                var playerRb = other.GetComponent<Rigidbody>();
+                playerRb.interpolation = RigidbodyInterpolation.None;
+                playerRb.isKinematic = false;
             }
         }
 
