@@ -40,7 +40,8 @@ namespace LevelObjects
                 // calculate the current t value for the lerp
                 // t = current lerp time / needed
                 float t = currentLerpTime / neededLerpTime;
-                transform.position = Vector3.Lerp(currentLerpStartLocation, destinations[destinationIndex], t);
+                var newDest = Vector3.Lerp(currentLerpStartLocation, destinations[destinationIndex], t);
+                transform.position = newDest;
                 
                 // check for the snap
                 if (Vector3.Distance(transform.position, destinations[destinationIndex]) <= DISTANCE_THRESHOLD || t >= 1)
