@@ -96,8 +96,12 @@ public class CharacterMovement : MonoBehaviour
                 }
                 else
                 {
-                    dir = Vector3.RotateTowards(transDir, targetDir * transDir.magnitude,
-                                    Mathf.Rad2Deg * 360, 0.1f);
+                    if ((int)lastExitPortal.GetLinkedPortalEulerAngles().y == (int)lastExitPortal.transform.eulerAngles.y)
+                        dir = Vector3.RotateTowards(transDir, lastExitPortal.transform.forward * transDir.magnitude,
+                                    Mathf.Deg2Rad * 360, 0.1f) * -1;
+                    else 
+                        dir = Vector3.RotateTowards(transDir, targetDir * transDir.magnitude,
+                            Mathf.Rad2Deg * 360, 0.1f);
                 }                
             }
             else
