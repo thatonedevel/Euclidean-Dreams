@@ -92,6 +92,8 @@ namespace Managers
                 case GameStates.LEVEL_COMPLETE:
                     // disable char movement
                     playerCharacterObject.GetComponent<CharacterMovement>().enabled = false;
+                    // also disable the rigidbody
+                    playerCharacterObject.GetComponent<Rigidbody>().isKinematic = true;
                     levelCameraRig.GetComponent<CameraControl>().enabled = false;
                     break;
                 default:
@@ -242,7 +244,7 @@ namespace Managers
                 val = float.MaxValue;
             }
             
-            return val;
+                return val;
         }
     }
 }
