@@ -14,11 +14,14 @@ namespace LevelObjects
         [SerializeField] private int destinationIndex = 0;
         [SerializeField] private bool continuous = false; // do we keep moving between points when we reach the current target?
         [SerializeField] private bool startAutomatically = false;
-
+        [SerializeField] private float delayBetweenPoints;
+        
         private float neededLerpTime = 0;
         private bool isMoving = false;
         private Vector3 currentLerpStartLocation = Vector3.zero;
         private float currentLerpTime = -1;
+        private float nextMoveStartTime = 0;
+        private bool waitingForPoint = false;
         
         private const float DISTANCE_THRESHOLD = 0.1f;
         
@@ -60,13 +63,34 @@ namespace LevelObjects
                     
                     if (continuous)
                     {
-                        StartMovingToNextLocation();
+                        // move us into the wait branch
+                        if (delayBetweenPoints > 0)
+                        {
+                            nextMoveStartTime = Time.time + delayBetweenPoints;
+                            waitingForPoint = true;
+                        }
+                        else
+                        {
+                            StartMovingToNextLocation();
+                        }
                     }
                 }
                 else
                 {
-                    // make sure we update the current lerp time
-                    currentLerpTime += Time.deltaTime;
+                     // make sure we update the current lerp time
+                     currentLerpTime += Time.deltaTime;
+                }
+            }
+            else
+            {
+                if (waitingForPoint)
+                {
+                    // check if the time is elapsed
+                    if (Time.time >= nextMoveStartTime)
+                    {
+                        waitingForPoint = false;
+                        StartMovingToNextLocation();
+                    }
                 }
             }
         }

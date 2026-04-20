@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 268196414288446895}
   - component: {fileID: 4898753343647767283}
   - component: {fileID: 7500575052613269351}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MovingPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,6 +131,7 @@ MonoBehaviour:
   destinationIndex: 0
   continuous: 1
   startAutomatically: 1
+  delayBetweenPoints: 0
 --- !u!114 &3847827288572188312
 MonoBehaviour:
   m_ObjectHideFlags: 0
