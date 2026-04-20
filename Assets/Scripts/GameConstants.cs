@@ -29,6 +29,7 @@ namespace GameConstants
         public const string ACTION_JUMP = "Jump";
         public const string ACTION_ROTATE_CAMERA = "Look";
         public const string ACTION_ZOOM_CAMERA = "Zoom";
+        public const string ACTION_CENTER_CAMERA = "Recenter Camera";
         public const string ACTION_SWITCH_PERSPECTIVE = "Toggle Perspective";
         public const string ACTION_PAUSE = "Pause";
 
