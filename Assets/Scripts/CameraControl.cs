@@ -3,6 +3,7 @@ using GameConstants;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using LevelObjects;
+using Unity.Burst.CompilerServices;
 
 public class CameraControl : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class CameraControl : MonoBehaviour
     // camera controls etc
     private InputAction cameraLookAction;
     private InputAction cameraProfZoomAction; // IT WAS ME BARRY, I'M THE ONE WHO MADE YOUR UNIT TESTS FAIL
+    private InputAction cameraRecenterAction;
     
     // relative positions for automatic camera adjustment & player reference
     private Vector3 relativeDirectionToPlayer = Vector3.zero;
@@ -44,6 +46,7 @@ public class CameraControl : MonoBehaviour
     {
         cameraLookAction = InputSystem.actions.FindAction(Constants.ACTION_ROTATE_CAMERA);
         cameraProfZoomAction = InputSystem.actions.FindAction(Constants.ACTION_ZOOM_CAMERA);
+        cameraRecenterAction = InputSystem.actions.FindAction(Constants.ACTION_CENTER_CAMERA);
 
         // test lerp for negative angles
         //Debug.Log("Test lerp on a negative target (12%): " + Vector3.Lerp(Vector3.zero, new Vector3(0, -45, 0), 0.12f));
@@ -51,7 +54,7 @@ public class CameraControl : MonoBehaviour
         if (playerCharacter == null)
             playerCharacter = GameObject.FindWithTag(Constants.TAG_PLAYER);
         
-        relativeDirectionToPlayer = playerCharacter.transform.position - transform.parent.position;
+        relativeDirectionToPlayer = transform.parent.position - playerCharacter.transform.position;
         Portal.OnPlayerLeftPortal += PortalExitHandler;
     }
 
@@ -70,6 +73,9 @@ public class CameraControl : MonoBehaviour
             HandleCameraRotation(rotation);
 
         ZoomCamera(zoomAmount);
+        
+        if (cameraRecenterAction.WasReleasedThisFrame())
+            RecenterCamera();
     }
 
     private void SetRotationVector(ref Vector3 rotation, Vector2 movement)
@@ -249,6 +255,19 @@ public class CameraControl : MonoBehaviour
         transform.parent.right = newRight;
                 
         //transform.parent.eulerAngles = newRotation;
+    }
+
+    private void RecenterCamera()
+    {
+        var playerTempRef = GameObject.FindWithTag(Constants.TAG_PLAYER);
+        // recenters the camera to be relative to the player. is called on-demand due to the need for this being contextual
+        var newCamPos = relativeDirectionToPlayer + playerTempRef.transform.position;
+        // set the position of the rig to the new calculated pos
+        
+        // transform this point based on the up direction of the player character
+        //newCamPos = playerTempRef.transform.TransformPoint(newCamPos);
+        
+        transform.parent.position = newCamPos;
     }
 }
 
