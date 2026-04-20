@@ -215,9 +215,12 @@ MonoBehaviour:
   fieldOfView: 60
   size: 10
   collisionThickness: 0
-  raycastingMask:
+  flipTo2DMask:
     serializedVersion: 2
     m_Bits: 8
+  flipTo3DMask:
+    serializedVersion: 2
+    m_Bits: 264
 --- !u!75 &4254330866762786646
 ConstantForce:
   m_ObjectHideFlags: 0
