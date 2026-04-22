@@ -1,5 +1,8 @@
 using LevelObjects.ForceManipulators;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using GameConstants;
+using GameConstants.Enumerations;
 
 namespace Animation
 {
@@ -9,6 +12,9 @@ namespace Animation
         [SerializeField] private Rigidbody pcRigidbody;
         [SerializeField] private CustomGravity customGrav;
         
+        // add movement action listening here
+        private InputAction moveAction;
+        
         // animation parameters
         const string PARAM_MOVING = "IsMoving";
         const string PARAM_FALLING = "IsFalling";
@@ -16,7 +22,7 @@ namespace Animation
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-        
+            moveAction = InputSystem.actions.FindAction(Constants.ACTION_MOVE);
         }
 
         // Update is called once per frame
@@ -26,19 +32,10 @@ namespace Animation
             Vector3 velocity = pcRigidbody.linearVelocity;
             Vector3 grav = customGrav.GetGravityDirection();
 
-            pcAnimator.SetBool(PARAM_MOVING, velocity.magnitude > 0);
+            pcAnimator.SetBool(PARAM_MOVING, moveAction.ReadValue<Vector2>().magnitude > 0);
             
-            // check if we're falling
-            if (customGrav.enabled)
-            {
-                // if local vel y < 0, we are falling
-                pcAnimator.SetBool(PARAM_FALLING, 
-                    transform.parent.InverseTransformDirection(velocity).y < 0);
-            }
-            else
-            {
-                pcAnimator.SetBool(PARAM_MOVING, false);
-            }
+            // check if local vel y < 0 => falling
+            pcAnimator.SetBool(PARAM_FALLING, transform.parent.InverseTransformDirection(velocity).y < 0);
         }
     }
 }
