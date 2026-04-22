@@ -1,10 +1,10 @@
 .level-select-button {
     width: 180px;
     height: 180px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 20px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
     padding-right: 0;
     padding-bottom: 0;
     padding-top: 0;
@@ -13,14 +13,18 @@
     margin-bottom: 20px;
     font-size: 30px;
     -unity-font-style: bold;
+    background-image: url("project://database/Assets/GUI/Textures/SquareButtons/button_square_flat.png?fileID=2800000&guid=bebc437e7c362724199b87e7bb003060&type=3#button_square_flat");
+    -unity-slice-left: 5;
+    -unity-slice-top: 5;
+    -unity-slice-right: 5;
+    -unity-slice-bottom: 5;
+    -unity-slice-scale: 2px;
 }
 
 .level-padlock {
     background-size: 75% 90%;
 }
 
-/* As pointed out by spiney199 (2024), use the .unity-disabled pseudoclass to make the padlocks appear normally */
-.unity-disabled
-{
+.unity-disabled {
     opacity: 1;
 }

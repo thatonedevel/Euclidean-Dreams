@@ -3,8 +3,9 @@
     margin-bottom: 10px;
     padding-top: 50px;
     padding-bottom: 50px;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
-    border-bottom-left-radius: 30px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    background-image: url("project://database/Assets/GUI/Textures/RectButtons/button_rectangle_depth_flat.png?fileID=2800000&guid=fcc14b3877845b74bbd567ffe9ca519c&type=3#button_rectangle_depth_flat");
 }
