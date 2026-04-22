@@ -14,3 +14,4 @@ recurring theme for this project is having regular subversion of expectations wi
 This project was made possible thanks to several artists who provided open assets for others to use
 
 - Buch from OpenGameArt for the physica expansion icons set: https://opengameart.org/content/physica-assets-expansion
+- Kenney for the player model, level geometry models & GUI Assets: https://kenney.nl/
