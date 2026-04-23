@@ -31,6 +31,13 @@ namespace Animation
             }
         }
 
+        private void Update()
+        {
+            var pos = CalculateLookPosition();
+            Debug.Log("Rotation loc target: " + pos);
+            transform.LookAt(pos, camera.transform.up);
+        }
+
         private void OnDestroy()
         {
             PerspectiveSwitcher.OnDimensionsSwitched -= DimensionSwitchHandler;
@@ -44,9 +51,6 @@ namespace Animation
                 // enable the sprite & set the global rotation to match the camera rotation
                 oobiModel.SetActive(false);
                 oobiSprite.SetActive(true);
-                var pos = CalculateLookPosition();
-                Debug.Log("Rotation loc target: " + pos);
-                transform.LookAt(pos, camera.transform.up);
             }
             else
             {
