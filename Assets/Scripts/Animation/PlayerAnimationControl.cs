@@ -8,9 +8,9 @@ namespace Animation
 {
     public class PlayerAnimationControl : MonoBehaviour
     {
-        [SerializeField] private Animator pcAnimator;
-        [SerializeField] private Rigidbody pcRigidbody;
-        [SerializeField] private CustomGravity customGrav;
+        [SerializeField] protected Animator pcAnimator;
+        [SerializeField] protected Rigidbody pcRigidbody;
+        [SerializeField] protected CustomGravity customGrav;
         
         // add movement action listening here
         private InputAction moveAction;
@@ -20,13 +20,13 @@ namespace Animation
         const string PARAM_FALLING = "IsFalling";
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        protected void Start()
         {
             moveAction = InputSystem.actions.FindAction(Constants.ACTION_MOVE);
         }
 
         // Update is called once per frame
-        void Update()
+        protected virtual void Update()
         {
             // check the state of the rigidbody to determine what state we need to update
             Vector3 velocity = pcRigidbody.linearVelocity;
