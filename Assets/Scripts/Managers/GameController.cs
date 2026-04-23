@@ -125,7 +125,7 @@ namespace Managers
                 // we went to a level
                 // updare references to this level's cam & player object
                 playerCharacterObject = GameObject.FindWithTag(Constants.TAG_PLAYER);
-                levelCameraRig = GameObject.FindWithTag(Constants.TAG_CAMERA);
+                levelCameraRig = GameObject.FindWithTag(Constants.TAG_CAMERA_RIG);
                 // update game state to playing
                 UpdateGameState(GameStates.PLAYING);
             }

@@ -3,10 +3,10 @@
     border-right-color: rgb(0, 0, 0);
     border-top-color: rgb(0, 0, 0);
     border-bottom-color: rgb(0, 0, 0);
-    border-top-width: 2px;
-    border-right-width: 2px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
     padding-top: 0;
     padding-right: 0;
     padding-bottom: 0;
@@ -16,14 +16,22 @@
     margin-bottom: 40px;
     margin-left: 40px;
     background-color: rgb(255, 255, 255);
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
-    border-bottom-left-radius: 30px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
     -unity-text-align: middle-center;
     -unity-font-style: bold;
     font-size: 40px;
     width: auto;
+    -unity-slice-left: 1;
+    -unity-slice-right: 1;
+    -unity-slice-top: 8;
+    -unity-slice-bottom: 8;
+    -unity-slice-scale: 2px;
+    background-image: url("project://database/Assets/GUI/Textures/RectButtons/button_rectangle_line.png?fileID=2800000&guid=c96b037fb8d97b54f9cf3bf20da9dad6&type=3#button_rectangle_line");
+    -unity-background-scale-mode: stretch-to-fill;
+    -unity-slice-type: sliced;
 }
 
 .meta-label {
@@ -39,27 +47,28 @@
 
 .control-button {
     margin-bottom: 15px;
-    border-top-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
     border-left-color: rgb(0, 0, 0);
     border-right-color: rgb(0, 0, 0);
     border-top-color: rgb(0, 0, 0);
     border-bottom-color: rgb(0, 0, 0);
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
-    border-bottom-left-radius: 30px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    background-image: url("project://database/Assets/GUI/Textures/RectButtons/button_rectangle_depth_flat.png?fileID=2800000&guid=fcc14b3877845b74bbd567ffe9ca519c&type=3#button_rectangle_depth_flat");
 }
 
 .button-container {
     -unity-text-align: upper-left;
     justify-content: center;
     padding-top: 10px;
-    padding-right: 10px;
+    padding-right: 20px;
     padding-bottom: 10px;
-    padding-left: 10px;
+    padding-left: 20px;
 }
 
 .misc-button {
@@ -101,8 +110,13 @@
     scale: 1 1;
     min-width: 50%;
     font-size: 30px;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
-    border-bottom-left-radius: 30px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    background-image: url("project://database/Assets/GUI/Textures/RectButtons/button_rectangle_flat.png?fileID=2800000&guid=fa8d3c53dec09da46ac1f2c7d2b65d52&type=3#button_rectangle_flat");
+}
+
+.delete-button {
+    background-image: url("project://database/Assets/GUI/Textures/RectButtons/button_rectangle_depth_flat%201.png?fileID=2800000&guid=988c18e6e9f1f624b9f35fe9efd35f3f&type=3#button_rectangle_depth_flat 1");
 }
