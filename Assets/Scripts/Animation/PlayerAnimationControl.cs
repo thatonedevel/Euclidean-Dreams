@@ -8,12 +8,13 @@ namespace Animation
 {
     public class PlayerAnimationControl : MonoBehaviour
     {
+        [Header("Common References")]
         [SerializeField] protected Animator pcAnimator;
         [SerializeField] protected Rigidbody pcRigidbody;
         [SerializeField] protected CustomGravity customGrav;
         
         // add movement action listening here
-        private InputAction moveAction;
+        protected InputAction moveAction;
         
         // animation parameters
         const string PARAM_MOVING = "IsMoving";
