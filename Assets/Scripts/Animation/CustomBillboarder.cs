@@ -46,7 +46,7 @@ namespace Animation
                 oobiSprite.SetActive(true);
                 var pos = CalculateLookPosition();
                 Debug.Log("Rotation loc target: " + pos);
-                transform.LookAt(pos);
+                transform.LookAt(pos, camera.transform.up);
             }
             else
             {
