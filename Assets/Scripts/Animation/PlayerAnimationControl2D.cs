@@ -15,7 +15,7 @@ namespace Animation
         {
             base.Update();
             // check if we need to have the sprite flipped
-            oobiRenderer.flipX = (int)moveAction.ReadValue<Vector2>().x != 0? moveAction.ReadValue<Vector2>().x < 0 : oobiRenderer.flipX;
+            oobiRenderer.flipX = (int)moveAction.ReadValue<Vector2>().x != 0? moveAction.ReadValue<Vector2>().x > 0 : oobiRenderer.flipX;
         }
     }
 }
