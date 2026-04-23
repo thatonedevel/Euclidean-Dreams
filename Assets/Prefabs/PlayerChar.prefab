@@ -111,7 +111,6 @@ MonoBehaviour:
   cameraRigDownAnchor: {fileID: 0}
   cameraParent: {fileID: 0}
   customGravityForce: {fileID: 4254330866762786646}
-  oobiSpriteParent: {fileID: 7021564958754595696}
 --- !u!114 &3933791462712212039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,7 +258,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1500477640685533873}
   - component: {fileID: 1649061996813416227}
-  - component: {fileID: 9052606230782015615}
   m_Layer: 0
   m_Name: spr_parent
   m_TagString: Untagged
@@ -298,33 +296,6 @@ MonoBehaviour:
   oobiSprite: {fileID: 3464461958314527493}
   oobiModel: {fileID: 7310939779947000966}
   customGravity: {fileID: 4998214103462156070}
---- !u!1773428102 &9052606230782015615
-ParentConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7021564958754595696}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: 0.70000005, z: 0}
-  m_RotationAtRest: {x: 0, y: 0, z: 0}
-  m_TranslationOffsets:
-  - {x: 0, y: 0, z: 0}
-  m_RotationOffsets:
-  - {x: 0, y: 0, z: 0}
-  m_AffectTranslationX: 0
-  m_AffectTranslationY: 0
-  m_AffectTranslationZ: 0
-  m_AffectRotationX: 1
-  m_AffectRotationY: 1
-  m_AffectRotationZ: 1
-  m_Active: 1
-  m_IsLocked: 1
-  m_Sources:
-  - sourceTransform: {fileID: 7468482877762746228}
-    weight: 1
 --- !u!1001 &7616929676686936535
 PrefabInstance:
   m_ObjectHideFlags: 0
