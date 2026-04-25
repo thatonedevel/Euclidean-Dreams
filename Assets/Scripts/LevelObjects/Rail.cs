@@ -56,6 +56,21 @@ namespace LevelObjects
             return 0;
         }
 
+        private void AddRailAtEnd()
+        {
+            
+        }
+
+        private void AddRailAtStart()
+        {
+            
+        }
+
+        private void RemoveConnectedRail()
+        {
+            
+        }
+
         public float GetRailLength()
         {
             return  railLength;

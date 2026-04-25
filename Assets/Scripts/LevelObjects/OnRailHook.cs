@@ -20,6 +20,7 @@ namespace LevelObjects
             // calculate how much t should change per frame that the move methods are called
             var length = parentRail.GetRailLength();
             tDelta = length * moveSpeed;
+            transform.position = parentRail.GetPointOnRail(t);
         }
 
         public void MoveForward()
