@@ -20,8 +20,8 @@ public class Rail : MonoBehaviour
         RailEnd = transform.position + (transform.forward * railLength);
         railMesh = transform.GetChild(0).gameObject;
     }
-
-    Vector3 GetPointOnRail(float t)
+    
+    public Vector3 GetPointOnRail(float t)
     {
         // takes in a value t and returns the position of the object on the rail
         
@@ -36,5 +36,12 @@ public class Rail : MonoBehaviour
         // dist = 1/2 of length
         
         railMesh.transform.localPosition = new Vector3(0, 0, (railLength/2) - 0.5f);
+        RailStart = transform.position;
+        RailEnd = transform.position + (transform.forward * railLength);
+    }
+
+    public float GetRailLength()
+    {
+        return  railLength;
     }
 }
