@@ -2,15 +2,17 @@ using UnityEngine;
 
 namespace LevelObjects
 {
+    [ExecuteInEditMode]
     public class OnRailHook : MonoBehaviour
     {
         // object that moves across a rail. acts as a container for other objects that will be placed onto this as children
         [SerializeField] private Rail parentRail;
         [SerializeField] private float moveSpeed;
         [SerializeField] private float snapThreshold = 0.1f;
+        [SerializeField] [Range(0, 1)] private float t = 0;
 
         private float tDelta = 0;
-        private float t = 0;
+        
     
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -34,6 +36,12 @@ namespace LevelObjects
             // decrease t and update pos
             t -= tDelta * Time.deltaTime;
             t = t <= snapThreshold? 0 : t;
+            transform.position = parentRail.GetPointOnRail(t);
+        }
+
+        private void OnValidate()
+        {
+            // use this to set the position of the object when t is adjusted
             transform.position = parentRail.GetPointOnRail(t);
         }
     }
