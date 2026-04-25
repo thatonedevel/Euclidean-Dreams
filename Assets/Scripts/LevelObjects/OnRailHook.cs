@@ -29,7 +29,7 @@ namespace LevelObjects
             transform.position = parentRail.GetPointOnRail(t);
         }
 
-        private void MoveBackwards()
+        public void MoveBackwards()
         {
             // decrease t and update pos
             t -= tDelta * Time.deltaTime;
