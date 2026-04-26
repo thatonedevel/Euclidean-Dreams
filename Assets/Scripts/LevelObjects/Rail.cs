@@ -13,6 +13,8 @@ namespace LevelObjects
         public Vector3 RailStart { get; private set; }
         public Vector3 RailEnd { get; private set; }
 
+        public bool IsConnected { get; private set; } = false;
+
         [Header("Rail Mesh")]
         [SerializeField] private GameObject railMesh;
 
@@ -44,7 +46,7 @@ namespace LevelObjects
             // length also = distance from centre
             // dist = 1/2 of length
         
-            railMesh.transform.localPosition = new Vector3(0, 0, (railLength/2) - 0.5f);
+            railMesh.transform.localPosition = new Vector3(0, 0, railLength/2);
             RailStart = transform.position;
             RailEnd = transform.position + (transform.forward * railLength);
         }
@@ -65,12 +67,12 @@ namespace LevelObjects
 
         public void AddRailAtEnd(Rail newRail)
         {
-            
+            if (IsConnected) return;
         }
 
         public void AddRailAtStart(Rail newRail)
         {
-            
+            if (IsConnected) return;
         }
 
         public void RemoveConnectedRail(RailData restorationData)
@@ -82,8 +84,17 @@ namespace LevelObjects
             // TODO: FIRE EVENT FOR DISCONNECT
             OnRailDisconnected?.Invoke(connectedRail);
             connectedRail = null;
+            IsConnected = false;
         }
 
         public float GetRailLength() => railLength;
+
+        private void RailWasConnected(Rail parentRail)
+        {
+            // the parentRail acts as the main backend for the rail until the disconnect, and we need to set the flag
+            // so that this rail won't try connecting to others
+            IsConnected = true;
+            connectedRail = parentRail;
+        }
     }
 }
