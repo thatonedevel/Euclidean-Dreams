@@ -10,7 +10,7 @@ public class ColliderAdjuster : MonoBehaviour
     protected List<BoxCollider> attachedColliders= new();
     protected List<ColliderSettings> defaultSettings = new();
     
-    protected void Start()
+    protected virtual void Start()
     {
        // set up the lists
        attachedColliders.AddRange(GetComponents<BoxCollider>());
