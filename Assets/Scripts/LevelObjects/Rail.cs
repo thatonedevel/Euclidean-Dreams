@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace LevelObjects
 {
@@ -14,6 +15,12 @@ namespace LevelObjects
 
         [Header("Rail Mesh")]
         [SerializeField] private GameObject railMesh;
+
+        private Rail connectedRail = null;
+        
+        // events for the rail hook to listen for
+        public event Action<Rail> OnRailConnected;
+        public event Action<Rail> OnRailDisconnected;
     
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Awake()
@@ -56,24 +63,27 @@ namespace LevelObjects
             return 0;
         }
 
-        private void AddRailAtEnd()
+        public void AddRailAtEnd(Rail newRail)
         {
             
         }
 
-        private void AddRailAtStart()
+        public void AddRailAtStart(Rail newRail)
         {
             
         }
 
-        private void RemoveConnectedRail()
+        public void RemoveConnectedRail(RailData restorationData)
         {
+            // reset the start / end points of the rail
+            RailStart = restorationData.railStart;
+            RailEnd = restorationData.railEnd;
             
+            // TODO: FIRE EVENT FOR DISCONNECT
+            OnRailDisconnected?.Invoke(connectedRail);
+            connectedRail = null;
         }
 
-        public float GetRailLength()
-        {
-            return  railLength;
-        }
+        public float GetRailLength() => railLength;
     }
 }
