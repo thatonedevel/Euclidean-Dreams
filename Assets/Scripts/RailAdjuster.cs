@@ -65,12 +65,23 @@ public class RailAdjuster : ColliderAdjuster
         for (int i = 0; i < railsInScene.Length; i++)
         {
             // check this rail against the other rails in the scene
+            if (checkedRails.Contains(railsInScene[i])) continue;
+            
             for (int j = 0; j < subIndices.Length; j++)
             {
                 if (i == j) continue;
                 
                 // check if a connection can be made between these rails. first connection breaks the loop
                 var state = CanRailsConnect(railsInScene[i], railsInScene[j]);
+                // we have the connection state, so connect the rails & add them to the hash set
+                if (state != RailConnectionState.NO_CONNECTION)
+                {
+                    if (state == RailConnectionState.A_FIRST) railsInScene[i].AddRailAtEnd(railsInScene[j]);
+                    else if (state == RailConnectionState.B_FIRST) railsInScene[j].AddRailAtEnd(railsInScene[i]);
+                    
+                    checkedRails.Add(railsInScene[i]);
+                    checkedRails.Add(railsInScene[j]);
+                }
             }
         }
         
