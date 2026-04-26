@@ -14,6 +14,7 @@ namespace LevelObjects
         public Vector3 RailEnd { get; private set; }
 
         public bool IsConnected { get; private set; } = false;
+        public bool IsStartRail { get; private set; } = true;
 
         [Header("Rail Mesh")]
         [SerializeField] private GameObject railMesh;
@@ -35,8 +36,14 @@ namespace LevelObjects
         public Vector3 GetPointOnRail(float t)
         {
             // takes in a value t and returns the position of the object on the rail
-        
-            return Vector3.Lerp(RailStart, RailEnd, t);
+            // if we're connected to another rail, consider the full rail length
+            if (!IsConnected)
+                return Vector3.Lerp(RailStart, RailEnd, t);
+            else if (IsStartRail)
+                return Vector3.Lerp(RailStart, connectedRail.RailEnd, t); // use local start + end of connected rail
+            else
+                return Vector3.Lerp(connectedRail.RailStart,  RailEnd, t); // use other start and local end
+            
         }
 
         private void OnValidate()
@@ -68,6 +75,11 @@ namespace LevelObjects
         public void AddRailAtEnd(Rail newRail)
         {
             if (IsConnected) return;
+            // we're the "original" rail
+            connectedRail = newRail;
+            IsConnected = true;
+            IsStartRail = true;
+            connectedRail.RailWasConnected(this);
         }
 
         public void AddRailAtStart(Rail newRail)
@@ -87,7 +99,14 @@ namespace LevelObjects
             IsConnected = false;
         }
 
-        public float GetRailLength() => railLength;
+        public float GetRailLength()
+        {
+            if (IsConnected)
+            {
+                return railLength + connectedRail.railLength; // give total length if rails are connected
+            }
+            return railLength;
+        }
 
         private void RailWasConnected(Rail parentRail)
         {
@@ -95,6 +114,7 @@ namespace LevelObjects
             // so that this rail won't try connecting to others
             IsConnected = true;
             connectedRail = parentRail;
+            IsStartRail = false;
         }
     }
 }
