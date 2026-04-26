@@ -67,6 +67,18 @@ namespace LevelObjects
             localPoint.x = 0;
             var localStart = transform.InverseTransformPoint(RailStart);
             var localEnd = transform.InverseTransformPoint(RailEnd);
+
+            if (IsConnected)
+            {
+                if (IsStartRail)
+                {
+                    localEnd = transform.InverseTransformPoint(connectedRail.RailEnd);
+                }
+                else
+                {
+                    localStart = transform.InverseTransformPoint(connectedRail.RailStart);
+                }
+            }
             
             // find out where on the start -> end is. since point is between, we can work based on magnitude
             float distToPoint = Vector3.Distance(localPoint, localEnd);
