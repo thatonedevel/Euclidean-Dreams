@@ -64,12 +64,16 @@ namespace LevelObjects
             // get local equivalent
             Vector3 localPoint = transform.InverseTransformPoint(point);
             localPoint.y = 0;
+            localPoint.x = 0;
             var localStart = transform.InverseTransformPoint(RailStart);
             var localEnd = transform.InverseTransformPoint(RailEnd);
             
             // find out where on the start -> end is. since point is between, we can work based on magnitude
+            float distToPoint = Vector3.Distance(localPoint, localEnd);
             
-            return 0;
+            // t = fraction of point dist / total
+            
+            return distToPoint / railLength;
         }
 
         public void AddRailAtEnd(Rail newRail)
@@ -80,11 +84,7 @@ namespace LevelObjects
             IsConnected = true;
             IsStartRail = true;
             connectedRail.RailWasConnected(this);
-        }
-
-        public void AddRailAtStart(Rail newRail)
-        {
-            if (IsConnected) return;
+            OnRailConnected?.Invoke(connectedRail);
         }
 
         public void RemoveConnectedRail(RailData restorationData)
