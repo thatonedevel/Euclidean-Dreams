@@ -65,28 +65,31 @@ namespace LevelObjects
         
         private void OnRailDisconnected(Rail disconTarget)
         {
-            // check the angle between hook position & each rail
-            if (Vector3.Angle(transform.position, parentRail.transform.position) <= 0.1f)
+            // get the t value of parent
+            float tempT = parentRail.GetTValueOfPoint(transform.position);
+
+            if (tempT >= snapThreshold)
             {
-                // recalculate t
-                t = parentRail.GetTValueOfPoint(transform.position);
+                t = tempT;
                 transform.position = parentRail.GetPointOnRail(t);
-                return;
+                Debug.Log("staying on current rail");
             }
-            
-            // unsub from parent rail events
-            parentRail.OnRailDisconnected -= OnRailDisconnected;
-            parentRail.OnRailConnected -= OnRailConnected;
-            // set new parent and sub to its disconnect event
-            parentRail = disconTarget;
-            transform.parent = disconTarget.transform;
-            
-            // sub to new rail events
-            parentRail.OnRailDisconnected += OnRailDisconnected;
-            parentRail.OnRailConnected += OnRailConnected;
-            
-            t =  parentRail.GetTValueOfPoint(transform.position);
-            transform.position = parentRail.GetPointOnRail(t);
+            else
+            {
+                // unsub from parent rail events
+                parentRail.OnRailDisconnected -= OnRailDisconnected;
+                parentRail.OnRailConnected -= OnRailConnected;
+                // set new parent and sub to its disconnect event
+                parentRail = disconTarget;
+                transform.parent = disconTarget.transform;
+                
+                // sub to new rail events
+                parentRail.OnRailDisconnected += OnRailDisconnected;
+                parentRail.OnRailConnected += OnRailConnected;
+                
+                t =  parentRail.GetTValueOfPoint(transform.position);
+                transform.position = parentRail.GetPointOnRail(t);
+            }
         }
     }
 }
