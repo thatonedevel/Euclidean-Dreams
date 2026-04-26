@@ -7,10 +7,10 @@ using Managers;
 
 public class ColliderAdjuster : MonoBehaviour
 {
-    private List<BoxCollider> attachedColliders= new();
-    private List<ColliderSettings> defaultSettings = new();
+    protected List<BoxCollider> attachedColliders= new();
+    protected List<ColliderSettings> defaultSettings = new();
     
-    private void Start()
+    protected void Start()
     {
        // set up the lists
        attachedColliders.AddRange(GetComponents<BoxCollider>());
@@ -25,7 +25,7 @@ public class ColliderAdjuster : MonoBehaviour
        PerspectiveSwitcher.OnDimensionsSwitched += DimensionSwitchHandler;
     }
 
-    private void OnDestroy()
+    protected void OnDestroy()
     {
         PerspectiveSwitcher.OnDimensionsSwitched -= DimensionSwitchHandler;
     }
@@ -73,7 +73,7 @@ public class ColliderAdjuster : MonoBehaviour
         }
     }
 
-    private Vector3 SetValueOnAxis(Vector3 inp, float newValue, Axes axis)
+    protected Vector3 SetValueOnAxis(Vector3 inp, float newValue, Axes axis)
     {
         Vector3 vec = inp;
             
