@@ -1,4 +1,7 @@
+using GameConstants.Enumerations;
+using UnityEditor.Build.Pipeline.WriteTypes;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 namespace LevelObjects
 {
@@ -21,8 +24,15 @@ namespace LevelObjects
             var length = parentRail.GetRailLength();
             tDelta = length * moveSpeed;
             transform.position = parentRail.GetPointOnRail(t);
+            parentRail.OnRailDisconnected += OnRailDisconnected;
+            parentRail.OnRailConnected += OnRailConnected;
         }
 
+        private void OnDestroy()
+        {
+            parentRail.OnRailDisconnected -= OnRailDisconnected;
+        }
+        
         public void MoveForward()
         {
             // increase t and update pos
@@ -43,6 +53,39 @@ namespace LevelObjects
         private void OnValidate()
         {
             // use this to set the position of the object when t is adjusted
+            transform.position = parentRail.GetPointOnRail(t);
+        }
+
+        private void OnRailConnected(Rail target)
+        {
+            // calculate the new t value
+            t =  parentRail.GetTValueOfPoint(transform.position);
+            transform.position = parentRail.GetPointOnRail(t);
+        }
+        
+        private void OnRailDisconnected(Rail disconTarget)
+        {
+            // check the angle between hook position & each rail
+            if (Vector3.Angle(transform.position, parentRail.transform.position) <= 0.1f)
+            {
+                // recalculate t
+                t = parentRail.GetTValueOfPoint(transform.position);
+                transform.position = parentRail.GetPointOnRail(t);
+                return;
+            }
+            
+            // unsub from parent rail events
+            parentRail.OnRailDisconnected -= OnRailDisconnected;
+            parentRail.OnRailConnected -= OnRailConnected;
+            // set new parent and sub to its disconnect event
+            parentRail = disconTarget;
+            transform.parent = disconTarget.transform;
+            
+            // sub to new rail events
+            parentRail.OnRailDisconnected += OnRailDisconnected;
+            parentRail.OnRailConnected += OnRailConnected;
+            
+            t =  parentRail.GetTValueOfPoint(transform.position);
             transform.position = parentRail.GetPointOnRail(t);
         }
     }
