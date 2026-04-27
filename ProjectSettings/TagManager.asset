@@ -10,6 +10,7 @@ TagManager:
   - LevelData
   - GeneratedCollider
   - Rail
+  - Crates
   layers:
   - Default
   - TransparentFX
