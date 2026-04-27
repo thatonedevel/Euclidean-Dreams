@@ -9,6 +9,8 @@ namespace LevelObjects
         [Header("Object References")] 
         [SerializeField] private Rigidbody crateRigidbody;
 
+        [Header("Settings")] [SerializeField] private Vector3 offset;
+
         private GameObject holder;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -16,7 +18,7 @@ namespace LevelObjects
         {
             if (transform.parent != null && holder == null)
             {
-                PickUp(transform.parent.gameObject);
+                PickUp(transform.parent.gameObject, offset);
             }
         }
         
@@ -53,7 +55,7 @@ namespace LevelObjects
                 return;
             if (transform.parent != null)
             {
-                PickUp(transform.parent.gameObject);
+                PickUp(transform.parent.gameObject, offset);
             }
         }
     }
