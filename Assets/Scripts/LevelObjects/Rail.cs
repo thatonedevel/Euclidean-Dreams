@@ -74,10 +74,14 @@ namespace LevelObjects
                 if (IsStartRail)
                 {
                     localEnd = transform.InverseTransformPoint(connectedRail.RailEnd);
+                    localEnd.y = localStart.y;
+                    localEnd.x = localStart.x;
                 }
                 else
                 {
                     localStart = transform.InverseTransformPoint(connectedRail.RailStart);
+                    localStart.x = localEnd.x;
+                    localStart.y = localEnd.y;
                 }
             }
             
