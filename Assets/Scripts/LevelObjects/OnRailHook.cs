@@ -78,6 +78,8 @@ namespace LevelObjects
 
         private void OnValidate()
         {
+            if (parentRail == null)
+                return;
             // use this to set the position of the object when t is adjusted
             transform.position = parentRail.GetPointOnRail(t);
         }
