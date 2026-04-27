@@ -1,3 +1,4 @@
+using System;
 using GameConstants.Enumerations;
 using UnityEditor.Build.Pipeline.WriteTypes;
 using UnityEngine;
@@ -15,8 +16,10 @@ namespace LevelObjects
         [SerializeField] [Range(0, 1)] private float t = 0;
 
         private float tDelta = 0;
+
+        private bool queueResubscription = false;
+        private Rail reParentRail;
         
-    
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -26,6 +29,29 @@ namespace LevelObjects
             transform.position = parentRail.GetPointOnRail(t);
             parentRail.OnRailDisconnected += OnRailDisconnected;
             parentRail.OnRailConnected += OnRailConnected;
+        }
+
+        private void Update()
+        {
+            if (queueResubscription)
+            {
+                // unsub from parent rail events
+                parentRail.OnRailDisconnected -= OnRailDisconnected;
+                parentRail.OnRailConnected -= OnRailConnected;
+                // set new parent and sub to its disconnect event
+                parentRail = reParentRail;
+                transform.parent = reParentRail.transform;
+                
+                // sub to new rail events
+                parentRail.OnRailDisconnected += OnRailDisconnected;
+                parentRail.OnRailConnected += OnRailConnected;
+                
+                t =  parentRail.GetTValueOfPoint(transform.position);
+                transform.position = parentRail.GetPointOnRail(t);
+                queueResubscription = false;
+
+                reParentRail = null;
+            }
         }
 
         private void OnDestroy()
@@ -76,19 +102,8 @@ namespace LevelObjects
             }
             else
             {
-                // unsub from parent rail events
-                parentRail.OnRailDisconnected -= OnRailDisconnected;
-                parentRail.OnRailConnected -= OnRailConnected;
-                // set new parent and sub to its disconnect event
-                parentRail = disconTarget;
-                transform.parent = disconTarget.transform;
-                
-                // sub to new rail events
-                parentRail.OnRailDisconnected += OnRailDisconnected;
-                parentRail.OnRailConnected += OnRailConnected;
-                
-                t =  parentRail.GetTValueOfPoint(transform.position);
-                transform.position = parentRail.GetPointOnRail(t);
+                queueResubscription = true;
+                reParentRail = disconTarget;
             }
         }
     }
