@@ -17,6 +17,7 @@ namespace GameConstants
         public const string TAG_CAMERA_MAIN = "MainCamera";
         public const string TAG_LEVEL_DATA = "LevelData";
         public const string TAG_GENERATED_COLLIDER = "GeneratedCollider";
+        public const string TAG_CRATES = "Crates";
 
         public const string LEVEL_PREFIX = "level_";
 
@@ -33,6 +34,7 @@ namespace GameConstants
         public const string ACTION_CENTER_CAMERA = "Recenter Camera";
         public const string ACTION_SWITCH_PERSPECTIVE = "Toggle Perspective";
         public const string ACTION_PAUSE = "Pause";
+        public const string ACTION_INTERACT = "Interact";
 
     }
 
