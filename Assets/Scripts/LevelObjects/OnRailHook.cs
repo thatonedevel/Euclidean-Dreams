@@ -6,7 +6,6 @@ using UnityEngine.ProBuilder;
 
 namespace LevelObjects
 {
-    [ExecuteInEditMode]
     public class OnRailHook : MonoBehaviour
     {
         // object that moves across a rail. acts as a container for other objects that will be placed onto this as children
