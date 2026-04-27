@@ -29,12 +29,13 @@ namespace Player
             {
                 heldCrate = tempCrate;
                 tempCrate = null;
-                heldCrate.PickUp(gameObject, (Vector3.forward * 2) + new Vector3(0, 0.5f, 0)); // pick up crate & put it in front of character
+                heldCrate.PickUp(gameObject, (Vector3.up * 2.5f)); // pick up crate & put it in front of character
                 isPickedUp = true;
             }
             else if (pickupAction.WasPressedThisFrame() && isPickedUp)
             {
                 heldCrate.Release();
+                heldCrate.transform.position = transform.position + (transform.forward * 2) + new Vector3(0, 0.5f, 0);
                 heldCrate = null;
                 isPickedUp = false;
             }
