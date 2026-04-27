@@ -1,7 +1,5 @@
 using UnityEngine;
 using System;
-using UnityEditor;
-using UnityEngine.Diagnostics;
 
 namespace LevelObjects.ForceManipulators
 {

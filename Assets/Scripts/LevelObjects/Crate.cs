@@ -1,5 +1,3 @@
-using System.Threading;
-using UnityEditor;
 using UnityEngine;
 
 namespace LevelObjects
