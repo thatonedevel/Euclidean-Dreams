@@ -58,11 +58,12 @@ namespace LevelObjects
             RailEnd = transform.position + (transform.forward * railLength);
         }
 
-        public float GetTValueOfPoint(Vector3 point)
+        public float GetTValueOfPoint(Vector3 point, bool isLocal=false)
         {
             // we can ignore the y value of the point vector, just focus on x/z
             // get local equivalent
-            Vector3 localPoint = transform.InverseTransformPoint(point);
+            
+            Vector3 localPoint = isLocal? point : transform.InverseTransformPoint(point);
             localPoint.y = 0;
             localPoint.x = 0;
             var localStart = transform.InverseTransformPoint(RailStart);
@@ -81,7 +82,7 @@ namespace LevelObjects
             }
             
             // find out where on the start -> end is. since point is between, we can work based on magnitude
-            float distToPoint = Vector3.Distance(localPoint, localEnd);
+            float distToPoint = Vector3.Distance(localPoint, localStart);
             
             // t = fraction of point dist / total
             

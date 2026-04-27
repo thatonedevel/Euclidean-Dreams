@@ -66,11 +66,11 @@ namespace LevelObjects
         private void OnRailDisconnected(Rail disconTarget)
         {
             // get the t value of parent
-            float tempT = parentRail.GetTValueOfPoint(transform.position);
+            float tempT = parentRail.GetTValueOfPoint(transform.localPosition, true);
 
             if (tempT >= snapThreshold)
             {
-                t = tempT;
+                t = tempT > 1 ? 1 : tempT;
                 transform.position = parentRail.GetPointOnRail(t);
                 Debug.Log("staying on current rail");
             }
