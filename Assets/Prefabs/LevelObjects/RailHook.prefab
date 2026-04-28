@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4468540383055365803}
   - component: {fileID: 1589443216914418733}
+  - component: {fileID: 4547068031328790207}
   m_Layer: 0
   m_Name: RailHook
   m_TagString: Untagged
@@ -49,6 +50,19 @@ MonoBehaviour:
   moveSpeed: 0
   snapThreshold: 0.1
   t: 0
+--- !u!114 &4547068031328790207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1570751874353250523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9061e01475f80c41a2795f32c781c41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  observedCrate: {fileID: 0}
 --- !u!1001 &6371051753503523924
 PrefabInstance:
   m_ObjectHideFlags: 0
