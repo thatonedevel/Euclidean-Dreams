@@ -3,7 +3,6 @@ using System;
 
 namespace LevelObjects
 {
-    [ExecuteInEditMode]
     public class Rail : MonoBehaviour
     {
         // Represents a rail that can have an attached object move across it
@@ -111,7 +110,7 @@ namespace LevelObjects
             RailEnd = restorationData.railEnd;
             
             // TODO: FIRE EVENT FOR DISCONNECT
-            OnRailDisconnected?.Invoke(connectedRail);
+            if (connectedRail != null) OnRailDisconnected?.Invoke(connectedRail);
             connectedRail = null;
             IsConnected = false;
         }
