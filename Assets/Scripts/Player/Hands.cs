@@ -10,10 +10,10 @@ namespace Player
     public class Hands : MonoBehaviour
     {
         private InputAction pickupAction;
-        protected Crate heldCrate;
-        protected bool canPickUp = false;
-        protected bool isPickedUp = false;
-        [SerializeField] protected Crate observedCrate;
+        private Crate heldCrate;
+        private bool canPickUp = false;
+        private bool isPickedUp = false;
+        private Crate tempCrate;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -27,12 +27,17 @@ namespace Player
             // check for pickup
             if (pickupAction.WasPressedThisFrame() && !isPickedUp && canPickUp)
             {
-                PickUpCrate(transform.position + (Vector3.up * 2.5f));
+                heldCrate = tempCrate;
+                tempCrate = null;
+                heldCrate.PickUp(gameObject, (Vector3.up * 2.5f)); // pick up crate & put it in front of character
+                isPickedUp = true;
             }
             else if (pickupAction.WasPressedThisFrame() && isPickedUp)
             {
-                observedCrate = heldCrate;
-                ReleaseCrate();
+                heldCrate.Release();
+                heldCrate.transform.position = transform.position + (transform.forward * 2) + new Vector3(0, 0.5f, 0);
+                heldCrate = null;
+                isPickedUp = false;
             }
         }
 
@@ -42,7 +47,7 @@ namespace Player
             {
                 Debug.Log("crate  found");
                 canPickUp = true;
-                observedCrate = other.GetComponent<Crate>();
+                tempCrate = other.GetComponent<Crate>();
             }
         }
 
@@ -52,24 +57,8 @@ namespace Player
             {
                 Debug.Log("crate is gone");
                 canPickUp = false;
-                observedCrate = null;
+                tempCrate = null;
             }
-        }
-
-        protected void ReleaseCrate()
-        {
-            heldCrate.Release();
-            observedCrate = heldCrate;
-            heldCrate =  null;
-            isPickedUp = false;
-        }
-        
-        protected void PickUpCrate(Vector3 localPickupPos)
-        {
-            heldCrate = observedCrate;
-            heldCrate.PickUp(gameObject, localPickupPos);
-            isPickedUp = true;
-            observedCrate = null;
         }
     }
 }
