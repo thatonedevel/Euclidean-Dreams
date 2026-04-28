@@ -46,3 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCharacterObject: {fileID: 0}
   levelCameraRig: {fileID: 0}
+  levelKeys:
+  - level_01_Tutorial
+  - level_02_EverHigher
+  - level_03_UpIsDown
+  - level_04_OffTheRails

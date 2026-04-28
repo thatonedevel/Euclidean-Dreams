@@ -9,6 +9,8 @@ TagManager:
   - Gem
   - LevelData
   - GeneratedCollider
+  - Rail
+  - Crates
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - Generated Collision
   - Portals
   - Dynamic Geometry
-  - 
+  - Rails
   - 
   - 
   - 

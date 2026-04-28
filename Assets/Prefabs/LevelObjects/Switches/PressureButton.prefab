@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4219668415007998071}
   - component: {fileID: 170517461660792845}
   - component: {fileID: 1888559222841317074}
+  - component: {fileID: 9084265824701926464}
   m_Layer: 0
   m_Name: PressureButton
   m_TagString: Untagged
@@ -96,7 +97,18 @@ MonoBehaviour:
   - Player
   pressCooldown: 0
   callbackInterval: 1
-  nextCallbackTime: 0
+--- !u!114 &9084265824701926464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301619566412047101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9252b664a6b6f4c8c7f8953ed830e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3447137856375498566
 PrefabInstance:
   m_ObjectHideFlags: 0

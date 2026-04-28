@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Levels
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 20d0e194eae6db8419609434b5961e40
+    m_Address: level_04_OffTheRails
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Levels
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3dd607a4257446b4b8944d7da1ce3ad5
     m_Address: level_01_Tutorial
     m_ReadOnly: 0

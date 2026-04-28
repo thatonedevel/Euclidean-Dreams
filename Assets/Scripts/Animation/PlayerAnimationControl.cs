@@ -36,7 +36,7 @@ namespace Animation
             pcAnimator.SetBool(PARAM_MOVING, moveAction.ReadValue<Vector2>().magnitude > 0);
             
             // check if local vel y < 0 => falling
-            pcAnimator.SetBool(PARAM_FALLING, transform.parent.InverseTransformDirection(velocity).y < 0);
+            pcAnimator.SetBool(PARAM_FALLING, transform.parent.InverseTransformDirection(velocity).y < -1.5f);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace LevelObjects.Switches
 {
@@ -9,6 +10,7 @@ namespace LevelObjects.Switches
         [Header("Pressure Button Settings")] [SerializeField]
         private float callbackInterval = 1;
         private float nextCallbackTime = 0;
+        public UnityEvent OnSwitchReleased;
 
         private bool isPressed = false;
 
@@ -25,6 +27,7 @@ namespace LevelObjects.Switches
         {
             isPressed = false;
             nextPressTime = Time.time + pressCooldown;
+            OnSwitchReleased.Invoke();
         }
         
         private void FixedUpdate()

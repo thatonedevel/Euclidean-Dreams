@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3933791462712212039}
   - component: {fileID: 4254330866762786646}
   - component: {fileID: 4998214103462156070}
+  - component: {fileID: 3151488708669300217}
   m_Layer: 0
   m_Name: PlayerChar
   m_TagString: Player
@@ -161,6 +162,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useGlobalGravityMagnitude: 1
   gravityDirection: {x: 0, y: -1, z: 0}
+--- !u!114 &3151488708669300217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3311720189761192454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 722b6326201f11b45963a8bd4ab87fa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3464461958314527493
 GameObject:
   m_ObjectHideFlags: 0
