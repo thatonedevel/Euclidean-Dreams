@@ -33,12 +33,13 @@ namespace LevelObjects
         {
             if (queueResubscription)
             {
+                queueResubscription = false;
                 // unsub from parent rail events
                 parentRail.OnRailDisconnected -= OnRailDisconnected;
                 parentRail.OnRailConnected -= OnRailConnected;
                 // set new parent and sub to its disconnect event
                 parentRail = reParentRail;
-                transform.parent = reParentRail.transform;
+                transform.parent = reParentRail.transform; // FIXME: reparent rail is set to null here
                 
                 // sub to new rail events
                 parentRail.OnRailDisconnected += OnRailDisconnected;
@@ -46,8 +47,6 @@ namespace LevelObjects
                 
                 t =  parentRail.GetTValueOfPoint(transform.position);
                 transform.position = parentRail.GetPointOnRail(t);
-                queueResubscription = false;
-
                 reParentRail = null;
             }
         }
