@@ -96,6 +96,9 @@ namespace Managers
                     playerCharacterObject.GetComponent<Rigidbody>().isKinematic = true;
                     levelCameraRig.GetComponent<CameraControl>().enabled = false;
                     break;
+                
+                case GameStates.GAME_OVER:
+                    break;
                 default:
                     // title screen, level select
                     CurrentLevelIndex = -1;
@@ -244,7 +247,12 @@ namespace Managers
                 val = float.MaxValue;
             }
             
-                return val;
+            return val;
+        }
+
+        public void GameOver()
+        {
+            UpdateGameState(GameStates.GAME_OVER);
         }
     }
 }
