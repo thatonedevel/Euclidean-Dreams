@@ -56,15 +56,15 @@ namespace Player
             }
         }
 
-        public virtual void ReleaseCrate()
+        protected void ReleaseCrate()
         {
             heldCrate.Release();
             observedCrate = heldCrate;
-            
+            heldCrate =  null;
             isPickedUp = false;
         }
         
-        public virtual void PickUpCrate(Vector3 localPickupPos)
+        protected void PickUpCrate(Vector3 localPickupPos)
         {
             heldCrate = observedCrate;
             heldCrate.PickUp(gameObject, localPickupPos);

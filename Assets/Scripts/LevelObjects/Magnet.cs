@@ -10,23 +10,16 @@ namespace LevelObjects
         
         }
 
-        // Update is called once per frame
-        void Update()
+        public void ToggleMagnet()
         {
-        
-        }
-
-        public void PickupExternal()
-        {
-            // pick up the "observed" crate
-            PickUpCrate(new Vector3(0, -2.5f, 0));
-            observedCrate = null;
-        }
-
-        public override void ReleaseCrate()
-        {
-            observedCrate = heldCrate;
-            base.ReleaseCrate();
+            if (isPickedUp)
+            {
+                PickUpCrate(new Vector3(0, -2.5f, 0));
+            }
+            else
+            {
+                ReleaseCrate();
+            }
         }
     }
 }
