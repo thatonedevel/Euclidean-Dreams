@@ -2,23 +2,22 @@ using UnityEngine;
 
 namespace LevelObjects
 {
-    public class Magnet : Player.Hands
+    public class Magnet : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
+        [SerializeField] private Crate observedCrate;
+        private bool isCrateHeld = false;
 
         public void ToggleMagnet()
         {
-            if (isPickedUp)
+            if (!isCrateHeld)
             {
-                PickUpCrate(new Vector3(0, -2.5f, 0));
+                observedCrate.PickUp(gameObject, new Vector3(0, -2.4f, 0));
+                isCrateHeld = true;
             }
             else
             {
-                ReleaseCrate();
+                observedCrate.Release();
+                isCrateHeld = false;
             }
         }
     }
