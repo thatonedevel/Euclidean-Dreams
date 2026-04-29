@@ -17,7 +17,7 @@ namespace EGUI
         {
             root = gameOverDocument.rootVisualElement.Q<VisualElement>("Root");
             restartButton = root.Q<Button>("RestartButton");
-            titleScreenButton = root.Q<Button>("TitleScreenButton");
+            titleScreenButton = root.Q<Button>("TitleButton");
 
             GameController.OnGameStateChanged += GameUpdateListener;
             restartButton.clicked += RestartButtonClicked;
