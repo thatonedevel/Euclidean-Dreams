@@ -1,0 +1,92 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="ControlHBox" src="project://database/Assets/GUI/Templates/ControlHBox.uxml?fileID=9197481963319205126&amp;guid=d86d400f7fa63b34a9907ab716cef6af&amp;type=3#ControlHBox" />
+    <Style src="project://database/Assets/GUI/USS/SettingsMenu.uss?fileID=7433441132597879392&amp;guid=e24a9a5f80d58f042a356073f000a46d&amp;type=3#SettingsMenu" />
+    <ui:VisualElement name="Root" style="flex-grow: 1; padding-top: 100px; padding-right: 200px; padding-bottom: 100px; padding-left: 200px; background-color: rgba(61, 61, 61, 0.27); visibility: hidden;">
+        <ui:VisualElement name="MainSettingsPanel" style="flex-grow: 1; background-color: rgb(255, 255, 255);">
+            <ui:VisualElement name="HeaderHBox" style="flex-grow: 1; flex-direction: row; align-items: stretch; height: auto; min-height: 0%; max-height: 14%;">
+                <ui:Label text="Settings" name="SettingsLabel" style="-unity-text-align: middle-center; font-size: 40px; height: 84px; width: 1448px;" />
+                <ui:VisualElement name="ExitButtonContainer" style="flex-grow: 1; height: 81px;">
+                    <ui:Button text="X" name="ExitSettingsButton" style="font-size: 30px; height: 61px; background-color: rgb(255, 0, 0); color: rgb(255, 255, 255); -unity-font-style: bold;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="SettingsBody" style="flex-grow: 1; flex-direction: column; width: auto; height: 81px;">
+                <ui:TabView name="SettingsTabs" tabindex="0" enabled="true" class="settings-tab" style="height: 100%; width: auto; align-items: center;">
+                    <ui:Tab label="Controls" name="ControlsTab" style="padding-top: 18px;">
+                        <ui:ScrollView name="ControlsScrollView" class="settings-container" style="display: none;">
+                            <ui:VisualElement name="CharacterMovementSection" class="controls-section" style="flex-grow: 1;">
+                                <ui:Instance template="ControlHBox" name="FowardHBox">
+                                    <AttributeOverrides element-name="ControlLabel" text="Move Forwards" />
+                                </ui:Instance>
+                                <ui:Instance template="ControlHBox" name="BackHBox">
+                                    <AttributeOverrides element-name="ControlLabel" text="Move Backwards" />
+                                </ui:Instance>
+                                <ui:Instance template="ControlHBox" name="LeftHBox">
+                                    <AttributeOverrides element-name="ControlLabel" text="Move Left" />
+                                </ui:Instance>
+                                <ui:Instance template="ControlHBox" name="RightHBox">
+                                    <AttributeOverrides element-name="ControlLabel" enable-rich-text="true" text="Move Right" />
+                                </ui:Instance>
+                            </ui:VisualElement>
+                            <ui:VisualElement name="PerspectiveSwitchSection" class="controls-section" style="flex-grow: 1;">
+                                <ui:Instance template="ControlHBox">
+                                    <AttributeOverrides element-name="ControlLabel" text="Switch Dimension" />
+                                </ui:Instance>
+                            </ui:VisualElement>
+                            <ui:VisualElement name="CameraSection" style="flex-grow: 1;">
+                                <ui:Instance template="ControlHBox" name="RotCamLeftHBox">
+                                    <AttributeOverrides element-name="ControlLabel" enable-rich-text="true" text="Rotate Camera Left" />
+                                </ui:Instance>
+                                <ui:Instance template="ControlHBox" name="RotCamRightHBox">
+                                    <AttributeOverrides element-name="ControlLabel" enable-rich-text="true" text="Rotate Camera Right" />
+                                </ui:Instance>
+                                <ui:Instance template="ControlHBox" name="RotCamUpHBox">
+                                    <AttributeOverrides element-name="ControlLabel" enable-rich-text="true" text="Rotate Camera Up" />
+                                </ui:Instance>
+                                <ui:Instance template="ControlHBox" name="RotCamDownHBox">
+                                    <AttributeOverrides element-name="ControlLabel" enable-rich-text="true" text="Rotate Camera Down" />
+                                </ui:Instance>
+                                <ui:Instance template="ControlHBox" name="ZoomCamHBox">
+                                    <AttributeOverrides element-name="ControlLabel" enable-rich-text="true" text="Zoom Camera" />
+                                </ui:Instance>
+                                <ui:Instance template="ControlHBox" name="CenterCamHBox">
+                                    <AttributeOverrides element-name="ControlLabel" enable-rich-text="true" text="Centre Camera on player" />
+                                </ui:Instance>
+                            </ui:VisualElement>
+                        </ui:ScrollView>
+                    </ui:Tab>
+                    <ui:Tab label="Audio" name="AudioTab">
+                        <ui:VisualElement name="AudioSettingsContainer" template="AudioSettingsContainer" class="settings-container" style="width: 1235px; height: 597px;">
+                            <Style src="project://database/Assets/GUI/USS/SettingsMenu.uss?fileID=7433441132597879392&amp;guid=e24a9a5f80d58f042a356073f000a46d&amp;type=3#SettingsMenu" />
+                            <ui:VisualElement name="AudioSettingsContainer" style="flex-grow: 1;">
+                                <ui:VisualElement template="ControlHBox" name="MasterHBox">
+                                    <ui:VisualElement name="ControlHBox" class="control-hbox" style="flex-grow: 1;">
+                                        <ui:Label text="Master Volume" name="ControlLabel" class="control-label" />
+                                        <ui:VisualElement name="ControlSliderContainer" class="control-button-container" style="flex-grow: 1;">
+                                            <ui:SliderInt value="100" high-value="100" name="MasterVolSlider" show-input-field="true" class="volume-slider" style="width: 448px;" />
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                                <ui:VisualElement template="ControlHBox" name="MusHBox">
+                                    <ui:VisualElement name="ControlHBox" class="control-hbox" style="flex-grow: 1;">
+                                        <ui:Label text="Music Volume" name="ControlLabel" class="control-label" />
+                                        <ui:VisualElement name="ControlButtonContainer" class="control-button-container" style="flex-grow: 1;">
+                                            <ui:SliderInt value="100" high-value="100" name="MusVolSlider" show-input-field="true" class="volume-slider" style="width: 448px;" />
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                                <ui:VisualElement template="ControlHBox" name="SFXHBox">
+                                    <ui:VisualElement name="ControlHBox" class="control-hbox" style="flex-grow: 1;">
+                                        <ui:Label text="SFX Volume" name="ControlLabel" class="control-label" />
+                                        <ui:VisualElement name="ControlSliderContainer" class="control-button-container" style="flex-grow: 1;">
+                                            <ui:SliderInt value="100" high-value="100" name="SFXVolSlider" show-input-field="true" class="volume-slider" style="width: 448px;" />
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:Tab>
+                </ui:TabView>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
