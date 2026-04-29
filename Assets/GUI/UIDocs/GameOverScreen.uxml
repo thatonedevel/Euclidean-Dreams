@@ -5,7 +5,7 @@
             <ui:Label text="Game Over" name="GameOverLabel" style="height: 71px; -unity-text-align: middle-center; font-size: 50px; padding-top: 20px; margin-top: 20px; margin-bottom: 20px;" />
             <ui:VisualElement name="ButtonVBox" style="flex-grow: 1; padding-top: 100px; padding-right: 100px; padding-bottom: 100px; padding-left: 100px; flex-direction: column; align-items: stretch; justify-content: center;">
                 <ui:Button text="Restart" name="RestartButton" class="gameover-button" />
-                <ui:Button text="Title Screen" name="TItleButton" class="gameover-button" />
+                <ui:Button text="Title Screen" name="TitleButton" class="gameover-button" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
