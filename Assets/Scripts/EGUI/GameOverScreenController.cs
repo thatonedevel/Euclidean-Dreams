@@ -42,12 +42,14 @@ namespace EGUI
         {
             // hide self
             root.visible = false;
+            GameController.Singleton.RestartLevel();
         }
 
         private void TitleScreenButtonClicked()
         {
             // hide self
             root.visible = false;
+            GameController.Singleton.GoToTitleScreen();
         }
     }
 }
