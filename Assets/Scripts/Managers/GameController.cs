@@ -143,7 +143,8 @@ namespace Managers
             if (currentScene.name.StartsWith(Constants.LEVEL_PREFIX))
             {
                 print("Can restart current level");
-                
+                // MAKE SURE TO CALL THE RESTART FUNCTION DINGUS
+                LoadGameLevel(CurrentLevelIndex);
             }
         }
     
@@ -221,6 +222,12 @@ namespace Managers
         public void GoToSaveScreen()
         {
             Addressables.LoadSceneAsync(Constants.SCENE_SAVE_SELECT);
+        }
+
+        public void GoToTitleScreen()
+        {
+            Addressables.LoadSceneAsync(Constants.SCENE_TITLE);
+            UpdateGameState(GameStates.TITLE_SCREEN);
         }
 
         public float GetPlayerAxisValue(Axes axis)
