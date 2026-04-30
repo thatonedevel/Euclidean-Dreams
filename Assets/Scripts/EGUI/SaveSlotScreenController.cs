@@ -88,6 +88,7 @@ namespace EGUI
             warningDialogueRoot = uiDocument.rootVisualElement.Query<VisualElement>("WarningDialogueRoot");
             cancelButton = uiDocument.rootVisualElement.Query<Button>("CancelButton");
             okButton = uiDocument.rootVisualElement.Query<Button>("OkButton");
+            settingsButton = uiDocument.rootVisualElement.Query<Button>("SettingsBtn");
             warningLabel = uiDocument.rootVisualElement.Query<Label>("WarningLabel");
             
             // button clicks for the dialogue box
