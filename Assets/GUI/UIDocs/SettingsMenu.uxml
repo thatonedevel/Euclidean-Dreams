@@ -1,7 +1,7 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:Template name="ControlHBox" src="project://database/Assets/GUI/Templates/ControlHBox.uxml?fileID=9197481963319205126&amp;guid=d86d400f7fa63b34a9907ab716cef6af&amp;type=3#ControlHBox" />
     <Style src="project://database/Assets/GUI/USS/SettingsMenu.uss?fileID=7433441132597879392&amp;guid=e24a9a5f80d58f042a356073f000a46d&amp;type=3#SettingsMenu" />
-    <ui:VisualElement name="Root" style="flex-grow: 1; padding-top: 100px; padding-right: 200px; padding-bottom: 100px; padding-left: 200px; background-color: rgba(61, 61, 61, 0.27); visibility: hidden;">
+    <ui:VisualElement name="Root" style="flex-grow: 1; padding-top: 100px; padding-right: 200px; padding-bottom: 100px; padding-left: 200px; background-color: rgba(61, 61, 61, 0.27); visibility: visible;">
         <ui:VisualElement name="MainSettingsPanel" style="flex-grow: 1; background-color: rgb(255, 255, 255);">
             <ui:VisualElement name="HeaderHBox" style="flex-grow: 1; flex-direction: row; align-items: stretch; height: auto; min-height: 0%; max-height: 14%;">
                 <ui:Label text="Settings" name="SettingsLabel" style="-unity-text-align: middle-center; font-size: 40px; height: 84px; width: 1448px;" />
@@ -12,8 +12,8 @@
             <ui:VisualElement name="SettingsBody" style="flex-grow: 1; flex-direction: column; width: auto; height: 81px;">
                 <ui:TabView name="SettingsTabs" tabindex="0" enabled="true" class="settings-tab" style="height: 100%; width: auto; align-items: center;">
                     <ui:Tab label="Controls" name="ControlsTab" style="padding-top: 18px;">
-                        <ui:ScrollView name="ControlsScrollView" class="settings-container" style="display: none;">
-                            <ui:VisualElement name="CharacterMovementSection" class="controls-section" style="flex-grow: 1;">
+                        <ui:ScrollView name="ControlsScrollView" class="settings-container" style="display: flex;">
+                            <ui:VisualElement name="CharacterMovementSection" class="controls-section" style="flex-grow: 1; visibility: visible;">
                                 <ui:Instance template="ControlHBox" name="FowardHBox">
                                     <AttributeOverrides element-name="ControlLabel" text="Move Forwards" />
                                 </ui:Instance>
