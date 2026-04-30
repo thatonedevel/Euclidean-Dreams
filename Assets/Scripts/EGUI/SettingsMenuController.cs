@@ -1,14 +1,18 @@
+using System;
 using GameConstants;
 using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
+using Managers;
 
 namespace EGUI
 {
     public class SettingsMenuController : MonoBehaviour
     {
+        public static SettingsMenuController Singleton; // settings need to be accessed globally
+        
         [Header("Objet References")] 
         [SerializeField] private UIDocument settingsDoc;
 
@@ -25,15 +29,24 @@ namespace EGUI
         private Slider masterVolSlider;
         private Slider musicVolSlider;
         private Slider sfxVolSlider;
+        
+        private Button closeSettingsButton;
 
         private const string CLASS_REMAP_BUTTON = "control-button";
         private const string ID_ROOT = "Root"; 
-
-        private bool isListeningForBinding = false;
+        
         private Button buttonToUpdate = null;
+
+        private void Awake()
+        {
+            if (Singleton != null)
+                Destroy(gameObject);
+            else
+                Singleton = this;
+        }
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        private void Start()
         {
             int controlBindingIndex = 1;
             rootElement = settingsDoc.rootVisualElement.Q<VisualElement>(ID_ROOT);
@@ -55,6 +68,17 @@ namespace EGUI
             SetButtonBindingTexts();
             // register the callbacks for the buttons
             RegisterButtonCallbacks();
+            
+            closeSettingsButton = rootElement.Q<Button>("ExitSettingsButton");
+            closeSettingsButton.clicked += CloseSettings;
+            
+            // sub to game state update
+            GameController.OnGameStateChanged += GameStateUpdateListener;
+        }
+
+        private void OnDestroy()
+        {
+            GameController.OnGameStateChanged -= GameStateUpdateListener;
         }
 
         private void SetButtonBindingTexts()
@@ -151,7 +175,10 @@ namespace EGUI
         {
             // based off of the control remap example provided by Unity (2023), acc: 30/4/2026
             // rebind system for non-composite actions
-
+            
+            // disable action before rebinding (voidsay, 2022)
+            targetAction.Disable();
+            
             targetAction.PerformInteractiveRebinding()
                 .WithControlsExcluding("Mouse")
                 .OnComplete(RebindComplete)
@@ -161,6 +188,9 @@ namespace EGUI
 
         private void RemapAction(InputAction targetAction, int bindingPartIndex)
         {
+            // disable action before rebinding (voidsay, 2020)
+            targetAction.Disable();
+            
             // based on solution suggested by Daniel Sitarz (2022)
             targetAction.PerformInteractiveRebinding(bindingPartIndex)
                 .WithControlsExcluding("Mouse")
@@ -171,13 +201,24 @@ namespace EGUI
 
         private void RebindComplete(InputActionRebindingExtensions.RebindingOperation op)
         {
+            // re-enable action here (voidsay, 2020)
+            op.action.Enable();
+            
             // TODO: update button text with new input
             Debug.Log("Rebind Complete");
 
-            if (buttonToUpdate is not null)
-                buttonToUpdate.text = op.bindingMask?.ToDisplayString();
+            SetButtonBindingTexts();
+            buttonToUpdate = null; // release reference to this button
         }
         
-        private void CloseSettings() => rootElement.visible = false;
+        public void CloseSettings() => rootElement.visible = false;
+        
+        public void OpenSettings() => rootElement.visible = true;
+
+        private void GameStateUpdateListener(GameStates newState, GameStates oldState)
+        {
+            if (newState == GameStates.PLAYING) 
+                CloseSettings();
+        }
     }
 }
