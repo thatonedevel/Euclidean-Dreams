@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EGUI
 {
@@ -31,10 +30,12 @@ namespace EGUI
         private const string ID_ROOT = "Root"; 
 
         private bool isListeningForBinding = false;
+        private int rebindButtonIndex = -1;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+            int controlBindingIndex = 1;
             rootElement = settingsDoc.rootVisualElement.Q<VisualElement>(ID_ROOT);
 
             UQueryState<Button> btnQuery = new UQueryBuilder<Button>(rootElement)
@@ -45,26 +46,50 @@ namespace EGUI
             
             foreach (string actionKey in inputActionKeys)
             {
-                InputAction tempAction = InputSystem.actions.FindAction(actionKey);
+                string mainActionKey = actionKey.Split('/')[0]; // for composite actions, main action header is before a /
+                
+                InputAction tempAction = InputSystem.actions.FindAction(mainActionKey);
                 if (tempAction is not null) actionDict.Add(actionKey, tempAction);
             }
 
+            SetButtonBindingTexts();
+        }
+
+        private void SetButtonBindingTexts()
+        {
+            InputAction currentAction = null;
+            int compositeBindingIndex = 1;
+            
             for (int i = 0; i < controlRemapButtons.Count; i++)
             {
                 // use this to set the text of each button
-                InputAction buttonAction = actionDict[inputActionKeys[i]];
+                InputAction tempAction = actionDict[inputActionKeys[i]];
+                
+                // check if the action has changed
+                if (currentAction == tempAction)
+                {
+                    // action has not changed, increment comp. index
+                    compositeBindingIndex++;
+                }
+                else
+                {
+                    // new action, reset index
+                    compositeBindingIndex = 1;
+                    currentAction = tempAction;
+                }
+                
+                // work out which binding we need to get
+                var mainBinding = currentAction.bindings[0];
+                var sourceBinding = mainBinding;
+                
+                if (mainBinding.isComposite)
+                {
+                    // get the partial binding
+                    sourceBinding = currentAction.bindings[compositeBindingIndex];
+                }
 
-                controlRemapButtons[i].text = buttonAction.activeControl.shortDisplayName;
+                controlRemapButtons[i].text = sourceBinding.ToDisplayString();
             }
-            
-            // set up the dictionary of actions
-            
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            
         }
 
         private void OnRemapButtonClicked(ClickEvent evt)
@@ -77,9 +102,20 @@ namespace EGUI
         private void RemapAction(InputAction targetAction)
         {
             // based off of the control remap example provided by Unity (2023), acc: 30/4/2026
-            
+            // rebind system for non-composite actions
+
+            targetAction.PerformInteractiveRebinding()
+                .WithControlsExcluding("Mouse")
+                .OnComplete(RebindComplete)
+                .Start();
         }
 
+        private void RebindComplete(InputActionRebindingExtensions.RebindingOperation op)
+        {
+            // TODO: update button text with new input
+            Debug.Log("Rebind Complete");
+        }
+        
         private void CloseSettings() => rootElement.visible = false;
     }
 }
