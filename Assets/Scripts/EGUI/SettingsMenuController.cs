@@ -30,7 +30,7 @@ namespace EGUI
         private const string ID_ROOT = "Root"; 
 
         private bool isListeningForBinding = false;
-        private int rebindButtonIndex = -1;
+        private Button buttonToUpdate = null;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -53,6 +53,8 @@ namespace EGUI
             }
 
             SetButtonBindingTexts();
+            // register the callbacks for the buttons
+            RegisterButtonCallbacks();
         }
 
         private void SetButtonBindingTexts()
@@ -77,18 +79,28 @@ namespace EGUI
                     compositeBindingIndex = 1;
                     currentAction = tempAction;
                 }
-                
-                // work out which binding we need to get
-                var mainBinding = currentAction.bindings[0];
-                var sourceBinding = mainBinding;
-                
-                if (mainBinding.isComposite)
-                {
-                    // get the partial binding
-                    sourceBinding = currentAction.bindings[compositeBindingIndex];
-                }
 
-                controlRemapButtons[i].text = sourceBinding.ToDisplayString();
+                if (currentAction is not null)
+                {
+                    // work out which binding we need to get
+                    var mainBinding = currentAction.bindings[0];
+                    var sourceBinding = mainBinding;
+                    
+                    if (mainBinding.isComposite)
+                    {
+                        // get the partial binding
+                        sourceBinding = currentAction.bindings[compositeBindingIndex];
+                    }
+                    controlRemapButtons[i].text = sourceBinding.ToDisplayString();
+                }
+            }
+        }
+
+        private void RegisterButtonCallbacks()
+        {
+            for (int i = 0; i < controlRemapButtons.Count; i++)
+            {
+                controlRemapButtons[i].RegisterCallback<ClickEvent>(OnRemapButtonClicked);
             }
         }
 
@@ -96,9 +108,45 @@ namespace EGUI
         {
             var btn = evt.target as Button;
             
-            // find the index of the button to determine the action we want to remap
+            if (btn is null) return;
+            
+            buttonToUpdate = btn;
+            buttonToUpdate.text = "Waiting...";
+            
+            int btnIndex = controlRemapButtons.IndexOf(btn); // this will give us the key for the action
+            
+            // get binding and check if it is composite
+            var rootBinding = actionDict[inputActionKeys[btnIndex]].bindings[0];
+
+            if (!rootBinding.isComposite)
+            {
+                RemapAction(actionDict[inputActionKeys[btnIndex]]);
+            }
+            else
+            {
+                int bindIndex = GetPartialBindingIndex(inputActionKeys[btnIndex]);
+                RemapAction(actionDict[inputActionKeys[btnIndex]], bindIndex);
+            }
         }
 
+        private int GetPartialBindingIndex(string actionKey)
+        {
+            string bindingPartName = actionKey.Split('/')[1];
+            InputAction sourceAction = actionDict[actionKey];
+            int bindingIndex = 1;
+
+            for (int i = 0; i < sourceAction.bindings.Count; i++)
+            {
+                if (sourceAction.bindings[i].name == bindingPartName)
+                {
+                    bindingIndex = i;
+                    break;
+                }
+            }
+            
+            return bindingIndex;
+        }
+        
         private void RemapAction(InputAction targetAction)
         {
             // based off of the control remap example provided by Unity (2023), acc: 30/4/2026
@@ -107,6 +155,17 @@ namespace EGUI
             targetAction.PerformInteractiveRebinding()
                 .WithControlsExcluding("Mouse")
                 .OnComplete(RebindComplete)
+                .OnMatchWaitForAnother(0.1f)
+                .Start();
+        }
+
+        private void RemapAction(InputAction targetAction, int bindingPartIndex)
+        {
+            // based on solution suggested by Daniel Sitarz (2022)
+            targetAction.PerformInteractiveRebinding(bindingPartIndex)
+                .WithControlsExcluding("Mouse")
+                .OnComplete(RebindComplete)
+                .OnMatchWaitForAnother(0.1f)
                 .Start();
         }
 
@@ -114,6 +173,9 @@ namespace EGUI
         {
             // TODO: update button text with new input
             Debug.Log("Rebind Complete");
+
+            if (buttonToUpdate is not null)
+                buttonToUpdate.text = op.bindingMask?.ToDisplayString();
         }
         
         private void CloseSettings() => rootElement.visible = false;
