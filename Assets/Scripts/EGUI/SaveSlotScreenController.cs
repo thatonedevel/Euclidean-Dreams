@@ -93,6 +93,7 @@ namespace EGUI
             // button clicks for the dialogue box
             okButton.clicked += OkClicked;
             cancelButton.clicked += CloseWarningDialogue;
+            settingsButton.clicked += SettingsMenuController.Singleton.OpenSettings;
             
             // update information on the metadata labels
             UpdateSaveStatus();
