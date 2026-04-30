@@ -37,7 +37,7 @@ namespace EGUI
         {
             rootElement = settingsDoc.rootVisualElement.Q<VisualElement>(ID_ROOT);
 
-            UQueryState<Button> btnQuery = new UQueryBuilder<Button>()
+            UQueryState<Button> btnQuery = new UQueryBuilder<Button>(rootElement)
                 .Class(CLASS_REMAP_BUTTON)
                 .Build();
             
