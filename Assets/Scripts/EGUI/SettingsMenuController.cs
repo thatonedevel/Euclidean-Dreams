@@ -5,7 +5,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
+using System.Text;
 using Managers;
+using Data;
+using Unity.Collections;
+using Unity.Jobs;
 
 namespace EGUI
 {
@@ -210,15 +214,32 @@ namespace EGUI
             SetButtonBindingTexts();
             buttonToUpdate = null; // release reference to this button
         }
-        
-        public void CloseSettings() => rootElement.visible = false;
-        
+
+        public void CloseSettings()
+        {
+            // start the write job to save changes
+            WriteActionMap();
+            rootElement.visible = false;
+        }
+
         public void OpenSettings() => rootElement.visible = true;
 
         private void GameStateUpdateListener(GameStates newState, GameStates oldState)
         {
             if (newState == GameStates.PLAYING) 
                 CloseSettings();
+        }
+
+        private void WriteActionMap()
+        {
+            var handle = new JobHandle();
+            // create the needed job & schedule it
+            var settingsWrite = new BindingsDataJob()
+            {
+                // Corvus Ultima (2022); use this to pass a string to the job
+                persistentPathBytes = new NativeArray<byte>(Encoding.ASCII.GetBytes(Application.persistentDataPath), Allocator.TempJob)
+            };
+            settingsWrite.Schedule(handle);
         }
     }
 }
