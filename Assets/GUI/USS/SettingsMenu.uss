@@ -39,6 +39,5 @@
     min-height: 0%;
     max-height: 100%;
     width: 1458px;
-    visibility: visible;
     padding-bottom: 30px;
 }
