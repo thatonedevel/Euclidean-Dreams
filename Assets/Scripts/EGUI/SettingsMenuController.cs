@@ -241,6 +241,9 @@ namespace EGUI
                 // Corvus Ultima (2022); use this to pass a string to the job
                 persistentPathBytes = new NativeArray<byte>(Encoding.ASCII.GetBytes(Application.persistentDataPath), Allocator.TempJob)
             };
+            
+            settingsWrite.CreateMapOfCurrentBindings(actionDict[inputActionKeys[0]].actionMap);
+            
             settingsWrite.Schedule(handle);
         }
     }
