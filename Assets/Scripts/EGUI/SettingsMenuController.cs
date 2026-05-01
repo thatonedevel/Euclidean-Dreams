@@ -268,12 +268,12 @@ namespace EGUI
         private void ReadActionMap()
         {
             // has to be ran on the main thread yay /s
-            if (!File.Exists(Application.persistentDataPath + INPUT_BINDINGS))
+            if (!File.Exists(Application.persistentDataPath + "/" + INPUT_BINDINGS))
             {
                 File.CreateText(Application.persistentDataPath + "/" + INPUT_BINDINGS).Close();
             }
 
-            var mapString = File.ReadAllText(Application.persistentDataPath + INPUT_BINDINGS);
+            var mapString = File.ReadAllText(Application.persistentDataPath + "/" + INPUT_BINDINGS);
 
             actionDict[inputActionKeys[0]].actionMap.LoadBindingOverridesFromJson(mapString);
         }
