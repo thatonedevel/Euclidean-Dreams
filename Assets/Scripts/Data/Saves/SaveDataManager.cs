@@ -12,7 +12,7 @@ namespace Data.Saves
     {
         // TODO: make use of the job system to have the file read/write be on a separate thread
 
-        const string SAVE_NAME = "player_data";
+        const string SAVE_NAME = "saves/player_data";
         const string FILE_SUFFIX = ".json";
 
         [Header("Debug Information")] [SerializeField]
