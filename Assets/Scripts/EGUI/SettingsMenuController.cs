@@ -137,8 +137,11 @@ namespace EGUI
             var btn = evt.target as Button;
             
             if (btn is null) return;
-            
+
             buttonToUpdate = btn;
+
+            var bindingDisplayName = buttonToUpdate.text;
+            
             buttonToUpdate.text = "Waiting...";
             
             int btnIndex = controlRemapButtons.IndexOf(btn); // this will give us the key for the action
@@ -152,26 +155,25 @@ namespace EGUI
             }
             else
             {
-                int bindIndex = GetPartialBindingIndex(inputActionKeys[btnIndex]);
+                int bindIndex = GetPartialBindingIndex(inputActionKeys[btnIndex], bindingDisplayName);
                 RemapAction(actionDict[inputActionKeys[btnIndex]], bindIndex);
             }
         }
 
-        private int GetPartialBindingIndex(string actionKey)
+        private int GetPartialBindingIndex(string actionKey, string bindingName)
         {
             string bindingPartName = actionKey.Split('/')[1];
             InputAction sourceAction = actionDict[actionKey];
             int bindingIndex = 1;
 
-            for (int i = 0; i < sourceAction.bindings.Count; i++)
+            for (int i = 1; i < sourceAction.bindings.Count; i++)
             {
-                if (sourceAction.bindings[i].name == bindingPartName)
+                if (sourceAction.bindings[i].ToDisplayString().Equals(bindingName)) // HACK: should work but ideally we avoid string comp.
                 {
                     bindingIndex = i;
                     break;
                 }
             }
-            
             return bindingIndex;
         }
         
