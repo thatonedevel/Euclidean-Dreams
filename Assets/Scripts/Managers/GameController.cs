@@ -101,7 +101,7 @@ namespace Managers
                     break;
                 default:
                     // title screen, level select
-                    CurrentLevelIndex = -1;
+                    //CurrentLevelIndex = -1;
                     isAtLastLevel = CurrentLevelIndex != -1 && CurrentLevelIndex < levelKeys.Length - 1; //CheckLevelExistsAtIndex(currentLevelNum + 1);
     
                     // disable character movement if the character is not null
