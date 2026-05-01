@@ -1,5 +1,4 @@
-using System;
-using GameConstants;
+using System.IO;
 using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -40,12 +39,24 @@ namespace EGUI
         
         private Button buttonToUpdate = null;
 
+        private JobHandle readerHandle;
+        private JobHandle keybindWriteHandle;
+        private bool loadKeybindsComplete = false;
+        private bool hasStartedLoading = false;
+        private ReadJob keybindLoadJob;
+        private WriteJob keybindWriter;
+        private bool scheduledKeybindWrite = true;
+
         private void Awake()
         {
             if (Singleton != null)
                 Destroy(gameObject);
             else
+            {
                 Singleton = this;
+                readerHandle = new JobHandle();
+                keybindWriteHandle = new JobHandle();
+            }
         }
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -67,6 +78,8 @@ namespace EGUI
                 InputAction tempAction = InputSystem.actions.FindAction(mainActionKey);
                 if (tempAction is not null) actionDict.Add(actionKey, tempAction);
             }
+            
+            ReadActionMap();
 
             SetButtonBindingTexts();
             // register the callbacks for the buttons
@@ -77,6 +90,16 @@ namespace EGUI
             
             // sub to game state update
             GameController.OnGameStateChanged += GameStateUpdateListener;
+        }
+
+        private void LateUpdate()
+        {
+            if (keybindWriteHandle.IsCompleted && scheduledKeybindWrite)
+            {
+                keybindWriteHandle.Complete();
+                scheduledKeybindWrite = false;
+                keybindWriter.Free();
+            }
         }
 
         private void OnDestroy()
@@ -233,14 +256,26 @@ namespace EGUI
 
         private void WriteActionMap()
         {
-            var keybindWriteHandle = new JobHandle();
 
-            WriteJob keybindWriter = (WriteJob) IOJobFactory.CreateJob(
+            keybindWriter = (WriteJob)IOJobFactory.CreateJob(
                 Application.persistentDataPath + INPUT_BINDINGS,
                 IOJobType.WRITE
                 );
             keybindWriter.SetWriteBytes(actionDict[inputActionKeys[0]].actionMap.SaveBindingOverridesAsJson());
             keybindWriter.Schedule(keybindWriteHandle);
+        }
+
+        private void ReadActionMap()
+        {
+            // has to be ran on the main thread yay /s
+            if (!File.Exists(Application.persistentDataPath + INPUT_BINDINGS))
+            {
+                File.CreateText(Application.persistentDataPath + INPUT_BINDINGS).Close();
+            }
+
+            var mapString = File.ReadAllText(Application.persistentDataPath + INPUT_BINDINGS);
+
+            actionDict[inputActionKeys[0]].actionMap.LoadBindingOverridesFromJson(mapString);
         }
     }
 }

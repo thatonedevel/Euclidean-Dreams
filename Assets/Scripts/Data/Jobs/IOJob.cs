@@ -9,6 +9,7 @@ namespace Data.Jobs
     public interface IOJob : IJob
     {
         public void SetPath(string path);
+        public void Free();
     }
 
     public struct ReadJob : IOJob
@@ -16,19 +17,29 @@ namespace Data.Jobs
         public NativeArray<byte> filePathBytes;
         public NativeArray<byte> fileContents;
 
+        //private const int MAX_BIND_SIZE = 33000;
+
         public void SetPath(string path)
         {
             filePathBytes =  new NativeArray<byte>(Encoding.UTF8.GetBytes(path), Allocator.TempJob);
+            // make sure to construct the filecontents array here too
+            fileContents = new NativeArray<byte>(fileContents.Length, Allocator.TempJob);
         }
 
         public void Execute()
         {
-            fileContents = new NativeArray<byte>(fileContents.Length, Allocator.TempJob);
+            fileContents = new NativeArray<byte>(33000, Allocator.Temp);
         }
 
         public string GetFileContents()
         {
             return Encoding.UTF8.GetString(fileContents);
+        }
+
+        public void Free()
+        {
+            filePathBytes.Dispose();
+            fileContents.Dispose();
         }
     }
 
@@ -52,6 +63,12 @@ namespace Data.Jobs
         public void Execute()
         {
             File.WriteAllBytes(Encoding.UTF8.GetString(filePathBytes), writeBytes.ToArray());
+        }
+
+        public void Free()
+        {
+            filePathBytes.Dispose();
+            writeBytes.Dispose();
         }
     }
 }
