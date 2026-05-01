@@ -5,10 +5,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
-using System.Text;
 using Managers;
-using Data;
-using Unity.Collections;
+using Data.Jobs;
 using Unity.Jobs;
 
 namespace EGUI
@@ -37,7 +35,8 @@ namespace EGUI
         private Button closeSettingsButton;
 
         private const string CLASS_REMAP_BUTTON = "control-button";
-        private const string ID_ROOT = "Root"; 
+        private const string ID_ROOT = "Root";
+        private const string INPUT_BINDINGS = "input.json";
         
         private Button buttonToUpdate = null;
 
@@ -234,17 +233,14 @@ namespace EGUI
 
         private void WriteActionMap()
         {
-            var handle = new JobHandle();
-            // create the needed job & schedule it
-            var settingsWrite = new BindingsDataJob()
-            {
-                // Corvus Ultima (2022); use this to pass a string to the job
-                persistentPathBytes = new NativeArray<byte>(Encoding.ASCII.GetBytes(Application.persistentDataPath), Allocator.TempJob)
-            };
-            
-            settingsWrite.CreateMapOfCurrentBindings(actionDict[inputActionKeys[0]].actionMap);
-            
-            settingsWrite.Schedule(handle);
+            var keybindWriteHandle = new JobHandle();
+
+            WriteJob keybindWriter = (WriteJob) IOJobFactory.CreateJob(
+                Application.persistentDataPath + INPUT_BINDINGS,
+                IOJobType.WRITE
+                );
+            keybindWriter.SetWriteBytes(actionDict[inputActionKeys[0]].actionMap.SaveBindingOverridesAsJson());
+            keybindWriter.Schedule(keybindWriteHandle);
         }
     }
 }
