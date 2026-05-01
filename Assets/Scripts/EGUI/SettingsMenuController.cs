@@ -258,7 +258,7 @@ namespace EGUI
         {
 
             keybindWriter = (WriteJob)IOJobFactory.CreateJob(
-                Application.persistentDataPath + INPUT_BINDINGS,
+                Application.persistentDataPath + "/" + INPUT_BINDINGS,
                 IOJobType.WRITE
                 );
             keybindWriter.SetWriteBytes(actionDict[inputActionKeys[0]].actionMap.SaveBindingOverridesAsJson());
@@ -270,7 +270,7 @@ namespace EGUI
             // has to be ran on the main thread yay /s
             if (!File.Exists(Application.persistentDataPath + INPUT_BINDINGS))
             {
-                File.CreateText(Application.persistentDataPath + INPUT_BINDINGS).Close();
+                File.CreateText(Application.persistentDataPath + "/" + INPUT_BINDINGS).Close();
             }
 
             var mapString = File.ReadAllText(Application.persistentDataPath + INPUT_BINDINGS);
