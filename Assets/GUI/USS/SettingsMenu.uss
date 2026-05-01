@@ -1,0 +1,43 @@
+.settings-tab {
+    font-size: 35px;
+}
+
+.control-hbox {
+    height: 60px;
+    align-items: flex-start;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.control-label {
+    -unity-text-align: middle-center;
+    width: 50%;
+}
+
+.control-button-container {
+    height: 100%;
+    padding-right: 50px;
+    padding-bottom: 0;
+    padding-left: 50px;
+}
+
+.control-button {
+}
+
+.controls-section {
+    margin-bottom: 30px;
+}
+
+.volume-slider {
+    min-width: 0%;
+    width: 50%;
+    max-width: 447px;
+}
+
+.settings-container {
+    height: 708px;
+    min-height: 0%;
+    max-height: 100%;
+    width: 1458px;
+    padding-bottom: 30px;
+}

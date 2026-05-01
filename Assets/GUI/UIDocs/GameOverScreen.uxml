@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/GUI/USS/GameOverScreen.uss?fileID=7433441132597879392&amp;guid=1b59f1c1483c7024096086d9a9cdac9c&amp;type=3#GameOverScreen" />
+    <ui:VisualElement name="Root" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.23); padding-right: 600px; padding-left: 600px; visibility: hidden;">
+        <ui:VisualElement name="GameOverPanel" style="flex-grow: 1; background-color: rgb(255, 255, 255);">
+            <ui:Label text="Game Over" name="GameOverLabel" style="height: 71px; -unity-text-align: middle-center; font-size: 50px; padding-top: 20px; margin-top: 20px; margin-bottom: 20px;" />
+            <ui:VisualElement name="ButtonVBox" style="flex-grow: 1; padding-top: 100px; padding-right: 100px; padding-bottom: 100px; padding-left: 100px; flex-direction: column; align-items: stretch; justify-content: center;">
+                <ui:Button text="Restart" name="RestartButton" class="gameover-button" />
+                <ui:Button text="Title Screen" name="TitleButton" class="gameover-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

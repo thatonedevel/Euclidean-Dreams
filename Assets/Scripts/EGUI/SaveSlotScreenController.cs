@@ -88,11 +88,13 @@ namespace EGUI
             warningDialogueRoot = uiDocument.rootVisualElement.Query<VisualElement>("WarningDialogueRoot");
             cancelButton = uiDocument.rootVisualElement.Query<Button>("CancelButton");
             okButton = uiDocument.rootVisualElement.Query<Button>("OkButton");
+            settingsButton = uiDocument.rootVisualElement.Query<Button>("SettingsBtn");
             warningLabel = uiDocument.rootVisualElement.Query<Label>("WarningLabel");
             
             // button clicks for the dialogue box
             okButton.clicked += OkClicked;
             cancelButton.clicked += CloseWarningDialogue;
+            settingsButton.clicked += SettingsMenuController.Singleton.OpenSettings;
             
             // update information on the metadata labels
             UpdateSaveStatus();

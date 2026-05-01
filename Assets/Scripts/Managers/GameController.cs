@@ -96,9 +96,12 @@ namespace Managers
                     playerCharacterObject.GetComponent<Rigidbody>().isKinematic = true;
                     levelCameraRig.GetComponent<CameraControl>().enabled = false;
                     break;
+                
+                case GameStates.GAME_OVER:
+                    break;
                 default:
                     // title screen, level select
-                    CurrentLevelIndex = -1;
+                    //CurrentLevelIndex = -1;
                     isAtLastLevel = CurrentLevelIndex != -1 && CurrentLevelIndex < levelKeys.Length - 1; //CheckLevelExistsAtIndex(currentLevelNum + 1);
     
                     // disable character movement if the character is not null
@@ -140,7 +143,8 @@ namespace Managers
             if (currentScene.name.StartsWith(Constants.LEVEL_PREFIX))
             {
                 print("Can restart current level");
-                
+                // MAKE SURE TO CALL THE RESTART FUNCTION DINGUS
+                LoadGameLevel(CurrentLevelIndex);
             }
         }
     
@@ -220,6 +224,12 @@ namespace Managers
             Addressables.LoadSceneAsync(Constants.SCENE_SAVE_SELECT);
         }
 
+        public void GoToTitleScreen()
+        {
+            Addressables.LoadSceneAsync(Constants.SCENE_TITLE);
+            UpdateGameState(GameStates.TITLE_SCREEN);
+        }
+
         public float GetPlayerAxisValue(Axes axis)
         {
             float val = 0;
@@ -244,7 +254,12 @@ namespace Managers
                 val = float.MaxValue;
             }
             
-                return val;
+            return val;
+        }
+
+        public void GameOver()
+        {
+            UpdateGameState(GameStates.GAME_OVER);
         }
     }
 }

@@ -7,6 +7,9 @@ namespace GameConstants
     {
         public const float MAX_RAYCAST_DISTANCE = 100;
         public const int MAX_RAYCAST_COUNT = 100;
+        
+        // data
+        public const string INPUT_MAP_NAME = "input.json";
 
         // tags
 

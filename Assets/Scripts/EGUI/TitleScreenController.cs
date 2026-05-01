@@ -23,7 +23,7 @@ namespace EGUI
     
             // event subscription
             playButton.clicked += () => GameController.Singleton.GoToSaveScreen();
-            settingsButton.clicked += () => Debug.Log("Settings clicked"); // TODO: change this to open settings when implemented
+            settingsButton.clicked += () => SettingsMenuController.Singleton.OpenSettings();
             quitButton.clicked += () => Application.Quit();
         }
     }

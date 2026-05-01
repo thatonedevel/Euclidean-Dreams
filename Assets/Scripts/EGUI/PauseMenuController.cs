@@ -98,7 +98,7 @@ namespace EGUI
     
         private void SettingsButtonPressed()
         {
-            // TODO: call to open settings menu once implemented
+            SettingsMenuController.Singleton.OpenSettings();
         }
     
         private void StageSelectButtonPressed()

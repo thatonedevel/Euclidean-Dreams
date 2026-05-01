@@ -11,6 +11,8 @@ namespace EGUI
     
         private Button titleScreenButton;
         private Button devGymButton;
+        private Button settingsButton;
+        
         private List<Button> levelSelectionButtons = new();
         private List<VisualElement> levelPadlocks = new();
     
@@ -20,7 +22,9 @@ namespace EGUI
             // initialise ui
             titleScreenButton = levelSelectDoc.rootVisualElement.Query<Button>("TitleScreenButton");
             devGymButton = levelSelectDoc.rootVisualElement.Query<Button>("GymButton");
-    
+            settingsButton = levelSelectDoc.rootVisualElement.Query<Button>("SettingsButton");
+            
+            
             // use a query builder to get all the level selection buttons
             UQueryState<Button> buttonQuery = new UQueryBuilder<Button>(levelSelectDoc.rootVisualElement)
                 .Class("level-select-button")
@@ -33,7 +37,8 @@ namespace EGUI
             // subscribe to the events / register the callbacks
             titleScreenButton.clicked += () => GameController.Singleton.StartGame();
             devGymButton.clicked += () => GameController.Singleton.LoadDevGym();
-    
+            settingsButton.clicked += SettingsMenuController.Singleton.OpenSettings;
+            
             buttonQuery.ForEach((Button btn) => { 
                 levelSelectionButtons.Add(btn);
                 btn.RegisterCallback<ClickEvent>(LevelSelectedCallback); 

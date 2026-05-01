@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="ControlHBox" class="control-hbox" style="flex-grow: 1;">
+        <ui:Label text="Control" name="ControlLabel" class="control-label" />
+        <ui:VisualElement name="ControlButtonContainer" class="control-button-container" style="flex-grow: 1;">
+            <ui:Button text="Button" name="ControlButton" class="control-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
