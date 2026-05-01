@@ -12,11 +12,12 @@ namespace Data
     public struct BindingsDataJob : IJob
     {
         public NativeArray<byte> persistentPathBytes;
+        public NativeArray<byte> inputMapBytes;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         public void Execute()
         {
-            var mapString = CreateMapOfCurrentBindings();
+            var mapString = Encoding.ASCII.GetString(inputMapBytes);
             // use this place to write the input action bindings to the disk
             // this is in a dedicated job as the map is kinda big
             try
@@ -29,18 +30,10 @@ namespace Data
             }
         }
 
-        private string CreateMapOfCurrentBindings()
+        public void CreateMapOfCurrentBindings(InputActionMap map)
         {
-            var map = new InputActionMap();
-
-            var defaultMap = InputSystem.actions.actionMaps[0];
-
-            foreach (var action in defaultMap.actions)
-            {
-                map.AddAction(action.name, action.type, action.bindings[0].ToString());
-            }
-
-            return map.ToJson();
+            // get json string of the map and store it in our native array
+            inputMapBytes = new NativeArray<byte>(Encoding.ASCII.GetBytes(map.SaveBindingOverridesAsJson()), Allocator.TempJob);
         }
     }
 }
