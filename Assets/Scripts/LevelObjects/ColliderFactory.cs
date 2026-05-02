@@ -27,12 +27,14 @@ namespace LevelObjects
         {
             // subscribe to the dimension switch event
             PerspectiveSwitcher.OnDimensionsSwitched += DimensionSwitchHandler;
+            PerspectiveSwitcher.OnViewRefreshed += ViewRefreshHandler;
             CreateColliderPool();
         }
 
         private void OnDestroy()
         {
             PerspectiveSwitcher.OnDimensionsSwitched -= DimensionSwitchHandler;
+            PerspectiveSwitcher.OnViewRefreshed -= ViewRefreshHandler;
         }
 
         private void DimensionSwitchHandler(Dimensions newDimension)
@@ -55,7 +57,7 @@ namespace LevelObjects
             if (PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.Count > 0)
             {
                 // update the standard colliders list to have all the colliders of the detected geometry
-                
+                RefreshColliders();
                 // check we have detected geometry
                 print("Opening the collider pool");
                 // go through the generated collision & calculate the new bounds for it
@@ -65,6 +67,8 @@ namespace LevelObjects
                     // get the generated collider of the same index & adjust bounds
                     print("Total found colliders: " + PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.Count);
                     print("Collider index: " + i);
+                    
+                    if (i > generatedColliders.Count - 1) break;
                     
                     BoxCollider currentCol = generatedColliders[i];
                     
@@ -132,6 +136,23 @@ namespace LevelObjects
             }
         }
 
+        private void RefreshColliders()
+        {
+            // was hoping this to be unnecessary as the point of pooling is so we can reuse the colliders
+            for (int i = 0; i < generatedColliders.Count; i++)
+            {
+                Destroy(generatedColliders[i].gameObject);
+            }
+            generatedColliders.Clear();
+
+            for (int i = 0; i < PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.Count; i++)
+            {
+                var col = Instantiate(colliderPrefab);
+                col.GetComponent<Collider>().enabled = false;
+                generatedColliders.Add(col.GetComponent<BoxCollider>());
+            }
+        }
+
         private void RemovePlatform2D(List<Collider> collList)
         {
             // used to removed the plat2d objects from the collider pool
@@ -142,6 +163,11 @@ namespace LevelObjects
                     collList.RemoveAt(i);
                 }
             }
+        }
+
+        private void ViewRefreshHandler()
+        {
+            OpenColliderPool();
         }
     }
 }

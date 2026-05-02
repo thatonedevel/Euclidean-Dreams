@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using System;
 using GameConstants;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using LevelObjects;
-using Unity.Burst.CompilerServices;
 
 public class CameraControl : MonoBehaviour
 {
@@ -30,6 +30,8 @@ public class CameraControl : MonoBehaviour
     private Vector3 relativeDirectionToPlayer = Vector3.zero;
     private GameObject playerCharacter;
     private Dictionary<int, CameraTransformSnapshot> transformSnapshots = new();
+
+    public static event Action OnCameraZoomed;
 
     // angle tracking
     [Header("Debug Info - Rotation information")]
@@ -125,6 +127,9 @@ public class CameraControl : MonoBehaviour
             // adjust the camera size
             levelCamera.orthographicSize += delta * -1;
         }
+        
+        if (delta > 0.1f || delta < -0.1f)
+            OnCameraZoomed?.Invoke();
     }
 
     /*private Vector3 FindNextAngle(Vector3 rotation)

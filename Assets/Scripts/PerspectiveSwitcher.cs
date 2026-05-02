@@ -50,6 +50,8 @@ public class PerspectiveSwitcher : MonoBehaviour
     public static event Action<Dimensions> OnDimensionsSwitched;
     public static event Action<Dimensions> OnDimensionsSwitched_Early;
 
+    public static event Action OnViewRefreshed;
+
     // input
     private InputAction perspectiveSwitchAction;
 
@@ -57,6 +59,12 @@ public class PerspectiveSwitcher : MonoBehaviour
     void Start()
     {
         perspectiveSwitchAction = InputSystem.actions.FindAction(Constants.ACTION_SWITCH_PERSPECTIVE);
+        CameraControl.OnCameraZoomed += CamZoomHandler;
+    }
+
+    private void OnDestroy()
+    {
+        CameraControl.OnCameraZoomed -= CamZoomHandler;
     }
 
     // Update is called once per frame
@@ -329,5 +337,15 @@ public class PerspectiveSwitcher : MonoBehaviour
             CurrentObservedAxis = Axes.Y;
         else if (IsLookingDownZAxis())
             CurrentObservedAxis = Axes.Z;
+    }
+
+    private void CamZoomHandler()
+    {
+        if (levelCamera.orthographic)
+        {
+            // we're 2d, so rework the geometry
+            GeoSortingRaycasts();
+            OnViewRefreshed?.Invoke();
+        }
     }
 }

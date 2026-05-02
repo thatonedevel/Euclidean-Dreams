@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2603283122452843669}
   - component: {fileID: 211739864485257735}
   - component: {fileID: 8378675575691504374}
+  - component: {fileID: 5725617523448479360}
   m_Layer: 3
   m_Name: Platform2D
   m_TagString: LevelGeometry
@@ -363,3 +364,15 @@ MonoBehaviour:
   traversableAxis: 2
   platformCollider: {fileID: 211739864485257735}
   platformRenderer: {fileID: 5663821067303108944}
+--- !u!114 &5725617523448479360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297421583009427876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9252b664a6b6f4c8c7f8953ed830e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
