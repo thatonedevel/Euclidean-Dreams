@@ -141,15 +141,15 @@ namespace LevelObjects
             // was hoping this to be unnecessary as the point of pooling is so we can reuse the colliders
             for (int i = 0; i < generatedColliders.Count; i++)
             {
-                Destroy(generatedColliders[i].gameObject);
+                DestroyImmediate(generatedColliders[i].gameObject);
             }
             generatedColliders.Clear();
 
             for (int i = 0; i < PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.Count; i++)
             {
-                var col = Instantiate(colliderPrefab);
-                col.GetComponent<Collider>().enabled = false;
+                var col = Instantiate(colliderPrefab, transform);
                 generatedColliders.Add(col.GetComponent<BoxCollider>());
+                col.GetComponent<Collider>().enabled = false;
             }
         }
 

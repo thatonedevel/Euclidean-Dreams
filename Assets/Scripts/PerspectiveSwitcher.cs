@@ -168,6 +168,7 @@ public class PerspectiveSwitcher : MonoBehaviour
                     {
                         // make sure to filter out the 2d platforms so we don't go out of range
                         // add the collider to the detected colliders
+                        // TODO: MAKE ORDERERED SET TO HAVE UNIQUE DATA
                         if (!hitData.collider.TryGetComponent<Platform2D>(out Platform2D temp))
                             CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
                     }
