@@ -22,6 +22,7 @@ namespace EGUI
         private InputAction zoomAction;
         private InputAction cameraLookAction;
         private InputAction perspectiveSwitchAction;
+        private InputAction recenterAction;
     
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
@@ -33,12 +34,14 @@ namespace EGUI
             zoomAction = InputSystem.actions.FindAction(Constants.ACTION_ZOOM_CAMERA);
     
             perspectiveSwitchAction = InputSystem.actions.FindAction(Constants.ACTION_SWITCH_PERSPECTIVE);
+            recenterAction = InputSystem.actions.FindAction(Constants.ACTION_CENTER_CAMERA);
     
     
             // subscribe to the performed event
             moveAction.performed += TutorialActionsListener;
             zoomAction.performed += TutorialActionsListener;
             cameraLookAction.performed += TutorialActionsListener;
+            recenterAction.performed += TutorialActionsListener;
     
             PerspectiveSwitcher.OnDimensionsSwitched += FirstDimSwitchHandler;
             TutorialTextSO.OnTutorialFinished += TutorialFinishedHandler;
@@ -73,6 +76,11 @@ namespace EGUI
             else if (context.action == cameraLookAction)
             {
                 if (tutorialText.lineIndex == 2)
+                    tutorialText.AdvanceText();
+            }
+            else if (context.action == recenterAction)
+            {
+                if (tutorialText.lineIndex == 6)
                     tutorialText.AdvanceText();
             }
         }

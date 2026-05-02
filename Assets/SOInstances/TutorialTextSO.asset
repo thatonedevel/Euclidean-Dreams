@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TutorialLines:
   - Welcome to the flipside
-  - Use WASD / Left Control stick to move
-  - Use Arrow Keys / Right Control stick to move the camera
-  - You can zoom in and out with the scroll wheel or d pad
-  - If you're looking straight down or ahead, then you can press L to switch to 2D
-  - Press L when you're ready to switch back to 3D
-  currentLine: Press enter when you're ready to switch back to 3D
+  - Use {0} to move
+  - Use {0} to move the camera
+  - You can zoom in and out with {0}
+  - If you're looking straight down or ahead, then you can press {0} to switch to
+    2D
+  - Press {0} when you're ready to switch back to 3D
+  - If you get too far away from the camera, you can press {0} to recenter
+  currentLine: Welcome to the flipside
