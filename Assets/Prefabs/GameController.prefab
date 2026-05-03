@@ -49,5 +49,5 @@ MonoBehaviour:
   levelKeys:
   - level_01_Tutorial
   - level_02_EverHigher
-  - level_03_UpIsDown
-  - level_04_OffTheRails
+  - level_03_OffTheRails
+  - level_04_UpIsDown
