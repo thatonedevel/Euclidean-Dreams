@@ -53,7 +53,7 @@ namespace Data.Saves
             print(Application.persistentDataPath);
 
             activeSaveData = new SaveSlotData(stageCount);
-            saveDataSlots = new SaveSlotData[stageCount];
+            saveDataSlots = new SaveSlotData[3];
 
             for (int i = 0; i < 3; i++)
             {
