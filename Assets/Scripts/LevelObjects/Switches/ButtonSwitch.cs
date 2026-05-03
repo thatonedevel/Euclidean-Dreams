@@ -11,7 +11,7 @@ namespace LevelObjects.Switches
 
         protected float nextPressTime = 0;
 
-        private void Start()
+        protected virtual void Start()
         {
             // add subscriptions here for making sure that we can press the button when facing down
             RaycastTriggerTarget.RaycastTriggered += OnRaycastTrigger;

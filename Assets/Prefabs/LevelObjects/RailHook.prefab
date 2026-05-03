@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentRail: {fileID: 0}
-  moveSpeed: 0
+  moveSpeed: 0.25
   snapThreshold: 0.1
   t: 0
 --- !u!114 &4547068031328790207

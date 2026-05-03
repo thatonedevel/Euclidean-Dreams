@@ -44,11 +44,13 @@ public class PerspectiveSwitcher : MonoBehaviour
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
     public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
 
-    public static List<BoxCollider> CurrentVisibleCollisionGeometryIn2D { get; private set; } = new();
+    public static HashSet<BoxCollider> CurrentVisibleCollisionGeometryIn2D { get; private set; } = new();
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
     public static event Action<Dimensions> OnDimensionsSwitched_Early;
+
+    public static event Action OnViewRefreshed;
 
     // input
     private InputAction perspectiveSwitchAction;
@@ -57,6 +59,12 @@ public class PerspectiveSwitcher : MonoBehaviour
     void Start()
     {
         perspectiveSwitchAction = InputSystem.actions.FindAction(Constants.ACTION_SWITCH_PERSPECTIVE);
+        CameraControl.OnCameraZoomed += CamZoomHandler;
+    }
+
+    private void OnDestroy()
+    {
+        CameraControl.OnCameraZoomed -= CamZoomHandler;
     }
 
     // Update is called once per frame
@@ -84,7 +92,7 @@ public class PerspectiveSwitcher : MonoBehaviour
             // switch to perspective projection
             SetPlayer3DPos();
             levelCamera.orthographic = false;
-            levelCamera.fieldOfView = fieldOfView;
+            //levelCamera.fieldOfView = fieldOfView;
             
             CurrentDimension = Dimensions.THIRD;
             // clear detected geometry array
@@ -101,7 +109,7 @@ public class PerspectiveSwitcher : MonoBehaviour
                 OnDimensionsSwitched_Early?.Invoke(Dimensions.SECOND);
                 // switch to ortho projection
                 levelCamera.orthographic = true;
-                levelCamera.orthographicSize = size;
+                //levelCamera.orthographicSize = size;
                 Debug.Log("Running the raycasts");
                 GeoSortingRaycasts();
                 CurrentDimension = Dimensions.SECOND;
@@ -160,6 +168,7 @@ public class PerspectiveSwitcher : MonoBehaviour
                     {
                         // make sure to filter out the 2d platforms so we don't go out of range
                         // add the collider to the detected colliders
+                        // TODO: MAKE ORDERERED SET TO HAVE UNIQUE DATA
                         if (!hitData.collider.TryGetComponent<Platform2D>(out Platform2D temp))
                             CurrentVisibleCollisionGeometryIn2D.Add(hitData.collider as BoxCollider);
                     }
@@ -329,5 +338,15 @@ public class PerspectiveSwitcher : MonoBehaviour
             CurrentObservedAxis = Axes.Y;
         else if (IsLookingDownZAxis())
             CurrentObservedAxis = Axes.Z;
+    }
+
+    private void CamZoomHandler()
+    {
+        if (levelCamera.orthographic)
+        {
+            // we're 2d, so rework the geometry
+            GeoSortingRaycasts();
+            OnViewRefreshed?.Invoke();
+        }
     }
 }
