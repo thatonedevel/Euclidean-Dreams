@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 211739864485257735}
   - component: {fileID: 8378675575691504374}
   - component: {fileID: 5725617523448479360}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: Platform2D
   m_TagString: LevelGeometry
   m_Icon: {fileID: 0}
