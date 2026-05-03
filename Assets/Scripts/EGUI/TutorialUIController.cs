@@ -47,6 +47,7 @@ namespace EGUI
             TutorialTextSO.OnTutorialFinished += TutorialFinishedHandler;
     
             StartCoroutine(routine: FirstSectionCoroutine());
+            tutorialDoc.sortingOrder = -1; // force the 0 at runtime
         }
     
         private void OnDestroy()

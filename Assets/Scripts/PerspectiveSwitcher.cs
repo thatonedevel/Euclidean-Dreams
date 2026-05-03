@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using GameConstants;
 using GameConstants.Enumerations;
 using LevelObjects;
+using Managers;
 using Unity.VisualScripting;
 using UnityEngine.Serialization;
 
@@ -70,6 +71,8 @@ public class PerspectiveSwitcher : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameController.Singleton.CurrentGameState != GameStates.PLAYING) return;
+        
         if (perspectiveSwitchAction.WasPressedThisFrame())
         {
             SwitchCamPerspective();

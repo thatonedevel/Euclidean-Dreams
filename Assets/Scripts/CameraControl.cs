@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System;
 using GameConstants;
+using GameConstants.Enumerations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using LevelObjects;
+using Managers;
 
 public class CameraControl : MonoBehaviour
 {
@@ -63,6 +65,8 @@ public class CameraControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameController.Singleton.CurrentGameState != GameStates.PLAYING) return;
+        
         Vector2 movement = cameraLookAction.ReadValue<Vector2>();
         Vector3 rotation = Vector3.zero;
         Vector2 zoomAmount = cameraProfZoomAction.ReadValue<Vector2>();
