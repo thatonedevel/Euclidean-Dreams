@@ -116,17 +116,11 @@ public class CameraControl : MonoBehaviour
     {
         // adjusts the camera's zoom level based on the y axis of the input vector
         float delta = input.y * cameraZoomScale * Time.deltaTime;
-
-        if (!levelCamera.orthographic)
-        {
-            // 3d, adjust camera pos
-            levelCamera.transform.position += levelCamera.transform.forward * delta;
-        }
-        else
-        {
-            // adjust the camera size
-            levelCamera.orthographicSize += delta * -1;
-        }
+        
+        // 3d, adjust camera pos
+        levelCamera.transform.position += levelCamera.transform.forward * delta;
+        // adjust the camera size
+        levelCamera.orthographicSize += delta * -1;
         
         if (delta > 0.1f || delta < -0.1f)
             OnCameraZoomed?.Invoke();

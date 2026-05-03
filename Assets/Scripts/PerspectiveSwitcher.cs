@@ -92,7 +92,7 @@ public class PerspectiveSwitcher : MonoBehaviour
             // switch to perspective projection
             SetPlayer3DPos();
             levelCamera.orthographic = false;
-            levelCamera.fieldOfView = fieldOfView;
+            //levelCamera.fieldOfView = fieldOfView;
             
             CurrentDimension = Dimensions.THIRD;
             // clear detected geometry array
@@ -109,7 +109,7 @@ public class PerspectiveSwitcher : MonoBehaviour
                 OnDimensionsSwitched_Early?.Invoke(Dimensions.SECOND);
                 // switch to ortho projection
                 levelCamera.orthographic = true;
-                levelCamera.orthographicSize = size;
+                //levelCamera.orthographicSize = size;
                 Debug.Log("Running the raycasts");
                 GeoSortingRaycasts();
                 CurrentDimension = Dimensions.SECOND;
