@@ -53,11 +53,14 @@ namespace LevelObjects
 
         private void OpenColliderPool()
         {
+            List<BoxCollider> colList = new();
+            
             // gets colliders from the pool and places them in the needed positions
             if (PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.Count > 0)
             {
                 // update the standard colliders list to have all the colliders of the detected geometry
                 RefreshColliders();
+                colList = PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.ToList();
                 // check we have detected geometry
                 print("Opening the collider pool");
                 // go through the generated collision & calculate the new bounds for it
@@ -65,7 +68,7 @@ namespace LevelObjects
                 for (int i = 0; i < PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.Count; i++)
                 {
                     // get the generated collider of the same index & adjust bounds
-                    print("Total found colliders: " + PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D.Count);
+                    print("Total found colliders: " + colList.Count);
                     print("Collider index: " + i);
                     
                     if (i > generatedColliders.Count - 1) break;
@@ -78,27 +81,27 @@ namespace LevelObjects
                         // set base position using the player's x axis value
                         currentCol.transform.position = new Vector3(
                             playerCharacter.transform.position.x,
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.position.y,
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.position.z
+                            colList[i].transform.position.y, 
+                            colList[i].transform.position.z
                             );
                     }
                     else if (PerspectiveSwitcher.CurrentObservedAxis == Axes.Z)
                     {
                         // set base position using the player's z axis value
                         currentCol.transform.position = new Vector3(
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.position.x,
-                            PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.position.y,
+                            colList[i].transform.position.x,
+                            colList[i].transform.position.y,
                             playerCharacter.transform.position.z
                             );
                     }
                     
                     // collider size should match its target
-                    currentCol.size = PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].size;
+                    currentCol.size = colList[i].size;
                     // set center of collider separately
-                    currentCol.center = PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].center;
+                    currentCol.center = colList[i].center;
                     
                     // make sure rotation matches
-                    currentCol.transform.rotation = PerspectiveSwitcher.CurrentVisibleCollisionGeometryIn2D[i].transform.rotation;
+                    currentCol.transform.rotation = colList[i].transform.rotation;
                     
                     // we've set the bounds of the collider as needed yay
                     // just enable it now

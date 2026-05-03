@@ -44,7 +44,7 @@ public class PerspectiveSwitcher : MonoBehaviour
     public static Dimensions CurrentDimension { get; private set; } = Dimensions.THIRD;
     public static Axes CurrentObservedAxis { get; private set; } = Axes.Z;
 
-    public static List<BoxCollider> CurrentVisibleCollisionGeometryIn2D { get; private set; } = new();
+    public static HashSet<BoxCollider> CurrentVisibleCollisionGeometryIn2D { get; private set; } = new();
 
     // event fired when switching dimensions
     public static event Action<Dimensions> OnDimensionsSwitched;
