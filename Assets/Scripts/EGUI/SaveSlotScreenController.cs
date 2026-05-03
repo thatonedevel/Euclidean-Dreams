@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 using System;
 using System.Linq;
 using Data.Saves;
+using Managers;
 
 namespace EGUI
 {
@@ -90,11 +91,13 @@ namespace EGUI
             okButton = uiDocument.rootVisualElement.Query<Button>("OkButton");
             settingsButton = uiDocument.rootVisualElement.Query<Button>("SettingsBtn");
             warningLabel = uiDocument.rootVisualElement.Query<Label>("WarningLabel");
+            titleScreenButton = uiDocument.rootVisualElement.Query<Button>("TitleBtn");
             
             // button clicks for the dialogue box
             okButton.clicked += OkClicked;
             cancelButton.clicked += CloseWarningDialogue;
             settingsButton.clicked += SettingsMenuController.Singleton.OpenSettings;
+            titleScreenButton.clicked += GameController.Singleton.GoToTitleScreen;
             
             // update information on the metadata labels
             UpdateSaveStatus();

@@ -246,7 +246,11 @@ namespace EGUI
             rootElement.visible = false;
         }
 
-        public void OpenSettings() => rootElement.visible = true;
+        public void OpenSettings()
+        {
+            Debug.Log("Settings opened");
+            rootElement.visible = true;
+        } 
 
         private void GameStateUpdateListener(GameStates newState, GameStates oldState)
         {
