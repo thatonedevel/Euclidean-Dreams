@@ -7,6 +7,8 @@ This project aims to present a game to explore how you (the player) can navigate
 to switch between either, and be subjected to the rules of physics in either dimension. What I eventually hope to be a 
 recurring theme for this project is having regular subversion of expectations with how you interact with this world. The version you are seeing here will be archived as of submission, and further development will be happening in another repository, as I have enjoyed my time working on this project, and would like to take it further.
 
+## ACTIVE DEVELOPMENT WILL BE CONTINUING [HERE](https://github.com/thatonedevel/euclidean-dreams-active)
+
 ## Credits
 This project was made possible thanks to several artists who provided open assets for others to use
 
